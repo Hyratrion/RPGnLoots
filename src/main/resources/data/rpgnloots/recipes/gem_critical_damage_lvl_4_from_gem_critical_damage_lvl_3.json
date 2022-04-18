@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "XXX",
+    "X#X",
+    "XXX"
+  ],
+  "key": {
+    "#": {
+      "item": "minecraft:diamond_block"
+    },
+    "X": {
+      "item": "rpgnloots:gem_critical_damage_lvl_3"
+    }
+  },
+  "result": {
+    "item": "rpgnloots:gem_critical_damage_lvl_4"
+  }
+}

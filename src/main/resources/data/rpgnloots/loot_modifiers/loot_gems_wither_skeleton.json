@@ -1,0 +1,10 @@
+{
+  "conditions": [
+    {
+      "condition": "forge:loot_table_id",
+      "loot_table_id": "minecraft:entities/wither_skeleton"
+    }
+  ],
+  "chanceLootGemTier1": 9.0,
+  "type": "rpgnloots:loot_gems_wither_skeleton"
+}

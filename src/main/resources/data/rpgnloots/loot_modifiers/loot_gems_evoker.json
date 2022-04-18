@@ -1,0 +1,10 @@
+{
+  "conditions": [
+    {
+      "condition": "forge:loot_table_id",
+      "loot_table_id": "minecraft:entities/evoker"
+    }
+  ],
+  "chanceLootGemTier1": 12.0,
+  "type": "rpgnloots:loot_gems_evoker"
+}
