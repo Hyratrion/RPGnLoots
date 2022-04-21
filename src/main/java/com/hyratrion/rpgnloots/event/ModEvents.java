@@ -140,7 +140,8 @@ public class ModEvents
                             entity.hurt(DamageSource.playerAttack(player),amountReflectedDamagePercent);
 
                         }
-                        if (!dodgeDone && attributeModifiers.containsKey(CustomAttributes.REFLECT_DAMAGE_RAW.get())) {
+                        if (!dodgeDone && attributeModifiers.containsKey(CustomAttributes.REFLECT_DAMAGE_RAW.get()))
+                        {
                             float amountReflectedDamagePercent = (float) attributeModifiers.get(CustomAttributes.REFLECT_DAMAGE_RAW.get()).stream().findFirst().get().getAmount();
 
                             Entity entity = event.getSource().getDirectEntity();
