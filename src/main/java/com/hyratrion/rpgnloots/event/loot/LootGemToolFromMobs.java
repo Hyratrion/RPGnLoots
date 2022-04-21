@@ -115,7 +115,17 @@ public class LootGemToolFromMobs extends LootModifier {
                 );
                 itemStackStuff.addAttributeModifier(
                         CustomAttributes.DODGE.get(),
-                        new AttributeModifier(DODGE_ID, "modifier rpgnloots", rand.nextFloat(0.1f, 10), AttributeModifier.Operation.ADDITION),
+                        new AttributeModifier(DODGE_ID, "modifier rpgnloots", rand.nextFloat(0.1f, 11), AttributeModifier.Operation.ADDITION),
+                        armorItem.getSlot()
+                );
+                itemStackStuff.addAttributeModifier(
+                        CustomAttributes.REFLECT_DAMAGE_PERCENT.get(),
+                        new AttributeModifier(REFLECT_DAMAGE_PERCENT_ID, "modifier rpgnloots", rand.nextFloat(1, 11), AttributeModifier.Operation.ADDITION),
+                        armorItem.getSlot()
+                );
+                itemStackStuff.addAttributeModifier(
+                        CustomAttributes.REFLECT_DAMAGE_RAW.get(),
+                        new AttributeModifier(REFLECT_DAMAGE_RAW_ID, "modifier rpgnloots", rand.nextFloat(0.1f, 2), AttributeModifier.Operation.ADDITION),
                         armorItem.getSlot()
                 );
             }
@@ -142,17 +152,17 @@ public class LootGemToolFromMobs extends LootModifier {
 
                 itemStackStuff.addAttributeModifier(
                         CustomAttributes.CRITICAL_CHANCE.get(),
-                        new AttributeModifier(CRITICAL_CHANCE_ID, "modifier rpgnloots", rand.nextInt(1, 100), AttributeModifier.Operation.ADDITION),
+                        new AttributeModifier(CRITICAL_CHANCE_ID, "modifier rpgnloots", rand.nextInt(1, 101), AttributeModifier.Operation.ADDITION),
                         EquipmentSlot.MAINHAND
                 );
                 itemStackStuff.addAttributeModifier(
                         CustomAttributes.CRITICAL_DAMAGE.get(),
-                        new AttributeModifier(CRITICAL_DAMAGE_ID, "modifier rpgnloots", rand.nextInt(1, 100), AttributeModifier.Operation.ADDITION),
+                        new AttributeModifier(CRITICAL_DAMAGE_ID, "modifier rpgnloots", rand.nextInt(1, 101), AttributeModifier.Operation.ADDITION),
                         EquipmentSlot.MAINHAND
                 );
                 itemStackStuff.addAttributeModifier(
                         CustomAttributes.LIFE_LEECH_PERCENT.get(),
-                        new AttributeModifier(LIFE_LEECH_PERCENT_ID, "modifier rpgnloots", rand.nextInt(1, 100), AttributeModifier.Operation.ADDITION),
+                        new AttributeModifier(LIFE_LEECH_PERCENT_ID, "modifier rpgnloots", rand.nextInt(1, 101), AttributeModifier.Operation.ADDITION),
                         EquipmentSlot.MAINHAND
                 );
                 itemStackStuff.addAttributeModifier(
