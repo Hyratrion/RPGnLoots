@@ -1,17 +1,14 @@
 package com.hyratrion.rpgnloots.event.loot;
 
-import com.google.common.collect.ImmutableMultimap;
 import com.google.gson.JsonObject;
 import com.hyratrion.rpgnloots.item.ModItems;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
-import net.minecraft.world.entity.ai.attributes.Attribute;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
-import net.minecraft.world.item.Tier;
+import net.minecraft.world.item.*;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 import net.minecraftforge.common.loot.GlobalLootModifierSerializer;
@@ -21,7 +18,10 @@ import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.Random;
 
-public class ExampleModifier extends LootModifier {
+import static com.hyratrion.rpgnloots.event.loot.CustomAttributes.CRITICAL_CHANCE_ID;
+import static com.hyratrion.rpgnloots.event.loot.CustomAttributes.CRITICAL_DAMAGE_ID;
+
+public class LootGemToolFromMobs extends LootModifier {
     private Item addition;
     private final float chanceLootGemTier1;
     private final float chanceLootStuffTier1;
@@ -31,7 +31,7 @@ public class ExampleModifier extends LootModifier {
     private final float chanceLootStuff;
 
 
-    protected ExampleModifier(LootItemCondition[] conditionsIn, float chanceLootGemTier1) {
+    protected LootGemToolFromMobs(LootItemCondition[] conditionsIn, float chanceLootGemTier1) {
         super(conditionsIn);
 
         //ce code
@@ -71,8 +71,11 @@ public class ExampleModifier extends LootModifier {
 
         chanceValue = rand.nextFloat(100);
 
-        if(chanceValue < chanceLootStuff) {
+        if(chanceValue < chanceLootStuff)
+        {
             Item SWORD;
+            //choix du tier
+            //(pour le moment juste de l'épée
             if (chanceValue < chanceLootStuffTier1) {
                 SWORD = Items.WOODEN_SWORD;
             }
@@ -89,29 +92,78 @@ public class ExampleModifier extends LootModifier {
                 SWORD = Items.NETHERITE_SWORD;
             }
 
-            generatedLoot.add(new ItemStack(SWORD, 1));
+
+            //ajout de modifier
+
+            //System.out.println("test makotache debut try");
+            //SwordItem sword_test = new SwordItem(Tiers.WOOD, 3, -2.4F, (new Item.Properties()).tab(CreativeModeTab.TAB_COMBAT));
+            //SwordItem sword_test = new SwordItem(((SwordItem)SWORD).getTier(), 3 + 10, -2.4F, (new Item.Properties()).tab(CreativeModeTab.TAB_COMBAT));
+
+
+            ItemStack itemStackSword = new ItemStack(SWORD, 1);
+
+            int damageMultiple = rand.nextInt(5);
+            itemStackSword.addAttributeModifier(
+                    Attributes.ATTACK_DAMAGE,
+                    new AttributeModifier("modifier rpgnloots",(3 + ((TieredItem)SWORD).getTier().getAttackDamageBonus()) * (1 + damageMultiple), AttributeModifier.Operation.ADDITION),
+                    EquipmentSlot.MAINHAND
+            );
+
+            /*
+            float speedValue = rand.nextFloat(0, 4);
+            itemStackSword.addAttributeModifier (
+                    Attributes.ATTACK_SPEED,
+                    new AttributeModifier("modifier rpgnloots", speedValue, AttributeModifier.Operation.ADDITION),
+                    EquipmentSlot.MAINHAND
+            );*/
+
+            itemStackSword.addAttributeModifier (
+                    CustomAttributes.CRITICAL_CHANCE.get(),
+                    new AttributeModifier(CRITICAL_CHANCE_ID, "modifier rpgnloots", 50, AttributeModifier.Operation.ADDITION),
+                    EquipmentSlot.MAINHAND
+            );
+
+
+            float a = rand.nextFloat(100);
+
+            if(a < 50)
+            {
+                itemStackSword.addAttributeModifier (
+                        CustomAttributes.CRITICAL_DAMAGE.get(),
+                        new AttributeModifier(CRITICAL_DAMAGE_ID, "modifier rpgnloots", 2, AttributeModifier.Operation.ADDITION),
+                        EquipmentSlot.MAINHAND
+                );
+            }
+
+
+            itemStackSword.getTooltipImage();
+            //SWORD.getDescription().add new TranslatableComponent("this.getDescriptionId()");
+
+
+            generatedLoot.add(itemStackSword);
         }
 
         generatedLoot.add(new ItemStack(addition, 1));
         return generatedLoot;
     }
 
-    public static class Serializer extends GlobalLootModifierSerializer<ExampleModifier> {
+    public static class Serializer extends GlobalLootModifierSerializer<LootGemToolFromMobs> {
 
         @Override
-        public ExampleModifier read(ResourceLocation name, JsonObject object,
-                                    LootItemCondition[] conditionsIn) {
+        public LootGemToolFromMobs read(ResourceLocation name, JsonObject object,
+                                        LootItemCondition[] conditionsIn) {
             float chanceLootTier1 = GsonHelper.getAsFloat(object, "chanceLootGemTier1");
-            return new ExampleModifier(conditionsIn, chanceLootTier1);
+            return new LootGemToolFromMobs(conditionsIn, chanceLootTier1);
         }
 
         @Override
-        public JsonObject write(ExampleModifier instance) {
+        public JsonObject write(LootGemToolFromMobs instance) {
             JsonObject json = makeConditions(instance.conditions);
             json.addProperty("chanceLootGemTier1",instance.chanceLootGemTier1);
             return json;
         }
     }
+
 }
 /*public class ExampleModifier extends LootModifier {
 

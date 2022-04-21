@@ -1,7 +1,6 @@
 package com.hyratrion.rpgnloots.item;
 
-import com.hyratrion.rpgnloots.RPGLOOT;
-import net.minecraft.world.item.CreativeModeTab;
+import com.hyratrion.rpgnloots.RPGNLOOT;
 import net.minecraft.world.item.Item;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.registries.DeferredRegister;
@@ -10,7 +9,7 @@ import net.minecraftforge.registries.RegistryObject;
 
 public class ModItems {
     public static final DeferredRegister<Item> ITEMS =
-            DeferredRegister.create(ForgeRegistries.ITEMS, RPGLOOT.MOD_ID);
+            DeferredRegister.create(ForgeRegistries.ITEMS, RPGNLOOT.MOD_ID);
 
     //Gemmes lvl 0
     public static final RegistryObject<Item> GEM_DAMAGE_LVL_0 = ITEMS.register( "gem_damage_lvl_0",

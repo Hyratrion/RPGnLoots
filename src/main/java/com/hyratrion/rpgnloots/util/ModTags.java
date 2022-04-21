@@ -1,12 +1,10 @@
 package com.hyratrion.rpgnloots.util;
 
-import com.hyratrion.rpgnloots.RPGLOOT;
+import com.hyratrion.rpgnloots.RPGNLOOT;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.level.block.Block;
 
 public class ModTags {
     /*public static class Blocks {
@@ -27,7 +25,7 @@ public class ModTags {
         public static final TagKey<Item> test = forgeTag("gems/gems_lvl_4");
 
         private static TagKey<Item> tag(String name) {
-            return ItemTags.create(new ResourceLocation(RPGLOOT.MOD_ID, name));
+            return ItemTags.create(new ResourceLocation(RPGNLOOT.MOD_ID, name));
         }
 
         private static TagKey<Item> forgeTag(String name) {
