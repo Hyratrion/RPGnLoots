@@ -3,24 +3,28 @@ package com.hyratrion.rpgnloots.event;
 import com.google.common.collect.Multimap;
 import com.hyratrion.rpgnloots.RPGNLOOT;
 import com.hyratrion.rpgnloots.event.loot.CustomAttributes;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingDamageEvent;
+import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.event.entity.player.CriticalHitEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.server.command.ConfigCommand;
+import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.Field;
-import java.util.Random;
+import java.util.*;
 
 @Mod.EventBusSubscriber(modid = RPGNLOOT.MOD_ID)
 public class ModEvents
@@ -92,11 +96,99 @@ public class ModEvents
     }
 
     @SubscribeEvent
+    public static void onLivingHurtEvent(LivingHurtEvent event)
+    {
+        if (!event.getEntity().level.isClientSide())
+        {
+            if (event.getEntity() instanceof Player player)
+            {
+                Iterable<ItemStack> itemStacks = player.getArmorSlots();
+                float amountDodge = 0;
+
+                for (ItemStack itemStack : itemStacks)
+                {
+                    if (itemStack.getItem() instanceof ArmorItem armorItem)
+                    {
+                        System.out.println("Get equipement slot --> " + armorItem.getSlot());
+                        Multimap<Attribute, AttributeModifier> attributeModifiers = itemStack.getAttributeModifiers(armorItem.getSlot());
+
+                        if (attributeModifiers.containsKey(CustomAttributes.DODGE.get()))
+                        {
+                            amountDodge += (float)attributeModifiers.get(CustomAttributes.DODGE.get()).stream().findFirst().get().getAmount();
+                        }
+                    }
+                }
+
+                if (amountDodge > 0)
+                {
+                    System.out.println("amout dodge -->" + amountDodge);
+                    float chanceDodge = rand.nextInt(100);
+                    if (chanceDodge < amountDodge)
+                    {
+                        event.setCanceled(true);
+                    }
+                }
+            }
+        }
+    }
+
+    @SubscribeEvent
     public static void onLivingDamageEvent(LivingDamageEvent event)
     {
         if (!event.getEntity().level.isClientSide())
         {
-            System.out.println("----- Makotache ----- bobo du mob => " +event.getAmount());
+            if (event.getSource().getDirectEntity() instanceof Player player)
+            {
+                ItemStack itemStack = player.getMainHandItem();
+
+                Multimap<Attribute, AttributeModifier> attributeModifiers = itemStack.getAttributeModifiers(EquipmentSlot.MAINHAND);
+
+                System.out.println("----- Makotache ----- bobo du mob => " +event.getAmount());
+
+                if(attributeModifiers.containsKey(CustomAttributes.LIFE_LEECH_PERCENT.get()))
+                {
+                    float amountLifeLeechPourcent = (float)attributeModifiers.get(CustomAttributes.LIFE_LEECH_PERCENT.get()).stream().findFirst().get().getAmount() / 100;
+
+                    System.out.println("----- Makotache ----- pourcentage de vole de vie => " + amountLifeLeechPourcent);
+
+                    amountLifeLeechPourcent = amountLifeLeechPourcent * event.getAmount();
+
+                    player.heal(amountLifeLeechPourcent);
+
+                    System.out.println("----- Makotache ----- vie regen => " + amountLifeLeechPourcent);
+                }
+
+            }
+
+        }
+        if (!event.getEntity().level.isClientSide())
+        {
+            if (event.getSource().getDirectEntity() instanceof Player player)
+            {
+                ItemStack itemStack = player.getMainHandItem();
+
+                Multimap<Attribute, AttributeModifier> attributeModifiers = itemStack.getAttributeModifiers(EquipmentSlot.MAINHAND);
+
+                System.out.println("----- Makotache ----- bobo du mob => " +event.getAmount());
+
+                Component displayname = itemStack.getDisplayName();
+                System.out.println("----- Makotache ----- displayname => " + displayname);
+                String DescriptionId = itemStack.getDescriptionId();
+                System.out.println("----- Makotache ----- DescriptionId => " + DescriptionId);
+
+                if(attributeModifiers.containsKey(CustomAttributes.LIFE_LEECH_RAW.get()))
+                {
+                    float amountLifeLeechraw = (float)attributeModifiers.get(CustomAttributes.LIFE_LEECH_RAW.get()).stream().findFirst().get().getAmount();
+
+                    System.out.println("----- Makotache ----- pourcentage de vole de vie => " + amountLifeLeechraw);
+
+                    player.heal(amountLifeLeechraw);
+
+                    System.out.println("----- Makotache ----- vie regen => " + amountLifeLeechraw);
+                }
+
+            }
+
         }
     }
     /* degats infligé a une entité

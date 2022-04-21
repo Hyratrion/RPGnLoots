@@ -1,11 +1,13 @@
 package com.hyratrion.rpgnloots.event.loot;
 
+import com.google.common.collect.Multimap;
 import com.google.gson.JsonObject;
 import com.hyratrion.rpgnloots.item.ModItems;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.item.*;
@@ -18,8 +20,7 @@ import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.Random;
 
-import static com.hyratrion.rpgnloots.event.loot.CustomAttributes.CRITICAL_CHANCE_ID;
-import static com.hyratrion.rpgnloots.event.loot.CustomAttributes.CRITICAL_DAMAGE_ID;
+import static com.hyratrion.rpgnloots.event.loot.CustomAttributes.*;
 
 public class LootGemToolFromMobs extends LootModifier {
     private Item addition;
@@ -71,44 +72,65 @@ public class LootGemToolFromMobs extends LootModifier {
 
         chanceValue = rand.nextFloat(100);
 
-        if(chanceValue < chanceLootStuff)
-        {
-            Item SWORD;
+        if(chanceValue < chanceLootStuff) {
+            Item stuff;
             //choix du tier
             //(pour le moment juste de l'épée
             if (chanceValue < chanceLootStuffTier1) {
-                SWORD = Items.WOODEN_SWORD;
-            }
-            else if (chanceValue < chanceLootStuffTier2) {
-                SWORD = Items.STONE_SWORD;
-            }
-            else if (chanceValue < chanceLootStuffTier3) {
-                SWORD = Items.IRON_SWORD;
-            }
-            else if (chanceValue < chanceLootStuffTier4) {
-                SWORD = Items.DIAMOND_SWORD;
-            }
-            else {
-                SWORD = Items.NETHERITE_SWORD;
+                stuff = Items.NETHERITE_CHESTPLATE;
+            } else if (chanceValue < chanceLootStuffTier2) {
+                stuff = Items.IRON_CHESTPLATE;
+            } else if (chanceValue < chanceLootStuffTier3) {
+                stuff = Items.IRON_SWORD;
+            } else if (chanceValue < chanceLootStuffTier4) {
+                stuff = Items.DIAMOND_SWORD;
+            } else {
+                stuff = Items.NETHERITE_SWORD;
             }
 
 
             //ajout de modifier
 
-            //System.out.println("test makotache debut try");
-            //SwordItem sword_test = new SwordItem(Tiers.WOOD, 3, -2.4F, (new Item.Properties()).tab(CreativeModeTab.TAB_COMBAT));
-            //SwordItem sword_test = new SwordItem(((SwordItem)SWORD).getTier(), 3 + 10, -2.4F, (new Item.Properties()).tab(CreativeModeTab.TAB_COMBAT));
+            ItemStack itemStackStuff = new ItemStack(stuff, 1);
 
-
-            ItemStack itemStackSword = new ItemStack(SWORD, 1);
-
-            int damageMultiple = rand.nextInt(5);
-            itemStackSword.addAttributeModifier(
-                    Attributes.ATTACK_DAMAGE,
-                    new AttributeModifier("modifier rpgnloots",(3 + ((TieredItem)SWORD).getTier().getAttackDamageBonus()) * (1 + damageMultiple), AttributeModifier.Operation.ADDITION),
-                    EquipmentSlot.MAINHAND
-            );
-
+            if (stuff instanceof ArmorItem armorItem)
+            {
+                float armorMultiple = rand.nextFloat(5);
+                itemStackStuff.addAttributeModifier(
+                        Attributes.ARMOR,
+                        new AttributeModifier("modifier rpgnloots", (armorItem.getDefense()) * (1 + armorMultiple), AttributeModifier.Operation.ADDITION),
+                        armorItem.getSlot()
+                );
+                float toughnessMultiple = rand.nextFloat(5);
+                itemStackStuff.addAttributeModifier(
+                        Attributes.ARMOR_TOUGHNESS,
+                        new AttributeModifier("modifier rpgnloots", (armorItem.getToughness()) * (1 + toughnessMultiple), AttributeModifier.Operation.ADDITION),
+                        armorItem.getSlot()
+                );
+                itemStackStuff.addAttributeModifier(
+                        Attributes.KNOCKBACK_RESISTANCE,
+                        new AttributeModifier("modifier rpgnloots", rand.nextFloat(0.001f, 0.5f), AttributeModifier.Operation.ADDITION),
+                        armorItem.getSlot()
+                );
+                itemStackStuff.addAttributeModifier(
+                        CustomAttributes.DODGE.get(),
+                        new AttributeModifier("modifier rpgnloots", rand.nextFloat(0.1f, 10), AttributeModifier.Operation.ADDITION),
+                        armorItem.getSlot()
+                );
+            }
+            else if (stuff instanceof SwordItem swordItem)
+            {
+                int damageMultiple = rand.nextInt(5);
+                itemStackStuff.addAttributeModifier(
+                        Attributes.ATTACK_DAMAGE,
+                        new AttributeModifier("modifier rpgnloots", (3 + swordItem.getTier().getAttackDamageBonus()) * (1 + damageMultiple), AttributeModifier.Operation.ADDITION),
+                        EquipmentSlot.MAINHAND
+                );
+                itemStackStuff.addAttributeModifier(
+                        Attributes.KNOCKBACK_RESISTANCE,
+                        new AttributeModifier("modifier rpgnloots", rand.nextFloat(0.001f, 0.2f), AttributeModifier.Operation.ADDITION),
+                        EquipmentSlot.MAINHAND
+                );
             /*
             float speedValue = rand.nextFloat(0, 4);
             itemStackSword.addAttributeModifier (
@@ -117,30 +139,39 @@ public class LootGemToolFromMobs extends LootModifier {
                     EquipmentSlot.MAINHAND
             );*/
 
-            itemStackSword.addAttributeModifier (
-                    CustomAttributes.CRITICAL_CHANCE.get(),
-                    new AttributeModifier(CRITICAL_CHANCE_ID, "modifier rpgnloots", 50, AttributeModifier.Operation.ADDITION),
-                    EquipmentSlot.MAINHAND
-            );
-
-
-            float a = rand.nextFloat(100);
-
-            if(a < 50)
-            {
-                itemStackSword.addAttributeModifier (
+                itemStackStuff.addAttributeModifier(
+                        CustomAttributes.CRITICAL_CHANCE.get(),
+                        new AttributeModifier(CRITICAL_CHANCE_ID, "modifier rpgnloots", rand.nextInt(1, 100), AttributeModifier.Operation.ADDITION),
+                        EquipmentSlot.MAINHAND
+                );
+                itemStackStuff.addAttributeModifier(
                         CustomAttributes.CRITICAL_DAMAGE.get(),
-                        new AttributeModifier(CRITICAL_DAMAGE_ID, "modifier rpgnloots", 2, AttributeModifier.Operation.ADDITION),
+                        new AttributeModifier(CRITICAL_DAMAGE_ID, "modifier rpgnloots", rand.nextInt(1, 100), AttributeModifier.Operation.ADDITION),
+                        EquipmentSlot.MAINHAND
+                );
+                itemStackStuff.addAttributeModifier(
+                        CustomAttributes.LIFE_LEECH_PERCENT.get(),
+                        new AttributeModifier(LIFE_LEECH_PERCENT_ID, "modifier rpgnloots", rand.nextInt(1, 100), AttributeModifier.Operation.ADDITION),
+                        EquipmentSlot.MAINHAND
+                );
+                itemStackStuff.addAttributeModifier(
+                        CustomAttributes.LIFE_LEECH_RAW.get(),
+                        new AttributeModifier(LIFE_LEECH_RAW_ID, "modifier rpgnloots", rand.nextFloat(0.1f, 1), AttributeModifier.Operation.ADDITION),
                         EquipmentSlot.MAINHAND
                 );
             }
 
+            /*Multimap<Attribute, AttributeModifier> List_modifiers = itemStackSword.getAttributeModifiers(EquipmentSlot.MAINHAND);
 
-            itemStackSword.getTooltipImage();
+            if(List_modifiers.containsKey(CustomAttributes.LIFE_LEECH_RAW.get()))
+                itemStackSword.getDescriptionId();
+                itemStackSword.name */
+
+            itemStackStuff.getTooltipImage();
             //SWORD.getDescription().add new TranslatableComponent("this.getDescriptionId()");
 
 
-            generatedLoot.add(itemStackSword);
+            generatedLoot.add(itemStackStuff);
         }
 
         generatedLoot.add(new ItemStack(addition, 1));
