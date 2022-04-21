@@ -17,6 +17,7 @@ import net.minecraftforge.common.loot.GlobalLootModifierSerializer;
 import net.minecraftforge.common.loot.LootModifier;
 
 import javax.annotation.Nonnull;
+import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Random;
 
@@ -160,6 +161,29 @@ public class LootGemToolFromMobs extends LootModifier {
                         EquipmentSlot.MAINHAND
                 );
             }
+
+            //durability
+
+            try
+            {
+                System.out.println("---- Makotache ----- base durability " + itemStackStuff.getMaxDamage());
+
+                int durability = rand.nextInt(1,4) * itemStackStuff.getMaxDamage();
+
+                System.out.println("---- Makotache ----- max durability " + durability);
+
+                Field field = Item.class.getDeclaredField("maxDamage");
+                field.setAccessible(true);
+                field.setInt(stuff, durability);
+                System.out.println("---- Makotache ----- durability mis a jour => " + itemStackStuff.getMaxDamage());
+
+            }
+            catch (Exception ex)
+            {
+                ex.printStackTrace();
+            }
+
+
 
             /*Multimap<Attribute, AttributeModifier> List_modifiers = itemStackSword.getAttributeModifiers(EquipmentSlot.MAINHAND);
 
