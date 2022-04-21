@@ -166,22 +166,17 @@ public class LootGemToolFromMobs extends LootModifier {
 
             try
             {
-                System.out.println("---- Makotache ----- base durability " + itemStackStuff.getMaxDamage());
-
+                //System.out.println("---- Makotache ----- base durability " + itemStackStuff.getMaxDamage());
                 int durability = rand.nextInt(1,4) * itemStackStuff.getMaxDamage();
 
-                System.out.println("---- Makotache ----- max durability " + durability);
 
                 Field field = Item.class.getDeclaredField("maxDamage");
                 field.setAccessible(true);
                 field.setInt(stuff, durability);
-                System.out.println("---- Makotache ----- durability mis a jour => " + itemStackStuff.getMaxDamage());
 
+                //System.out.println("---- Makotache ----- durability mis a jour => " + itemStackStuff.getMaxDamage());
             }
-            catch (Exception ex)
-            {
-                ex.printStackTrace();
-            }
+            catch (Exception ingored) { }
 
 
 
