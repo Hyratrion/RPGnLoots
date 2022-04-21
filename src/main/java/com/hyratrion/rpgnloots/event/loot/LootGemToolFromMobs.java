@@ -114,7 +114,7 @@ public class LootGemToolFromMobs extends LootModifier {
                 );
                 itemStackStuff.addAttributeModifier(
                         CustomAttributes.DODGE.get(),
-                        new AttributeModifier("modifier rpgnloots", rand.nextFloat(0.1f, 10), AttributeModifier.Operation.ADDITION),
+                        new AttributeModifier(DODGE_ID, "modifier rpgnloots", rand.nextFloat(0.1f, 10), AttributeModifier.Operation.ADDITION),
                         armorItem.getSlot()
                 );
             }
