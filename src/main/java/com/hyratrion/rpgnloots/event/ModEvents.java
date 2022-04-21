@@ -4,6 +4,8 @@ import com.google.common.collect.Multimap;
 import com.hyratrion.rpgnloots.RPGNLOOT;
 import com.hyratrion.rpgnloots.event.loot.CustomAttributes;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
@@ -116,16 +118,35 @@ public class ModEvents
                         {
                             amountDodge += (float)attributeModifiers.get(CustomAttributes.DODGE.get()).stream().findFirst().get().getAmount();
                         }
-                    }
-                }
+                        boolean dodgeDone = false;
+                        if (amountDodge > 0)
+                        {
+                            System.out.println("amout dodge -->" + amountDodge);
+                            float chanceDodge = rand.nextInt(100);
+                            if (chanceDodge < amountDodge)
+                            {
+                                dodgeDone = true;
+                                event.setCanceled(true);
+                            }
+                        }
+                        if (!dodgeDone && attributeModifiers.containsKey(CustomAttributes.REFLECT_DAMAGE_PERCENT.get()))
+                        {
+                            float amountReflectedDamagePercent = (float)attributeModifiers.get(CustomAttributes.REFLECT_DAMAGE_PERCENT.get()).stream().findFirst().get().getAmount() / 100;
 
-                if (amountDodge > 0)
-                {
-                    System.out.println("amout dodge -->" + amountDodge);
-                    float chanceDodge = rand.nextInt(100);
-                    if (chanceDodge < amountDodge)
-                    {
-                        event.setCanceled(true);
+                            Entity entity = event.getSource().getDirectEntity();
+
+                            amountReflectedDamagePercent = amountReflectedDamagePercent * event.getAmount();
+
+                            entity.hurt(DamageSource.playerAttack(player),amountReflectedDamagePercent);
+
+                        }
+                        if (!dodgeDone && attributeModifiers.containsKey(CustomAttributes.REFLECT_DAMAGE_RAW.get())) {
+                            float amountReflectedDamagePercent = (float) attributeModifiers.get(CustomAttributes.REFLECT_DAMAGE_RAW.get()).stream().findFirst().get().getAmount();
+
+                            Entity entity = event.getSource().getDirectEntity();
+
+                            entity.hurt(DamageSource.playerAttack(player), amountReflectedDamagePercent);
+                        }
                     }
                 }
             }
@@ -147,15 +168,15 @@ public class ModEvents
 
                 if(attributeModifiers.containsKey(CustomAttributes.LIFE_LEECH_PERCENT.get()))
                 {
-                    float amountLifeLeechPourcent = (float)attributeModifiers.get(CustomAttributes.LIFE_LEECH_PERCENT.get()).stream().findFirst().get().getAmount() / 100;
+                    float amountLifeLeechPercent = (float)attributeModifiers.get(CustomAttributes.LIFE_LEECH_PERCENT.get()).stream().findFirst().get().getAmount() / 100;
 
-                    System.out.println("----- Makotache ----- pourcentage de vole de vie => " + amountLifeLeechPourcent);
+                    System.out.println("----- Makotache ----- pourcentage de vole de vie => " + amountLifeLeechPercent);
 
-                    amountLifeLeechPourcent = amountLifeLeechPourcent * event.getAmount();
+                    amountLifeLeechPercent = amountLifeLeechPercent * event.getAmount();
 
-                    player.heal(amountLifeLeechPourcent);
+                    player.heal(amountLifeLeechPercent);
 
-                    System.out.println("----- Makotache ----- vie regen => " + amountLifeLeechPourcent);
+                    System.out.println("----- Makotache ----- vie regen => " + amountLifeLeechPercent);
                 }
 
             }
