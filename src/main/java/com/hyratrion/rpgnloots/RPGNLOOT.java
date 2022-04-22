@@ -1,5 +1,7 @@
 package com.hyratrion.rpgnloots;
 
+import com.hyratrion.rpgnloots.block.ModBlocks;
+import com.hyratrion.rpgnloots.block.entity.ModBlockEntities;
 import com.hyratrion.rpgnloots.event.loot.CustomAttributes;
 import com.hyratrion.rpgnloots.item.ModItems;
 import net.minecraftforge.common.MinecraftForge;
@@ -26,7 +28,9 @@ public class RPGNLOOT
         IEventBus eventBus = FMLJavaModLoadingContext.get().getModEventBus();
 
         ModItems.register(eventBus);
+        ModBlocks.register(eventBus);
         CustomAttributes.register(eventBus);
+        ModBlockEntities.register(eventBus);
 
         eventBus.addListener(this::setup);
         eventBus.addListener(this::clientSetup);

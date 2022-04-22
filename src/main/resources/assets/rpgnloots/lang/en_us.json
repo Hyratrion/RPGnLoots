@@ -64,5 +64,7 @@
   "attribute.name.rpgnloots.more_gem_slot": "Slot of Gem increase",
   "attribute.name.rpgnloots.reflect_damage_raw" : "Reflect damage",
   "attribute.name.rpgnloots.reflect_damage_percent" : "% Reflect damage",
-  "attribute.name.rpgnloots.dodge" : "% Of Dodge"
+  "attribute.name.rpgnloots.dodge" : "% Of Dodge",
+
+  "block.rpgloots.socketing_table": "Socketing table"
 }

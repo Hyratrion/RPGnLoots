@@ -80,7 +80,7 @@ public class LootGemToolFromMobs extends LootModifier {
             if (chanceValue < chanceLootStuffTier1) {
                 stuff = Items.NETHERITE_CHESTPLATE;
             } else if (chanceValue < chanceLootStuffTier2) {
-                stuff = Items.IRON_CHESTPLATE;
+                stuff = Items.IRON_LEGGINGS;
             } else if (chanceValue < chanceLootStuffTier3) {
                 stuff = Items.IRON_SWORD;
             } else if (chanceValue < chanceLootStuffTier4) {
@@ -174,7 +174,7 @@ public class LootGemToolFromMobs extends LootModifier {
 
             //durability
 
-            try
+            /*try
             {
                 //System.out.println("---- Makotache ----- base durability " + itemStackStuff.getMaxDamage());
                 int durability = rand.nextInt(1,4) * itemStackStuff.getMaxDamage();
@@ -186,7 +186,7 @@ public class LootGemToolFromMobs extends LootModifier {
 
                 //System.out.println("---- Makotache ----- durability mis a jour => " + itemStackStuff.getMaxDamage());
             }
-            catch (Exception ingored) { }
+            catch (Exception ingored) { }*/
 
 
 

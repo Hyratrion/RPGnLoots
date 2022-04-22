@@ -63,5 +63,7 @@
   "attribute.name.rpgnloots.more_gem_slot": "Slot de Gemme augmenté",
   "attribute.name.rpgnloots.reflect_damage_raw" : "Renvoie de dégâts",
   "attribute.name.rpgnloots.reflect_damage_percent" : "% Renvoie de dégâts",
-  "attribute.name.rpgnloots.dodge" : "% D'esquive"
+  "attribute.name.rpgnloots.dodge" : "% D'esquive",
+
+  "block.rpgloots.socketing_table": "Tâble d'incrustation"
 }
