@@ -1,6 +1,7 @@
 package com.hyratrion.rpgnloots.block;
 
 import com.hyratrion.rpgnloots.RPGNLOOT;
+import com.hyratrion.rpgnloots.item.ModCreativeModeTab;
 import com.hyratrion.rpgnloots.item.ModItems;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.CreativeModeTab;
@@ -21,7 +22,8 @@ public class ModBlocks {
     public static final DeferredRegister<Block> BLOCKS =
             DeferredRegister.create(ForgeRegistries.BLOCKS, RPGNLOOT.MOD_ID);
 
-    public static final RegistryObject<Block> SOCKETING_TABLE = registerBlock("socketing_table", () -> new OldSocketedTable(BlockBehaviour.Properties.of(Material.HEAVY_METAL, MaterialColor.METAL).strength(5.0f).requiresCorrectToolForDrops().sound(SoundType.ANVIL)), CreativeModeTab.TAB_MISC);
+    public static final RegistryObject<Block> SOCKETING_TABLE = registerBlock("socketing_table",
+            () -> new Block(BlockBehaviour.Properties.of(Material.HEAVY_METAL, MaterialColor.METAL).strength(5.0f).requiresCorrectToolForDrops().sound(SoundType.ANVIL)), ModCreativeModeTab.RPGNLOOTS_TAB);
 
     private static <T extends Block> RegistryObject<T> registerBlock (String name, Supplier<T> block, CreativeModeTab tab) {
         RegistryObject<T> toReturn = BLOCKS.register(name, block);

@@ -4,6 +4,8 @@ import com.hyratrion.rpgnloots.block.ModBlocks;
 import com.hyratrion.rpgnloots.block.entity.ModBlockEntities;
 import com.hyratrion.rpgnloots.event.loot.CustomAttributes;
 import com.hyratrion.rpgnloots.item.ModItems;
+import net.minecraft.client.renderer.ItemBlockRenderTypes;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
@@ -40,6 +42,7 @@ public class RPGNLOOT
     }
 
     private void clientSetup(final FMLClientSetupEvent event) {
+        ItemBlockRenderTypes.setRenderLayer(ModBlocks.SOCKETING_TABLE.get(), RenderType.cutout());
 
     }
 

@@ -1,19 +1,5 @@
 {
   "variants": {
-    "facing=east": {
-      "model": "rpgnloots:block/socketing_table",
-      "y": 270
-    },
-    "facing=north": {
-      "model": "rpgnloots:block/socketing_table",
-      "y": 180
-    },
-    "facing=south": {
-      "model": "rpgnloots:block/socketing_table"
-    },
-    "facing=west": {
-      "model": "rpgnloots:block/socketing_table",
-      "y": 90
-    }
+    "": { "model": "rpgnloots:block/socketing_table" }
   }
 }
