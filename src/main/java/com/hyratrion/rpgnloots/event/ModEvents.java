@@ -8,6 +8,7 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.ai.attributes.Attribute;
+import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
@@ -49,79 +50,104 @@ public class ModEvents
         }
     }
 
+    //event de critique
     @SubscribeEvent
     public static void onCriticalHitEvent(CriticalHitEvent event)
     {
         if(!event.getEntity().level.isClientSide())
         {
+            //récupération de l'item dans main du joueur
             ItemStack itemStack = event.getPlayer().getMainHandItem();
 
+            //récupération des attributeModifiers de l'item
             Multimap<Attribute, AttributeModifier> attributeModifiers = itemStack.getAttributeModifiers(EquipmentSlot.MAINHAND);
 
-            if(attributeModifiers.containsKey(CustomAttributes.ATTACK_DAMAGE))
+            //debug
+            /*if(attributeModifiers.containsKey(CustomAttributes.ATTACK_DAMAGE))
             {
                 float degatBase = (float)attributeModifiers.get(CustomAttributes.ATTACK_DAMAGE).stream().findFirst().get().getAmount();
                 System.out.println("----- Makotache ----- Degats precedant => " + degatBase);
                 System.out.println("----- Makotache ----- itemStack.getTag().toString() => " + itemStack.getTag().toString());
-            }
+            }*/
 
-            if(attributeModifiers.containsKey(CustomAttributes.ATTACK_DAMAGE) &&
+            //on vérifie si "attributeModifiers" contiens
+            //"Attributes.ATTACK_DAMAGE" ET "CustomAttributes.CRITICAL_CHANCE"
+            if(attributeModifiers.containsKey(Attributes.ATTACK_DAMAGE) &&
                     attributeModifiers.containsKey(CustomAttributes.CRITICAL_CHANCE.get()))
             {
-                //float degatBase = (float)attributeModifiers.get(CustomAttributes.ATTACK_DAMAGE).stream().findFirst().get().getAmount();
+                //récupération des chances de critiques
                 float criticalChanceBase = (float)attributeModifiers.get(CustomAttributes.CRITICAL_CHANCE.get()) .stream().findFirst().get().getAmount();
 
-
+                //récupération de la valeur de chance d'appliquer un critique
                 float criticalChanceRNG = rand.nextFloat( 100 );
 
-                if(criticalChanceRNG < criticalChanceBase && attributeModifiers.containsKey(CustomAttributes.CRITICAL_DAMAGE.get()))
+                //on check notre chance de faire un critique
+                if(criticalChanceRNG < criticalChanceBase)
                 {
-                    System.out.println("----- Makotache ----- crit EXISTANT");
+                    //System.out.println("----- Makotache ----- crit EXISTANT");
 
-                    float degatsCritique = event.getOldDamageModifier();
-                    System.out.println("----- Makotache ----- crit base " + degatsCritique);
+                    //récupération du multiplicateur des dégâts crtitique de minecraft Vanilla
+                    float criticalDamage = event.getOldDamageModifier();
+                    //System.out.println("----- Makotache ----- crit base " + degatsCritique);
 
-                    degatsCritique += (float)attributeModifiers.get(CustomAttributes.CRITICAL_DAMAGE.get()).stream().findFirst().get().getAmount() / 100;
-                    System.out.println("----- Makotache ----- nouveau crit  " + degatsCritique);
+                    //SI on possède "CustomAttributes.CRITICAL_DAMAGE"
+                    if(attributeModifiers.containsKey(CustomAttributes.CRITICAL_DAMAGE.get()))
+                    {
+                        //on ajoute plus de dégâts critique
+                        criticalDamage += (float)attributeModifiers.get(CustomAttributes.CRITICAL_DAMAGE.get()).stream().findFirst().get().getAmount() / 100;
+                        //System.out.println("----- Makotache ----- nouveau crit  " + degatsCritique);
+                    }
 
-                    event.setDamageModifier(degatsCritique);
+                    //on change la valeur des dégâts
+                    event.setDamageModifier(criticalDamage);
                     event.setResult(Event.Result.ALLOW);
 
-                    System.out.println("----- Makotache ----- Degats suivant => " + degatsCritique);
+                    //System.out.println("----- Makotache ----- Degats suivant => " + degatsCritique);
                 }
-                else
+                /*else
                 {
-                    System.out.println("----- Makotache ----- AUCUN critique");
-                }
+                    //System.out.println("----- Makotache ----- AUCUN critique");
+                }*/
             }
         }
     }
 
+    //Event quand une enitité prend des dégats
     @SubscribeEvent
     public static void onLivingHurtEvent(LivingHurtEvent event)
     {
         if (!event.getEntity().level.isClientSide())
         {
+            //si l'entité qui inflige des dégâts est un joueur
             if (event.getEntity() instanceof Player player)
             {
+                //on récupère tous les equipement dans les slots d'armure du joueur
                 Iterable<ItemStack> itemStacks = player.getArmorSlots();
                 float amountDodge = 0;
 
+
                 for (ItemStack itemStack : itemStacks)
                 {
+                    //si l'equipement d'amure est bien une armure et pas un slot vide
                     if (itemStack.getItem() instanceof ArmorItem armorItem)
                     {
-                        System.out.println("Get equipement slot --> " + armorItem.getSlot());
+                        //System.out.println("Get equipement slot --> " + armorItem.getSlot());
+                        //récupération des attributeModifiers de l'item en question
                         Multimap<Attribute, AttributeModifier> attributeModifiers = itemStack.getAttributeModifiers(armorItem.getSlot());
 
+                        //si attributeModifiers contient "CustomAttributes.DODGE.get())"
                         if (attributeModifiers.containsKey(CustomAttributes.DODGE.get()))
                         {
+                            //on réucpère le montant d'esquive
                             amountDodge += (float)attributeModifiers.get(CustomAttributes.DODGE.get()).stream().findFirst().get().getAmount();
                         }
+
                         boolean dodgeDone = false;
+                        //si on a un montant d'esquive
                         if (amountDodge > 0)
                         {
-                            System.out.println("amout dodge -->" + amountDodge);
+                            //System.out.println("amout dodge -->" + amountDodge);
+                            //on test notre chance d'esquive
                             float chanceDodge = rand.nextInt(100);
                             if (chanceDodge < amountDodge)
                             {

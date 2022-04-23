@@ -62,6 +62,7 @@
   "attribute.name.rpgnloots.life_leech_percent" :  "% Life leech",
   "attribute.name.rpgnloots.gem_lvl_increase": "Level of Gem increase",
   "attribute.name.rpgnloots.more_gem_slot": "Slot of Gem increase",
+  "attribute.name.rpgnloots.gem_slot" : "Gem Slot",
   "attribute.name.rpgnloots.reflect_damage_raw" : "Reflect damage",
   "attribute.name.rpgnloots.reflect_damage_percent" : "% Reflect damage",
   "attribute.name.rpgnloots.dodge" : "% Of Dodge",

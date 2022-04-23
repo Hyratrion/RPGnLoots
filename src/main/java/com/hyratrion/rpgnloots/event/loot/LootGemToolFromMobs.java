@@ -77,22 +77,49 @@ public class LootGemToolFromMobs extends LootModifier {
             Item stuff;
             //choix du tier
             //(pour le moment juste de l'épée
-            if (chanceValue < chanceLootStuffTier1) {
+
+            int tier = 0;
+
+            if (chanceValue < chanceLootStuffTier1)
+            {
                 stuff = Items.NETHERITE_CHESTPLATE;
-            } else if (chanceValue < chanceLootStuffTier2) {
+            }
+            else if (chanceValue < chanceLootStuffTier2)
+            {
                 stuff = Items.IRON_LEGGINGS;
-            } else if (chanceValue < chanceLootStuffTier3) {
+            }
+            else if (chanceValue < chanceLootStuffTier3)
+            {
                 stuff = Items.IRON_SWORD;
-            } else if (chanceValue < chanceLootStuffTier4) {
+                tier = 1;
+            }
+            else if (chanceValue < chanceLootStuffTier4)
+            {
                 stuff = Items.DIAMOND_SWORD;
-            } else {
+                tier = 1;
+            }
+            else
+            {
                 stuff = Items.NETHERITE_SWORD;
+                tier = 2;
+
             }
 
 
             //ajout de modifier
 
             ItemStack itemStackStuff = new ItemStack(stuff, 1);
+
+
+            if(tier > 0)
+            {
+                itemStackStuff.addAttributeModifier(
+                        GEM_SLOT.get(),
+                        new AttributeModifier(GEM_SLOT_ID, "modifier rpgnloots", tier, AttributeModifier.Operation.ADDITION),
+                        itemStackStuff.getEquipmentSlot()
+                );
+
+            }
 
             if (stuff instanceof ArmorItem armorItem)
             {
@@ -142,13 +169,14 @@ public class LootGemToolFromMobs extends LootModifier {
                         new AttributeModifier("modifier rpgnloots", rand.nextFloat(0.001f, 0.2f), AttributeModifier.Operation.ADDITION),
                         EquipmentSlot.MAINHAND
                 );
-            /*
-            float speedValue = rand.nextFloat(0, 4);
-            itemStackSword.addAttributeModifier (
-                    Attributes.ATTACK_SPEED,
-                    new AttributeModifier("modifier rpgnloots", speedValue, AttributeModifier.Operation.ADDITION),
-                    EquipmentSlot.MAINHAND
-            );*/
+
+                /*
+                float speedValue = rand.nextFloat(0, 4);
+                itemStackSword.addAttributeModifier (
+                        Attributes.ATTACK_SPEED,
+                        new AttributeModifier("modifier rpgnloots", speedValue, AttributeModifier.Operation.ADDITION),
+                        EquipmentSlot.MAINHAND
+                );*/
 
                 itemStackStuff.addAttributeModifier(
                         CustomAttributes.CRITICAL_CHANCE.get(),

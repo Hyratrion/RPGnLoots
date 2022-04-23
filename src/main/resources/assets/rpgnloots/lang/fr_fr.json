@@ -61,6 +61,7 @@
   "attribute.name.rpgnloots.life_leech_percent" :  "% Vol de vie",
   "attribute.name.rpgnloots.gem_lvl_increase": "Niveau de Gemme augmenté",
   "attribute.name.rpgnloots.more_gem_slot": "Slot de Gemme augmenté",
+  "attribute.name.rpgnloots.gem_slot" : "Slot de Gemme",
   "attribute.name.rpgnloots.reflect_damage_raw" : "Renvoie de dégâts",
   "attribute.name.rpgnloots.reflect_damage_percent" : "% Renvoie de dégâts",
   "attribute.name.rpgnloots.dodge" : "% D'esquive",
