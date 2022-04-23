@@ -40,9 +40,179 @@ public class CustomAttributes extends Attributes
     public static final RegistryObject<Attribute> REFLECT_DAMAGE_PERCENT = ATTRIBUTES.register("rpgnloots.reflect_damage_percent", () -> new RangedAttribute("attribute.name.rpgnloots.reflect_damage_percent", 10.0D, 1.0D, 1024.0D));
     public static final RegistryObject<Attribute> DODGE = ATTRIBUTES.register("rpgnloots.dodge", () -> new RangedAttribute("attribute.name.rpgnloots.dodge", 10.0D, 1.0D, 1024.0D));
 
-
     public static void register(IEventBus eventBus)
     {
         ATTRIBUTES.register(eventBus);
     }
+
+    //region Les Get sur les valeurs des tiers
+    /**
+     * Permet de récupérer les valeurs des boost par rapport aux tiers de l'attributModifier AttaqueDamage
+     * sous forme de float (pour tier 1 -> utiliser getValuesTierAttackDamage[1])
+     */
+    static float[] getValuesTierAttackDamage = new float[]{
+            0,
+            31.25f,
+            62.5f,
+            125,
+            250,
+            500
+    };
+    /**
+     * Permet de récupérer les valeurs des boost par rapport aux tiers de l'attributModifier AttaqueSpeed
+     * sous forme de float (pour tier 1 -> utiliser getValuesTierAttackSpeed[1])
+     */
+    static float[] getValuesTierAttackSpeed = new float[]{
+            0,
+            18.75f,
+            37.5f,
+            75,
+            150,
+            300
+    };
+    /**
+     * Permet de récupérer les valeurs des boost par rapport aux tiers de l'attributModifier Armor
+     * sous forme de float (pour tier 1 -> utiliser getValuesTierArmor[1])
+     */
+    static float[] getValuesTierArmor = new float[]{
+            0,
+            6.25f,
+            12.5f,
+            25,
+            50,
+            100
+    };
+    /**
+     * Permet de récupérer les valeurs des boost par rapport aux tiers de l'attributModifier ArmorToughness
+     * sous forme de float (pour tier 1 -> utiliser getValuesTierArmorToughness[1])
+     */
+    static float[] getValuesTierArmorToughness = new float[]{
+            0,
+            6.25f,
+            12.5f,
+            25,
+            50,
+            100
+    };
+    /**
+     * Permet de récupérer les valeurs des boost par rapport aux tiers de l'attributModifier KnockbackResistance
+     * sous forme de float (pour tier 1 -> utiliser getValuesTierKnockbackResistance[1])
+     */
+    static float[] getValuesTierKnockbackResistance = new float[]{
+            0,
+            0.016f,
+            0.031f,
+            0.063f,
+            0.125f,
+            0.25f
+    };
+    /**
+     * Permet de récupérer les valeurs des boost par rapport aux tiers de l'attributModifier LifeLeechPercent
+     * sous forme de float (pour tier 1 -> utiliser getValuesTierLifeLeechPercent[1])
+     */
+    static float[] getValuesTierLifeLeechPercent = new float[]{
+            0,
+            6.25f,
+            12.5f,
+            25,
+            50,
+            100
+    };
+    /**
+     * Permet de récupérer les valeurs des boost par rapport aux tiers de l'attributModifier LifeLeechRaw
+     * sous forme de float (pour tier 1 -> utiliser getValuesTierLifeLeechRaw[1])
+     */
+    static float[] getValuesTierLifeLeechRaw = new float[]{
+            0,
+            0.313f,
+            0.625f,
+            1.25f,
+            2.5f,
+            5
+    };
+    /**
+     * Permet de récupérer les valeurs des boost par rapport aux tiers de l'attributModifier ReflectDamagePercent
+     * sous forme de float (pour tier 1 -> utiliser getValuesTierReflectDamagePercent[1])
+     */
+    static float[] getValuesTierReflectDamagePercent = new float[]{
+            0,
+            6.25f,
+            12.5f,
+            25,
+            50,
+            100
+    };
+    /**
+     * Permet de récupérer les valeurs des boost par rapport aux tiers de l'attributModifier ReflectDamageRaw
+     * sous forme de float (pour tier 1 -> utiliser getValuesTierReflectDamageRaw[1])
+     */
+    static float[] getValuesTierReflectDamageRaw = new float[]{
+            0,
+            0.625f,
+            1.25f,
+            2.5f,
+            5,
+            10
+    };
+    /**
+     * Permet de récupérer les valeurs des boost par rapport aux tiers de l'attributModifier CriticalChance
+     * sous forme de float (pour tier 1 -> utiliser getValuesTierCriticalChance[1])
+     */
+    static float[] getValuesTierCriticalChance = new float[]{
+            0,
+            6.25f,
+            12.5f,
+            25,
+            50,
+            100
+    };
+    /**
+     * Permet de récupérer les valeurs des boost par rapport aux tiers de l'attributModifier CriticalDamage
+     * sous forme de float (pour tier 1 -> utiliser getValuesTierCriticalDamage[1])
+     */
+    static float[] getValuesTierCriticalDamage = new float[]{
+            0,
+            18.75f,
+            37.5f,
+            75,
+            150,
+            300
+    };
+    /**
+     * Permet de récupérer les valeurs des boost par rapport aux tiers de l'attributModifier GemLevelIncrease
+     * sous forme de float (pour tier 1 -> utiliser getValuesTierGemLevelIncrease[1])
+     */
+    static int[] getValuesTierGemLevelIncrease = new int[]{
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+    };
+    /**
+     * Permet de récupérer les valeurs des boost par rapport aux tiers de l'attributModifier MoreGemSlot
+     * sous forme de float (pour tier 1 -> utiliser getValuesTierMoreGemSlot[1])
+     */
+    static float[] getValuesTierMoreGemSlot = new float[]{
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+    };
+    /**
+     * Permet de récupérer les valeurs des boost par rapport aux tiers de l'attributModifier Dodge
+     * sous forme de float (pour tier 1 -> utiliser getValuesTierDodge[1])
+     */
+    static float[] getValuesTierDodge = new float[]{
+            0,
+            1.25f,
+            2.5f,
+            5,
+            10,
+            20
+    };
+    //endregion
 }
