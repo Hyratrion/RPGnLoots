@@ -4,6 +4,8 @@ import com.hyratrion.rpgnloots.block.ModBlocks;
 import com.hyratrion.rpgnloots.block.entity.SocketingTableBlockEntity;
 import com.hyratrion.rpgnloots.screen.slot.ModResultSlot;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.Container;
+import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.*;
@@ -15,28 +17,46 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.SlotItemHandler;
 
 public class SocketingTableMenu extends ItemCombinerMenu {
-    private final SocketingTableBlockEntity blockEntity;
+//    private final SocketingTableBlockEntity blockEntity;
     private final Level level;
+
+    private final Container inputContainer = new SimpleContainer(2) {
+        @Override
+        public void setChanged() {
+            SocketingTableMenu.this.slotsChanged(this);
+            super.setChanged();
+        }
+    };
+    private final ResultContainer outputContainer = new ResultContainer() {
+        @Override
+        public void setChanged() {
+            SocketingTableMenu.this.slotsChanged(this);
+            super.setChanged();
+        }
+    };
+
+    public SocketingTableMenu(int p_39005_, Inventory p_39006_) {
+        this(p_39005_, p_39006_, ContainerLevelAccess.NULL);
+    }
 
     public SocketingTableMenu(int p_39008_, Inventory inv, ContainerLevelAccess p_39010_) {
         super(ModMenuTypes.SOCKETING_TABLE_MENU.get(), p_39008_, inv, p_39010_);
         checkContainerSize(inv, 4);
-        blockEntity = ((SocketingTableBlockEntity) entity);
         this.level = inv.player.level;
 
         addPlayerInventory(inv);
         addPlayerHotbar(inv);
 
-        this.blockEntity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).ifPresent(handler -> {
-            this.addSlot(new SlotItemHandler(this., 0, 19, 16));
-            this.addSlot(new SlotItemHandler(handler, 1, 19, 50));
-            this.addSlot(new ModResultSlot(handler, 2, 76, 33));
-            this.addSlot(new ModResultSlot(handler, 3, 135, 9));
-            this.addSlot(new ModResultSlot(handler, 4, 141, 33));
-            this.addSlot(new ModResultSlot(handler, 5, 135, 57));
-        });
+     //   this.blockEntity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).ifPresent(handler -> {
+            this.addSlot(new Slot(this.inputContainer, 0, 19, 16));
+            this.addSlot(new Slot(this.inputContainer, 1, 19, 50));
+            this.addSlot(new Slot(this.outputContainer, 2, 76, 33));
+            this.addSlot(new Slot(this.outputContainer, 3, 135, 9));
+            this.addSlot(new Slot(this.outputContainer, 4, 141, 33));
+            this.addSlot(new Slot(this.outputContainer, 5, 135, 57));
+    //    });
     }
-    public SocketingTableMenu(int windowId, Inventory inv, FriendlyByteBuf extraData) {
+  /*  public SocketingTableMenu(int windowId, Inventory inv, FriendlyByteBuf extraData) {
         this(windowId, inv, inv.player.level.getBlockEntity(extraData.readBlockPos()));
     }
 
@@ -57,7 +77,7 @@ public class SocketingTableMenu extends ItemCombinerMenu {
             this.addSlot(new ModResultSlot(handler, 4, 141, 33));
             this.addSlot(new ModResultSlot(handler, 5, 135, 57));
         });
-    }
+    }*/
 
     // CREDIT GOES TO: diesieben07 | https://github.com/diesieben07/SevenCommons
     // must assign a slot number to each of the slots used by the GUI.
@@ -129,12 +149,12 @@ public class SocketingTableMenu extends ItemCombinerMenu {
     public void createResult() {
 
     }
-
+/*
     @Override
     public boolean stillValid(Player pPlayer) {
         return stillValid(ContainerLevelAccess.create(level, blockEntity.getBlockPos()),
                 pPlayer, ModBlocks.SOCKETING_TABLE.get());
-    }
+    }*/
 
     private void addPlayerInventory(Inventory playerInventory) {
         for (int i = 0; i < 3; ++i) {

@@ -15,12 +15,16 @@ public class ModMenuTypes {
             DeferredRegister.create(ForgeRegistries.CONTAINERS, RPGNLOOT.MOD_ID);
 
     public static final RegistryObject<MenuType<SocketingTableMenu>> SOCKETING_TABLE_MENU =
-            registerMenuType(SocketingTableMenu::new, "socketing_table_menu");
+            registerMenuType("socketing_table_menu", SocketingTableMenu::new );
 
-
+/*
     private static <T extends AbstractContainerMenu> RegistryObject<MenuType<T>> registerMenuType(IContainerFactory<T> factory,
                                                                                                   String name) {
         return MENUS.register(name, () -> IForgeMenuType.create(factory));
+    }*/
+    private static <T extends AbstractContainerMenu> RegistryObject<MenuType<T>> registerMenuType(String name, MenuType.MenuSupplier<T> menu)
+    {
+        return MENUS.register(name, () -> new MenuType<>(menu));
     }
 
     public static void register(IEventBus eventBus) {

@@ -53,7 +53,7 @@ public class SocketingTableBlockEntity extends BlockEntity implements MenuProvid
     @Nullable
     @Override
     public AbstractContainerMenu createMenu(int pContainerId, Inventory pInventory, Player pPlayer) {
-        return new SocketingTableMenu(pContainerId, pInventory, this);
+        return null; //new SocketingTableMenu(pContainerId, pInventory, this);
     }
 
     @Nonnull
