@@ -47,7 +47,8 @@ public class RPGNLOOT
     }
 
     private void setup(final FMLCommonSetupEvent event) {
-
+        ModItems.createArrayGems();
+        ModItems.initGemsValuesAndReferences();
     }
 
 }

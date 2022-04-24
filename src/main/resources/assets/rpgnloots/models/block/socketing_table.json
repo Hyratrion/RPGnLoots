@@ -1,13 +1,13 @@
 {
 	"credit": "Made with Blockbench",
 	"textures": {
-		"8": "rpgnloots:machines/Plateau_haut",
-		"9": "rpgnloots:machines/Cube_haut",
-		"10": "rpgnloots:machines/Pied_1",
-		"11": "rpgnloots:machines/Pied_2",
-		"12": "rpgnloots:machines/Pied_3",
-		"13": "rpgnloots:machines/Plateau_bas",
-		"14": "rpgnloots:machines/Plateau_centre"
+		"8": "rpgnloots:machines/plateau_haut",
+		"9": "rpgnloots:machines/cube_haut",
+		"10": "rpgnloots:machines/pied_1",
+		"11": "rpgnloots:machines/pied_2",
+		"12": "rpgnloots:machines/pied_3",
+		"13": "rpgnloots:machines/plateau_bas",
+		"14": "rpgnloots:machines/plateau_centre"
 	},
 	"elements": [
 		{

@@ -5,6 +5,6 @@
       "loot_table_id": "minecraft:entities/zombified_piglin"
     }
   ],
-  "chanceLootTier1": 7.0,
+  "chanceLootGemTier1": 7.0,
   "type": "rpgnloots:loot_gems_zombified_piglin"
 }

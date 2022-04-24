@@ -3,6 +3,11 @@ package com.hyratrion.rpgnloots.event.loot;
 import com.google.common.collect.Multimap;
 import com.google.gson.JsonObject;
 import com.hyratrion.rpgnloots.item.ModItems;
+import com.hyratrion.rpgnloots.util.ModTags;
+import net.minecraft.core.Registry;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.StringTag;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
@@ -37,7 +42,7 @@ public class LootGemToolFromMobs extends LootModifier {
         super(conditionsIn);
 
         //ce code
-        ModItems.createArrayGems();
+        //ModItems.createArrayGems();
         //en mettant 5
         //cela veux dire que l'on a ces valeurs : 0, 1, 2, 3, 4
         //pour loot l'item tier 1
@@ -111,15 +116,7 @@ public class LootGemToolFromMobs extends LootModifier {
             ItemStack itemStackStuff = new ItemStack(stuff, 1);
 
 
-            if(tier > 0)
-            {
-                itemStackStuff.addAttributeModifier(
-                        GEM_SLOT.get(),
-                        new AttributeModifier(GEM_SLOT_ID, "modifier rpgnloots", tier, AttributeModifier.Operation.ADDITION),
-                        itemStackStuff.getEquipmentSlot()
-                );
 
-            }
 
             if (stuff instanceof ArmorItem armorItem)
             {
@@ -198,6 +195,22 @@ public class LootGemToolFromMobs extends LootModifier {
                         new AttributeModifier(LIFE_LEECH_RAW_ID, "modifier rpgnloots", rand.nextFloat(0.1f, 1), AttributeModifier.Operation.ADDITION),
                         EquipmentSlot.MAINHAND
                 );
+            }
+            if(tier > 0)
+            {
+                itemStackStuff.addAttributeModifier(
+                        GEM_SLOT.get(),
+                        new AttributeModifier(GEM_SLOT_ID, "modifier rpgnloots", tier, AttributeModifier.Operation.ADDITION),
+                        stuff.getEquipmentSlot(itemStackStuff)
+                );
+
+                ModTags.AddGemTag(itemStackStuff, ModTags.CreateTagFromItem(ModItems.GEM_CRITICAL_CHANCE_LVL_4.get()));
+                if(tier > 1 )
+                {
+                    ModTags.AddGemTag(itemStackStuff, ModTags.CreateTagFromItem(ModItems.GEM_CRITICAL_DAMAGE_LVL_4.get()));
+
+                }
+
             }
 
             //durability

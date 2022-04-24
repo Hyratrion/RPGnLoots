@@ -1,0 +1,10 @@
+{
+  "replace": false,
+  "values": [
+    "rpgnloots:gem_damage_lvl_1",
+    "rpgnloots:gem_damage_lvl_2",
+    "rpgnloots:gem_damage_lvl_3",
+    "rpgnloots:gem_damage_lvl_4",
+    "rpgnloots:gem_damage_lvl_5"
+  ]
+}
