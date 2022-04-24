@@ -2,12 +2,19 @@ package com.hyratrion.rpgnloots.block.custom;
 
 import com.hyratrion.rpgnloots.block.entity.ModBlockEntities;
 import com.hyratrion.rpgnloots.block.entity.SocketingTableBlockEntity;
+import com.hyratrion.rpgnloots.screen.SocketingTableMenu;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.MenuProvider;
+import net.minecraft.world.SimpleMenuProvider;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AnvilMenu;
+import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
@@ -31,6 +38,8 @@ import java.util.stream.Stream;
 
 public class SocketingTableBlock extends BaseEntityBlock {
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
+
+    private static final Component CONTAINER_TITLE = new TranslatableComponent("block.rpgloots.socketing_table");
 
     public SocketingTableBlock(Properties properties) {
         super(properties);
@@ -241,7 +250,16 @@ public class SocketingTableBlock extends BaseEntityBlock {
     public BlockEntity newBlockEntity(BlockPos pPos, BlockState pState) {
         return new SocketingTableBlockEntity(pPos, pState);
     }
-/*
+
+    @Nullable
+    @Override
+    public MenuProvider getMenuProvider(BlockState pBlockState, Level pLevel, BlockPos pBlockPos) {
+        return new SimpleMenuProvider((p_48785_, p_48786_, p_48787_) -> {
+            return new SocketingTableMenu(p_48785_, p_48786_, ContainerLevelAccess.create(pLevel, pBlockPos));
+        }, CONTAINER_TITLE);
+    }
+
+    /*
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level pLevel, BlockState pState, BlockEntityType<T> pBlockEntityType) {

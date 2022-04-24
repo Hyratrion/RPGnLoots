@@ -6,19 +6,36 @@ import com.hyratrion.rpgnloots.screen.slot.ModResultSlot;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.inventory.ContainerLevelAccess;
-import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.inventory.*;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.SlotItemHandler;
 
-public class SocketingTableMenu extends AbstractContainerMenu {
+public class SocketingTableMenu extends ItemCombinerMenu {
     private final SocketingTableBlockEntity blockEntity;
     private final Level level;
 
+    public SocketingTableMenu(int p_39008_, Inventory inv, ContainerLevelAccess p_39010_) {
+        super(ModMenuTypes.SOCKETING_TABLE_MENU.get(), p_39008_, inv, p_39010_);
+        checkContainerSize(inv, 4);
+        blockEntity = ((SocketingTableBlockEntity) entity);
+        this.level = inv.player.level;
+
+        addPlayerInventory(inv);
+        addPlayerHotbar(inv);
+
+        this.blockEntity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).ifPresent(handler -> {
+            this.addSlot(new SlotItemHandler(this., 0, 19, 16));
+            this.addSlot(new SlotItemHandler(handler, 1, 19, 50));
+            this.addSlot(new ModResultSlot(handler, 2, 76, 33));
+            this.addSlot(new ModResultSlot(handler, 3, 135, 9));
+            this.addSlot(new ModResultSlot(handler, 4, 141, 33));
+            this.addSlot(new ModResultSlot(handler, 5, 135, 57));
+        });
+    }
     public SocketingTableMenu(int windowId, Inventory inv, FriendlyByteBuf extraData) {
         this(windowId, inv, inv.player.level.getBlockEntity(extraData.readBlockPos()));
     }
@@ -91,6 +108,26 @@ public class SocketingTableMenu extends AbstractContainerMenu {
         }
         sourceSlot.onTake(playerIn, sourceStack);
         return copyOfSourceStack;
+    }
+
+    @Override
+    protected boolean mayPickup(Player p_39798_, boolean p_39799_) {
+        return false;
+    }
+
+    @Override
+    protected void onTake(Player p_150601_, ItemStack p_150602_) {
+
+    }
+
+    @Override
+    protected boolean isValidBlock(BlockState p_39788_) {
+        return false;
+    }
+
+    @Override
+    public void createResult() {
+
     }
 
     @Override
