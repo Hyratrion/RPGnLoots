@@ -81,16 +81,16 @@ public class ModEvents
             {
                 //récupération des chances de critiques
                 float criticalChanceBase = StaticClass.GetValueFromAttributeModifier(attributeModifiers, CustomAttributes.CRITICAL_CHANCE.get());
-                System.out.println("----- Makotache ----- base crit chance " + criticalChanceBase);
+                //System.out.println("----- Makotache ----- base crit chance " + criticalChanceBase);
 
 
                 String[] allGemsEquiped = ModTags.GetGemTags(itemStack);
-                System.out.println("----- Makotache ----- itemStack.getTag() => "+ itemStack.getTag());
+                //System.out.println("----- Makotache ----- itemStack.getTag() => "+ itemStack.getTag());
 
                 if(ModTags.HaveGemOfType(allGemsEquiped, ModTags.Items.GEM_TYPE_CRITICAL_CHANCE))
                 {
                     criticalChanceBase += ModTags.GetGemTotalValueOfType(itemStack, ModTags.Items.GEM_TYPE_CRITICAL_CHANCE);
-                    System.out.println("----- Makotache ----- base +gem crit chance " + criticalChanceBase);
+                    //System.out.println("----- Makotache ----- base +gem crit chance " + criticalChanceBase);
                 }
                 //récupération de la valeur de chance d'appliquer un critique
                 float criticalChanceRNG = rand.nextFloat( 100 );
@@ -98,16 +98,16 @@ public class ModEvents
                 //on check notre chance de faire un critique
                 if(criticalChanceRNG < criticalChanceBase)
                 {
-                    System.out.println("----- Makotache ----- crit EXISTANT");
+                    //System.out.println("----- Makotache ----- crit EXISTANT");
 
                     //récupération du multiplicateur des dégâts crtitique de minecraft Vanilla
                     float criticalDamage = event.getOldDamageModifier();
-                    System.out.println("----- Makotache ----- crit base " + criticalDamage);
+                    //System.out.println("----- Makotache ----- crit base " + criticalDamage);
 
                     if(ModTags.HaveGemOfType(allGemsEquiped, ModTags.Items.GEM_TYPE_CRITICAL_DAMAGE))
                     {
                         criticalDamage += ModTags.GetGemTotalValueOfType(itemStack, ModTags.Items.GEM_TYPE_CRITICAL_DAMAGE) / 100;
-                        System.out.println("----- Makotache ----- base +gem crit damage " + criticalDamage);
+                        //System.out.println("----- Makotache ----- base +gem crit damage " + criticalDamage);
                     }
 
                     //SI on possède "CustomAttributes.CRITICAL_DAMAGE"
@@ -115,19 +115,19 @@ public class ModEvents
                     {
                         //on ajoute plus de dégâts critique
                         criticalDamage += StaticClass.GetValueFromAttributeModifier(attributeModifiers, CustomAttributes.CRITICAL_DAMAGE.get()) / 100;
-                        System.out.println("----- Makotache ----- nouveau crit  " + criticalDamage);
+                        //System.out.println("----- Makotache ----- nouveau crit  " + criticalDamage);
                     }
 
                     //on change la valeur des dégâts
                     event.setDamageModifier(criticalDamage);
                     event.setResult(Event.Result.ALLOW);
 
-                    System.out.println("----- Makotache ----- Degats suivant => " + criticalDamage);
+                    //System.out.println("----- Makotache ----- Degats suivant => " + criticalDamage);
                 }
-                else
+                /*else
                 {
                     System.out.println("----- Makotache ----- AUCUN critique");
-                }
+                }*/
             }
         }
     }
