@@ -1,5 +1,8 @@
 package com.hyratrion.rpgnloots.block.entity;
 
+import com.hyratrion.rpgnloots.item.ModItems;
+import com.hyratrion.rpgnloots.recipe.GemIncrustationRecipe;
+import com.hyratrion.rpgnloots.screen.SocketingTableMenu;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -11,7 +14,9 @@ import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -24,9 +29,10 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.Nonnull;
+import java.util.Optional;
 
 public class SocketingTableBlockEntity extends BlockEntity implements MenuProvider {
-    private final ItemStackHandler itemHandler = new ItemStackHandler(4) {
+    private final ItemStackHandler itemHandler = new ItemStackHandler(6) {
         @Override
         protected void onContentsChanged(int slot) {
             setChanged();
@@ -35,8 +41,8 @@ public class SocketingTableBlockEntity extends BlockEntity implements MenuProvid
 
     private LazyOptional<IItemHandler> lazyItemHandler = LazyOptional.empty();
 
-    public SocketingTableBlockEntity(BlockPos p_155229_, BlockState p_155230_) {
-        super(ModBlockEntities.SOCKETING_TABLE.get(), p_155229_, p_155230_);
+    public SocketingTableBlockEntity(BlockPos pWorldPosition, BlockState pBlockState) {
+        super(ModBlockEntities.SOCKETING_TABLE.get(), pWorldPosition, pBlockState);
     }
 
     @Override
@@ -46,8 +52,8 @@ public class SocketingTableBlockEntity extends BlockEntity implements MenuProvid
 
     @Nullable
     @Override
-    public AbstractContainerMenu createMenu(int p_39954_, Inventory p_39955_, Player p_39956_) {
-        return null;
+    public AbstractContainerMenu createMenu(int pContainerId, Inventory pInventory, Player pPlayer) {
+        return new SocketingTableMenu(pContainerId, pInventory, this);
     }
 
     @Nonnull
@@ -91,5 +97,46 @@ public class SocketingTableBlockEntity extends BlockEntity implements MenuProvid
         }
 
         Containers.dropContents(this.level, this.worldPosition, inventory);
+    }
+
+    private static boolean hasRecipe(SocketingTableBlockEntity entity) {
+        Level level = entity.level;
+        SimpleContainer inventory = new SimpleContainer(entity.itemHandler.getSlots());
+        for (int i = 0; i < entity.itemHandler.getSlots(); i++) {
+            inventory.setItem(i, entity.itemHandler.getStackInSlot(i));
+        }
+
+        Optional<GemIncrustationRecipe> match = level.getRecipeManager()
+                .getRecipeFor(GemIncrustationRecipe.Type.INSTANCE, inventory, level);
+
+        return match.isPresent() && canInsertAmountIntoOutputSlot(inventory)
+                && canInsertItemIntoOutputSlot(inventory, match.get().getResultItem());
+    }
+
+    private static void craftItem(SocketingTableBlockEntity entity) {
+        Level level = entity.level;
+        SimpleContainer inventory = new SimpleContainer(entity.itemHandler.getSlots());
+        for (int i = 0; i < entity.itemHandler.getSlots(); i++) {
+            inventory.setItem(i, entity.itemHandler.getStackInSlot(i));
+        }
+
+        Optional<GemIncrustationRecipe> match = level.getRecipeManager()
+                .getRecipeFor(GemIncrustationRecipe.Type.INSTANCE, inventory, level);
+
+        if(match.isPresent()) {
+            entity.itemHandler.extractItem(0,1, false);
+            entity.itemHandler.extractItem(1,1, false);
+
+            entity.itemHandler.setStackInSlot(2, new ItemStack(match.get().getResultItem().getItem(),
+                    entity.itemHandler.getStackInSlot(3).getCount() + 1));
+        }
+    }
+
+    private static boolean canInsertItemIntoOutputSlot(SimpleContainer inventory, ItemStack output) {
+        return inventory.getItem(2).getItem() == output.getItem() || inventory.getItem(2).isEmpty();
+    }
+
+    private static boolean canInsertAmountIntoOutputSlot(SimpleContainer inventory) {
+        return inventory.getItem(2).getMaxStackSize() > inventory.getItem(2).getCount();
     }
 }

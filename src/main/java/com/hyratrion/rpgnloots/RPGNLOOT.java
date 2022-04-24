@@ -4,6 +4,10 @@ import com.hyratrion.rpgnloots.block.ModBlocks;
 import com.hyratrion.rpgnloots.block.entity.ModBlockEntities;
 import com.hyratrion.rpgnloots.event.loot.CustomAttributes;
 import com.hyratrion.rpgnloots.item.ModItems;
+import com.hyratrion.rpgnloots.recipe.ModRecipes;
+import com.hyratrion.rpgnloots.screen.ModMenuTypes;
+import com.hyratrion.rpgnloots.screen.SocketingTableScreen;
+import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraftforge.common.MinecraftForge;
@@ -32,7 +36,11 @@ public class RPGNLOOT
         ModItems.register(eventBus);
         ModBlocks.register(eventBus);
         CustomAttributes.register(eventBus);
+
         ModBlockEntities.register(eventBus);
+        ModMenuTypes.register(eventBus);
+
+        ModRecipes.register(eventBus);
 
         eventBus.addListener(this::setup);
         eventBus.addListener(this::clientSetup);
@@ -43,6 +51,8 @@ public class RPGNLOOT
 
     private void clientSetup(final FMLClientSetupEvent event) {
         ItemBlockRenderTypes.setRenderLayer(ModBlocks.SOCKETING_TABLE.get(), RenderType.cutout());
+
+        MenuScreens.register(ModMenuTypes.SOCKETING_TABLE_MENU.get(), SocketingTableScreen::new);
 
     }
 

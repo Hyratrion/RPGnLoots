@@ -16,6 +16,9 @@ public class ModItems
     public static final DeferredRegister<Item> ITEMS =
             DeferredRegister.create(ForgeRegistries.ITEMS, RPGNLOOT.MOD_ID);
 
+    public static final RegistryObject<Item> PLIERS = ITEMS.register("pliers",
+            () -> new Item(new Item.Properties().tab(ModCreativeModeTab.RPGNLOOTS_TAB)));
+
     //Gemmes lvl 0
     public static final RegistryObject<Item> GEM_DAMAGE_LVL_0 = ITEMS.register("gem_damage_lvl_0",
             () -> new Item(new Item.Properties().tab(ModCreativeModeTab.RPGNLOOTS_TAB)));
@@ -280,14 +283,14 @@ public class ModItems
         GEMS_REFERENCES.put(GEM_REPARATION_LVL_2.get().getRegistryName().getPath(), GEM_REPARATION_LVL_2.get());
         GEMS_REFERENCES.put(GEM_SPEED_LVL_2.get().getRegistryName().getPath(), GEM_SPEED_LVL_2.get());
 
-        GEMS_REFERENCES.put(GEM_DAMAGE_LVL_3.get().getRegistryName().getPath(), GEM_DAMAGE_LVL_1.get());
-        GEMS_REFERENCES.put(GEM_SHIELD_LVL_1.get().getRegistryName().getPath(), GEM_SHIELD_LVL_1.get());
-        GEMS_REFERENCES.put(GEM_MAX_LIFE_LVL_1.get().getRegistryName().getPath(), GEM_MAX_LIFE_LVL_1.get());
-        GEMS_REFERENCES.put(GEM_CHANCE_LVL_1.get().getRegistryName().getPath(), GEM_CHANCE_LVL_1.get());
-        GEMS_REFERENCES.put(GEM_CRITICAL_CHANCE_LVL_1.get().getRegistryName().getPath(), GEM_CRITICAL_CHANCE_LVL_1.get());
-        GEMS_REFERENCES.put(GEM_CRITICAL_DAMAGE_LVL_1.get().getRegistryName().getPath(), GEM_CRITICAL_DAMAGE_LVL_1.get());
-        GEMS_REFERENCES.put(GEM_REPARATION_LVL_1.get().getRegistryName().getPath(), GEM_REPARATION_LVL_1.get());
-        GEMS_REFERENCES.put(GEM_SPEED_LVL_1.get().getRegistryName().getPath(), GEM_SPEED_LVL_1.get());
+        GEMS_REFERENCES.put(GEM_DAMAGE_LVL_3.get().getRegistryName().getPath(), GEM_DAMAGE_LVL_3.get());
+        GEMS_REFERENCES.put(GEM_SHIELD_LVL_3.get().getRegistryName().getPath(), GEM_SHIELD_LVL_3.get());
+        GEMS_REFERENCES.put(GEM_MAX_LIFE_LVL_3.get().getRegistryName().getPath(), GEM_MAX_LIFE_LVL_3.get());
+        GEMS_REFERENCES.put(GEM_CHANCE_LVL_3.get().getRegistryName().getPath(), GEM_CHANCE_LVL_3.get());
+        GEMS_REFERENCES.put(GEM_CRITICAL_CHANCE_LVL_3.get().getRegistryName().getPath(), GEM_CRITICAL_CHANCE_LVL_3.get());
+        GEMS_REFERENCES.put(GEM_CRITICAL_DAMAGE_LVL_3.get().getRegistryName().getPath(), GEM_CRITICAL_DAMAGE_LVL_3.get());
+        GEMS_REFERENCES.put(GEM_REPARATION_LVL_3.get().getRegistryName().getPath(), GEM_REPARATION_LVL_3.get());
+        GEMS_REFERENCES.put(GEM_SPEED_LVL_3.get().getRegistryName().getPath(), GEM_SPEED_LVL_3.get());
 
         GEMS_REFERENCES.put(GEM_DAMAGE_LVL_4.get().getRegistryName().getPath(), GEM_DAMAGE_LVL_4.get());
         GEMS_REFERENCES.put(GEM_SHIELD_LVL_4.get().getRegistryName().getPath(), GEM_SHIELD_LVL_4.get());
