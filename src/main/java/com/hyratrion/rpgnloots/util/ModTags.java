@@ -15,6 +15,8 @@ import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.item.*;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,25 +29,21 @@ public class ModTags
         if (item instanceof ArmorItem armorItem)
         {
             result.add(armorItem.getSlot());
-        }
-        else if(item instanceof TieredItem)
+        } else if (item instanceof TieredItem)
         {
             result.add(EquipmentSlot.MAINHAND);
-        }
-        else if(item instanceof FishingRodItem || item instanceof ShearsItem ||
+        } else if (item instanceof FishingRodItem || item instanceof ShearsItem ||
                 item instanceof ShieldItem || item instanceof TridentItem ||
                 item instanceof CrossbowItem || item instanceof BowItem)
         {
             result.add(EquipmentSlot.MAINHAND);
             result.add(EquipmentSlot.OFFHAND);
-        }
-        else if(item instanceof ElytraItem)
+        } else if (item instanceof ElytraItem)
         {
             result.add(EquipmentSlot.CHEST);
-
         }
 
-        return result.toArray(new EquipmentSlot[result.size()-1]);
+        return result.toArray(new EquipmentSlot[result.size() - 1]);
     }
 
     public static EquipmentSlot[] GetEquipmentSlotOf(@Nonnull ItemStack itemStack)
@@ -53,7 +51,7 @@ public class ModTags
         return GetEquipmentSlotOf(itemStack.getItem());
     }
 
-    public static boolean AddGemTag(@Nonnull ItemStack itemStack, @Nonnull StringTag tagItem)
+    public static boolean AddGemTag(@Nonnull ItemStack itemStack, @Nonnull String tagItem)
     {
         CompoundTag tag = itemStack.getOrCreateTag();
         if (!tag.contains(ModItems.GEM_TYPE))
@@ -61,7 +59,7 @@ public class ModTags
             tag.put(ModItems.GEM_TYPE, new ListTag());
         }
 
-        ListTag listtag = (ListTag)tag.get(ModItems.GEM_TYPE);
+        ListTag listtag = (ListTag) tag.get(ModItems.GEM_TYPE);
 
         int gemCountFill = CountGem(itemStack, false);
         int maxSlotGem = 0;
@@ -70,17 +68,17 @@ public class ModTags
         boolean gem_slot_loaded = false;
         boolean more_gem_slot_loaded = false;
 
-        for(int i =0; i < equipmentSlots.length; i++)
+        for (int i = 0; i < equipmentSlots.length; i++)
         {
             Multimap<Attribute, AttributeModifier> attributeModifiers = itemStack.getAttributeModifiers(equipmentSlots[i]);
 
-            if(!gem_slot_loaded && attributeModifiers.containsKey(CustomAttributes.GEM_SLOT.get()))
+            if (!gem_slot_loaded && attributeModifiers.containsKey(CustomAttributes.GEM_SLOT.get()))
             {
                 maxSlotGem += StaticClass.GetValueFromAttributeModifier(itemStack, CustomAttributes.GEM_SLOT.get());
                 gem_slot_loaded = true;
             }
 
-            if(!more_gem_slot_loaded && attributeModifiers.containsKey(CustomAttributes.MORE_GEM_SLOT.get()))
+            if (!more_gem_slot_loaded && attributeModifiers.containsKey(CustomAttributes.MORE_GEM_SLOT.get()))
             {
                 maxSlotGem += StaticClass.GetValueFromAttributeModifier(itemStack, CustomAttributes.MORE_GEM_SLOT.get());
                 more_gem_slot_loaded = true;
@@ -89,10 +87,10 @@ public class ModTags
         }
 
 
-        if(maxSlotGem > gemCountFill)
+        if (maxSlotGem > gemCountFill)
         {
             CompoundTag compoundtag = new CompoundTag();
-            compoundtag.putString("Name", tagItem.toString());
+            compoundtag.putString("Name", tagItem);
             listtag.add(compoundtag);
             return true;
         }
@@ -171,12 +169,12 @@ public class ModTags
         CompoundTag tag = itemStack.getOrCreateTag();
         ListTag listtag = (ListTag)tag.get(ModItems.GEM_TYPE);
 
-        if (!tag.contains(ModItems.GEM_TYPE) || listtag.size() > index)
+        if (!tag.contains(ModItems.GEM_TYPE) || listtag.size() < index)
         {
             return false;
         }
 
-        return listtag.setTag(index, StringTag.valueOf(GetTagGem(newGem)));
+        return ReplaceInListTag(listtag, index, StringTag.valueOf(GetTagGem(newGem)));
     }
 
     public static boolean ReplaceGemTag(@Nonnull ItemStack itemStack, @Nonnull Item gem, @Nonnull Item newGem)
@@ -197,7 +195,7 @@ public class ModTags
 
             if(value.equals(gemTag))
             {
-                result = listtag.setTag(i, StringTag.valueOf(GetTagGem(newGem))) ? true : result;
+                result = ReplaceInListTag(listtag, i, StringTag.valueOf(GetTagGem(newGem)));
             }
         }
         return result;
@@ -220,7 +218,7 @@ public class ModTags
 
             if(GemIsType(value, type))
             {
-                result = listtag.setTag(i, StringTag.valueOf(GetTagGem(newGem))) ? true : result;
+                result = ReplaceInListTag(listtag, i, StringTag.valueOf(GetTagGem(newGem)));
             }
         }
 
@@ -237,7 +235,7 @@ public class ModTags
             return false;
         }
 
-        return listtag.setTag(index, DEFAULT_TAG_VALUE);
+        return ReplaceInListTag(listtag, index, DEFAULT_TAG_VALUE);
     }
 
     public static boolean ReplaceGemTagByEmpty(@Nonnull ItemStack itemStack, @Nonnull Item gem)
@@ -258,7 +256,7 @@ public class ModTags
 
             if(value.equals(gemTag))
             {
-                result = listtag.setTag(i, DEFAULT_TAG_VALUE) ? true : result;
+                result = ReplaceInListTag(listtag, i, DEFAULT_TAG_VALUE);
             }
         }
         return result;
@@ -278,13 +276,34 @@ public class ModTags
         for(int i = listtag.size()-1; i >= 0; i--)
         {
             String value = StringValue(listtag.getCompound(i).get("Name"));
-
             if(GemIsType(value, type))
             {
-                result = listtag.setTag(i, DEFAULT_TAG_VALUE) ? true : result;
+                result = ReplaceInListTag(listtag, i, DEFAULT_TAG_VALUE);
             }
         }
 
+        return result;
+    }
+
+    private static boolean ReplaceInListTag(@Nonnull ListTag listtag, int index, @Nonnull Tag newTag)
+    {
+        boolean result = false;
+        try
+        {
+            Field listOfTag = ListTag.class.getDeclaredField("list");
+            listOfTag.setAccessible(true);
+
+            List<Tag> listToEdit = (List<Tag>)listOfTag.get(listtag);
+            CompoundTag tag = new CompoundTag();
+            tag.put("Name", newTag);
+            listToEdit.set(index, tag);
+
+            result = true;
+        }
+        catch (Exception ex)
+        {
+            ex.printStackTrace();
+        }
         return result;
     }
 
@@ -346,21 +365,29 @@ public class ModTags
         return GetGemTags(itemStack.getOrCreateTag());
     }
 
+    @Nullable
     public static Item GetGem(@Nonnull String tag)
     {
         return ModItems.GEMS_REFERENCES.get(tag);
     }
 
+    @Nullable
     public static Item[] GetGems(@Nonnull String[] allGemsEquiped)
     {
+        if(allGemsEquiped.length == 0)
+        {
+            return null;
+        }
+
         List<Item> result = new ArrayList<>();
         for(int i = 0; i < allGemsEquiped.length; i++)
         {
-            result.add(ModItems.GEMS_REFERENCES.get(allGemsEquiped[i]));
+            result.add(GetGem(allGemsEquiped[i]));
         }
         return result.toArray(new Item[result.size()-1]);
     }
 
+    @Nullable
     public static Item[] GetGems(@Nonnull ItemStack itemStack)
     {
         return GetGems(GetGemTags(itemStack));
@@ -369,7 +396,12 @@ public class ModTags
 
     public static boolean GemEqualTag(@Nonnull Item gem,@Nonnull String tag)
     {
-        return GetGem(tag).equals(gem);
+        Item tagGem = GetGem(tag);
+        if(tagGem == null)
+        {
+            return false;
+        }
+        return tagGem.equals(gem);
     }
 
     public static boolean GemIsType(@Nonnull Item gem,@Nonnull TagKey<Item> type)
@@ -389,12 +421,17 @@ public class ModTags
         return GemIsType(GetGem(tag), type);
     }
 
-    public static boolean HaveGemOfType(@Nonnull String[] allGemsEquiped,@Nonnull TagKey<Item> type)
+    public static boolean HaveGemOfType(@Nonnull String[] allGemsEquiped, @Nonnull TagKey<Item> type)
     {
+        if(allGemsEquiped.length == 0)
+        {
+            return false;
+        }
+
         Item[] gemTags = GetGems(allGemsEquiped);
         for(int i = 0; i < gemTags.length; i++)
         {
-            if(GemIsType(gemTags[i], type))
+            if(gemTags[i] != null && GemIsType(gemTags[i], type))
             {
                 return true;
             }
@@ -402,7 +439,7 @@ public class ModTags
         return false;
     }
 
-    public static boolean HaveGemOfType(@Nonnull ItemStack itemStack,@Nonnull TagKey<Item> type)
+    public static boolean HaveGemOfType(@Nonnull ItemStack itemStack, @Nonnull TagKey<Item> type)
     {
         return HaveGemOfType(GetGemTags(itemStack), type);
     }
@@ -415,6 +452,11 @@ public class ModTags
 
     public static Float[] GetGemValueOfType(@Nonnull String[] allGemsEquiped,@Nonnull TagKey<Item> type)
     {
+        if(allGemsEquiped.length == 0)
+        {
+            return null;
+        }
+
         List<Float> result = new ArrayList<>();
         for(int i = 0; i < allGemsEquiped.length; i++)
         {
@@ -459,7 +501,7 @@ public class ModTags
 
     private static String StringValue(@Nonnull Tag tag)
     {
-        return tag.toString().replace("\"", "").replace("'", "");
+        return tag.toString().replace("\"", "");//.replace("'", "");
     }
 
 

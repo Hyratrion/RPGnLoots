@@ -86,11 +86,12 @@ public class ModEvents
 
                 String[] allGemsEquiped = ModTags.GetGemTags(itemStack);
                 //System.out.println("----- Makotache ----- itemStack.getTag() => "+ itemStack.getTag());
+                System.out.println("----- Makotache ----- allGemsEquiped.length => "+ allGemsEquiped.length);
 
                 if(ModTags.HaveGemOfType(allGemsEquiped, ModTags.Items.GEM_TYPE_CRITICAL_CHANCE))
                 {
                     criticalChanceBase += ModTags.GetGemTotalValueOfType(itemStack, ModTags.Items.GEM_TYPE_CRITICAL_CHANCE);
-                    //System.out.println("----- Makotache ----- base +gem crit chance " + criticalChanceBase);
+                    System.out.println("----- Makotache ----- base +gem crit chance " + criticalChanceBase);
                 }
                 //récupération de la valeur de chance d'appliquer un critique
                 float criticalChanceRNG = rand.nextFloat( 100 );

@@ -209,58 +209,56 @@ public class ModItems
     public static void register(IEventBus eventBus)
     {
         ITEMS.register(eventBus);
-        //createArrayGems();
-        //initGemsValuesAndReferences();
     }
 
     public static void initGemsValuesAndReferences()
     {
         //GEMS_VALUES
 
-        GEMS_VALUES.put(GEM_DAMAGE_LVL_1.get(), 1f);
+        GEMS_VALUES.put(GEM_DAMAGE_LVL_1.get(), 15f);
         GEMS_VALUES.put(GEM_SHIELD_LVL_1.get(), 1f);
         GEMS_VALUES.put(GEM_MAX_LIFE_LVL_1.get(), 1f);
         GEMS_VALUES.put(GEM_CHANCE_LVL_1.get(), 1f);
-        GEMS_VALUES.put(GEM_CRITICAL_CHANCE_LVL_1.get(), 1f);
-        GEMS_VALUES.put(GEM_CRITICAL_DAMAGE_LVL_1.get(), 1f);
+        GEMS_VALUES.put(GEM_CRITICAL_CHANCE_LVL_1.get(), 15f);
+        GEMS_VALUES.put(GEM_CRITICAL_DAMAGE_LVL_1.get(), 15f);
         GEMS_VALUES.put(GEM_REPARATION_LVL_1.get(), 1f);
-        GEMS_VALUES.put(GEM_SPEED_LVL_1.get(), 1f);
+        GEMS_VALUES.put(GEM_SPEED_LVL_1.get(), 15f);
 
-        GEMS_VALUES.put(GEM_DAMAGE_LVL_2.get(), 2f);
+        GEMS_VALUES.put(GEM_DAMAGE_LVL_2.get(), 30f);
         GEMS_VALUES.put(GEM_SHIELD_LVL_2.get(), 2f);
         GEMS_VALUES.put(GEM_MAX_LIFE_LVL_2.get(), 2f);
         GEMS_VALUES.put(GEM_CHANCE_LVL_2.get(), 2f);
-        GEMS_VALUES.put(GEM_CRITICAL_CHANCE_LVL_2.get(), 2f);
-        GEMS_VALUES.put(GEM_CRITICAL_DAMAGE_LVL_2.get(), 2f);
+        GEMS_VALUES.put(GEM_CRITICAL_CHANCE_LVL_2.get(), 30f);
+        GEMS_VALUES.put(GEM_CRITICAL_DAMAGE_LVL_2.get(), 30f);
         GEMS_VALUES.put(GEM_REPARATION_LVL_2.get(), 2f);
-        GEMS_VALUES.put(GEM_SPEED_LVL_2.get(), 2f);
+        GEMS_VALUES.put(GEM_SPEED_LVL_2.get(), 30f);
 
-        GEMS_VALUES.put(GEM_DAMAGE_LVL_3.get(), 3f);
+        GEMS_VALUES.put(GEM_DAMAGE_LVL_3.get(), 45f);
         GEMS_VALUES.put(GEM_SHIELD_LVL_3.get(), 3f);
         GEMS_VALUES.put(GEM_MAX_LIFE_LVL_3.get(), 3f);
         GEMS_VALUES.put(GEM_CHANCE_LVL_3.get(), 3f);
-        GEMS_VALUES.put(GEM_CRITICAL_CHANCE_LVL_3.get(), 3f);
-        GEMS_VALUES.put(GEM_CRITICAL_DAMAGE_LVL_3.get(), 3f);
+        GEMS_VALUES.put(GEM_CRITICAL_CHANCE_LVL_3.get(), 45f);
+        GEMS_VALUES.put(GEM_CRITICAL_DAMAGE_LVL_3.get(), 45f);
         GEMS_VALUES.put(GEM_REPARATION_LVL_3.get(), 3f);
-        GEMS_VALUES.put(GEM_SPEED_LVL_3.get(), 3f);
+        GEMS_VALUES.put(GEM_SPEED_LVL_3.get(), 45f);
 
-        GEMS_VALUES.put(GEM_DAMAGE_LVL_4.get(), 4f);
+        GEMS_VALUES.put(GEM_DAMAGE_LVL_4.get(), 70f);
         GEMS_VALUES.put(GEM_SHIELD_LVL_4.get(), 4f);
         GEMS_VALUES.put(GEM_MAX_LIFE_LVL_4.get(), 4f);
         GEMS_VALUES.put(GEM_CHANCE_LVL_4.get(), 4f);
-        GEMS_VALUES.put(GEM_CRITICAL_CHANCE_LVL_4.get(), 50f);
-        GEMS_VALUES.put(GEM_CRITICAL_DAMAGE_LVL_4.get(), 50f);
+        GEMS_VALUES.put(GEM_CRITICAL_CHANCE_LVL_4.get(), 70f);
+        GEMS_VALUES.put(GEM_CRITICAL_DAMAGE_LVL_4.get(), 70f);
         GEMS_VALUES.put(GEM_REPARATION_LVL_4 .get(), 4f);
-        GEMS_VALUES.put(GEM_SPEED_LVL_4.get(), 4f);
+        GEMS_VALUES.put(GEM_SPEED_LVL_4.get(), 70f);
 
-        GEMS_VALUES.put(GEM_DAMAGE_LVL_5.get(), 5f);
+        GEMS_VALUES.put(GEM_DAMAGE_LVL_5.get(), 100f);
         GEMS_VALUES.put(GEM_SHIELD_LVL_5.get(), 5f);
         GEMS_VALUES.put(GEM_MAX_LIFE_LVL_5.get(), 5f);
         GEMS_VALUES.put(GEM_CHANCE_LVL_5.get(), 5f);
-        GEMS_VALUES.put(GEM_CRITICAL_CHANCE_LVL_5.get(), 5f);
-        GEMS_VALUES.put(GEM_CRITICAL_DAMAGE_LVL_5.get(), 5f);
+        GEMS_VALUES.put(GEM_CRITICAL_CHANCE_LVL_5.get(), 100f);
+        GEMS_VALUES.put(GEM_CRITICAL_DAMAGE_LVL_5.get(), 100f);
         GEMS_VALUES.put(GEM_REPARATION_LVL_5.get(), 5f);
-        GEMS_VALUES.put(GEM_SPEED_LVL_5.get(), 5f);
+        GEMS_VALUES.put(GEM_SPEED_LVL_5.get(), 100f);
 
 
         //GEMS_REFERENCES
