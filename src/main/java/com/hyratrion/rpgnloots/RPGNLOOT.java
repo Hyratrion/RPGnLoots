@@ -7,6 +7,7 @@ import com.hyratrion.rpgnloots.item.ModItems;
 import com.hyratrion.rpgnloots.recipe.ModRecipes;
 import com.hyratrion.rpgnloots.screen.ModMenuTypes;
 import com.hyratrion.rpgnloots.screen.SocketingTableScreen;
+import com.hyratrion.rpgnloots.util.ModStats;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
@@ -41,6 +42,7 @@ public class RPGNLOOT
         ModMenuTypes.register(eventBus);
 
         ModRecipes.register(eventBus);
+ //       ModStats.register(eventBus);
 
         eventBus.addListener(this::setup);
         eventBus.addListener(this::clientSetup);

@@ -3,6 +3,7 @@ package com.hyratrion.rpgnloots.block.custom;
 import com.hyratrion.rpgnloots.block.entity.ModBlockEntities;
 import com.hyratrion.rpgnloots.block.entity.SocketingTableBlockEntity;
 import com.hyratrion.rpgnloots.screen.SocketingTableMenu;
+import com.hyratrion.rpgnloots.util.ModStats;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
@@ -238,7 +239,7 @@ public class SocketingTableBlock extends FallingBlock {
             return InteractionResult.SUCCESS;
         } else {
             pPlayer.openMenu(pState.getMenuProvider(pLevel, pPos));
-            pPlayer.awardStat(Stats.INTERACT_WITH_ANVIL);
+            pPlayer.awardStat(ModStats.INTERACT_WITH_SOCKETING_TABLE);
             return InteractionResult.CONSUME;
         }
     }
@@ -250,6 +251,7 @@ public class SocketingTableBlock extends FallingBlock {
             return new SocketingTableMenu(p_48785_, p_48786_, ContainerLevelAccess.create(pLevel, pBlockPos));
         }, CONTAINER_TITLE);
     }
+
 
     /*
     @Nullable
