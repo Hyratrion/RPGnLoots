@@ -1,33 +1,39 @@
 package com.hyratrion.rpgnloots.util;
 
 import com.google.common.collect.Multimap;
-import com.hyratrion.rpgnloots.event.loot.CustomAttributes;
-import net.minecraft.core.DefaultedRegistry;
-import net.minecraft.core.Registry;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.SwordItem;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.state.BlockBehaviour;
-import net.minecraftforge.fml.common.Mod;
 
-import java.lang.reflect.Type;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.Map;
-import java.util.Objects;
 
 public final class StaticClass
 {
-    public static float GetValueFromAttributeModifier(Multimap<Attribute, AttributeModifier> attributeModifiers, Attribute attribute)
+    @Nullable
+    public static AttributeModifier GetAttributeModifierFromMultimap(@Nonnull Multimap<Attribute, AttributeModifier> attributeModifiers,@Nonnull Attribute attribute)
     {
-        return (float)attributeModifiers.get(attribute).stream().findFirst().get().getAmount();
+        AttributeModifier result = null;
+        try
+        {
+            result = attributeModifiers.get(attribute).stream().findFirst().get();
+        }
+        catch (Exception ingored) { }
+
+        return result;
     }
 
-    public static float GetValueFromAttributeModifier(ItemStack itemStack, Attribute attribute)
+    public static float GetValueFromAttributeModifierMap(@Nonnull Multimap<Attribute, AttributeModifier> attributeModifiers,@Nonnull Attribute attribute)
     {
-        return GetValueFromAttributeModifier(itemStack.getAttributeModifiers(ModTags.GetEquipmentSlotOf(itemStack)[0]), attribute);
+        return (float)GetAttributeModifierFromMultimap(attributeModifiers, attribute).getAmount();
     }
+
+    public static float GetValueFromAttributeModifierMap(@Nonnull ItemStack itemStack,@Nonnull Attribute attribute)
+    {
+        return GetValueFromAttributeModifierMap(itemStack.getAttributeModifiers(ModTags.GetEquipmentSlotOf(itemStack)[0]), attribute);
+    }
+
 
 
 
@@ -36,6 +42,19 @@ public final class StaticClass
         for (Map.Entry<T, E> entry : map.entrySet())
         {
             if (entry.getValue().equals(value))
+            {
+                return entry.getKey();
+            }
+        }
+        return null;
+    }
+
+    public static <T, E> T GetKeyByIndex(Map<T, E> map, int index)
+    {
+        int cpt = 0;
+        for (Map.Entry<T, E> entry : map.entrySet())
+        {
+            if (cpt == index)
             {
                 return entry.getKey();
             }
@@ -54,4 +73,5 @@ public final class StaticClass
         }
         return false;
     }
+
 }

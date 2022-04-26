@@ -6,32 +6,37 @@ import com.hyratrion.rpgnloots.event.loot.CustomAttributes;
 import com.hyratrion.rpgnloots.item.ModItems;
 import com.hyratrion.rpgnloots.util.ModTags;
 import com.hyratrion.rpgnloots.util.StaticClass;
-import net.minecraft.nbt.Tag;
-import net.minecraft.network.chat.Component;
+import net.minecraft.ChatFormatting;
+import net.minecraft.core.Registry;
+import net.minecraft.locale.Language;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.network.chat.*;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.MobType;
 import net.minecraft.world.entity.ai.attributes.Attribute;
-import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ArmorItem;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.*;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraftforge.event.RegisterCommandsEvent;
-import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingDamageEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.event.entity.player.CriticalHitEvent;
+import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.server.command.ConfigCommand;
-import org.jetbrains.annotations.NotNull;
 
-import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.*;
+
+import static net.minecraft.world.item.ItemStack.ATTRIBUTE_MODIFIER_FORMAT;
 
 @Mod.EventBusSubscriber(modid = RPGNLOOT.MOD_ID)
 public class ModEvents
@@ -67,12 +72,12 @@ public class ModEvents
             Multimap<Attribute, AttributeModifier> attributeModifiers = itemStack.getAttributeModifiers(EquipmentSlot.MAINHAND);
 
             //debug
-            /*if(attributeModifiers.containsKey(CustomAttributes.ATTACK_DAMAGE))
+            if(attributeModifiers.containsKey(CustomAttributes.ATTACK_DAMAGE))
             {
                 float degatBase = (float)attributeModifiers.get(CustomAttributes.ATTACK_DAMAGE).stream().findFirst().get().getAmount();
                 System.out.println("----- Makotache ----- Degats precedant => " + degatBase);
-                System.out.println("----- Makotache ----- itemStack.getTag().toString() => " + itemStack.getTag().toString());
-            }*/
+                //System.out.println("----- Makotache ----- itemStack.getTag().toString() => " + itemStack.getTag().toString());
+            }
 
             //on vérifie si "attributeModifiers" contiens
             //"Attributes.ATTACK_DAMAGE" ET "CustomAttributes.CRITICAL_CHANCE"
@@ -80,7 +85,7 @@ public class ModEvents
                     attributeModifiers.containsKey(CustomAttributes.CRITICAL_CHANCE.get()))
             {
                 //récupération des chances de critiques
-                float criticalChanceBase = StaticClass.GetValueFromAttributeModifier(attributeModifiers, CustomAttributes.CRITICAL_CHANCE.get());
+                float criticalChanceBase = StaticClass.GetValueFromAttributeModifierMap(attributeModifiers, CustomAttributes.CRITICAL_CHANCE.get());
                 //System.out.println("----- Makotache ----- base crit chance " + criticalChanceBase);
 
 
@@ -94,7 +99,7 @@ public class ModEvents
                     System.out.println("----- Makotache ----- base +gem crit chance " + criticalChanceBase);
                 }
                 //récupération de la valeur de chance d'appliquer un critique
-                float criticalChanceRNG = rand.nextFloat( 100 );
+                float criticalChanceRNG = rand.nextFloat(100);
 
                 //on check notre chance de faire un critique
                 if(criticalChanceRNG < criticalChanceBase)
@@ -115,7 +120,7 @@ public class ModEvents
                     if(attributeModifiers.containsKey(CustomAttributes.CRITICAL_DAMAGE.get()))
                     {
                         //on ajoute plus de dégâts critique
-                        criticalDamage += StaticClass.GetValueFromAttributeModifier(attributeModifiers, CustomAttributes.CRITICAL_DAMAGE.get()) / 100;
+                        criticalDamage += StaticClass.GetValueFromAttributeModifierMap(attributeModifiers, CustomAttributes.CRITICAL_DAMAGE.get()) / 100;
                         //System.out.println("----- Makotache ----- nouveau crit  " + criticalDamage);
                     }
 
@@ -123,7 +128,7 @@ public class ModEvents
                     event.setDamageModifier(criticalDamage);
                     event.setResult(Event.Result.ALLOW);
 
-                    //System.out.println("----- Makotache ----- Degats suivant => " + criticalDamage);
+                    System.out.println("----- Makotache ----- Degats suivant => " + criticalDamage);
                 }
                 /*else
                 {
@@ -165,7 +170,7 @@ public class ModEvents
                         if (attributeModifiers.containsKey(CustomAttributes.DODGE.get()))
                         {
                             //on réucpère le montant d'esquive
-                            amountDodge += StaticClass.GetValueFromAttributeModifier(attributeModifiers, CustomAttributes.DODGE.get());
+                            amountDodge += StaticClass.GetValueFromAttributeModifierMap(attributeModifiers, CustomAttributes.DODGE.get());
                         }
                     }
                 }
@@ -206,14 +211,14 @@ public class ModEvents
                             if (attributeModifiers.containsKey(CustomAttributes.REFLECT_DAMAGE_PERCENT.get()))
                             {
                                 //récupérationd de la valeurs de renvoie de dégâts
-                                amountReflectedDamagePercent += StaticClass.GetValueFromAttributeModifier(attributeModifiers, CustomAttributes.REFLECT_DAMAGE_PERCENT.get()) / 100;
+                                amountReflectedDamagePercent += StaticClass.GetValueFromAttributeModifierMap(attributeModifiers, CustomAttributes.REFLECT_DAMAGE_PERCENT.get()) / 100;
                             }
 
                             //BRUTE
                             //si l'armure possède "CustomAttributes.REFLECT_DAMAGE_RAW"
                             if (attributeModifiers.containsKey(CustomAttributes.REFLECT_DAMAGE_RAW.get()))
                             {
-                                amountReflectedDamageRaw += StaticClass.GetValueFromAttributeModifier(attributeModifiers, CustomAttributes.REFLECT_DAMAGE_RAW.get());
+                                amountReflectedDamageRaw += StaticClass.GetValueFromAttributeModifierMap(attributeModifiers, CustomAttributes.REFLECT_DAMAGE_RAW.get());
                             }
                         }
                     }
@@ -244,16 +249,17 @@ public class ModEvents
         {
             if (event.getSource().getDirectEntity() instanceof Player player)
             {
+                //vol de vie POURCENTAGE
                 ItemStack itemStack = player.getMainHandItem();
 
                 Multimap<Attribute, AttributeModifier> attributeModifiers = itemStack.getAttributeModifiers(EquipmentSlot.MAINHAND);
 
-                //System.out.println("----- Makotache ----- bobo du mob => " +event.getAmount());
+                System.out.println("----- Makotache ----- bobo du mob => " +event.getAmount());
 
                 //vol de vie
                 if(attributeModifiers.containsKey(CustomAttributes.LIFE_LEECH_PERCENT.get()))
                 {
-                    float amountLifeLeechPercent = (float)attributeModifiers.get(CustomAttributes.LIFE_LEECH_PERCENT.get()).stream().findFirst().get().getAmount() / 100;
+                    float amountLifeLeechPercent = StaticClass.GetValueFromAttributeModifierMap(attributeModifiers, CustomAttributes.LIFE_LEECH_PERCENT.get()) / 100;
 
                     //System.out.println("----- Makotache ----- pourcentage de vole de vie => " + amountLifeLeechPercent);
 
@@ -264,16 +270,8 @@ public class ModEvents
                     //System.out.println("----- Makotache ----- vie regen => " + amountLifeLeechPercent);
                 }
 
-            }
 
-        }
-        if (!event.getEntity().level.isClientSide())
-        {
-            if (event.getSource().getDirectEntity() instanceof Player player)
-            {
-                ItemStack itemStack = player.getMainHandItem();
-
-                Multimap<Attribute, AttributeModifier> attributeModifiers = itemStack.getAttributeModifiers(EquipmentSlot.MAINHAND);
+                //vol de vie BRUTE
 
                 //System.out.println("----- Makotache ----- bobo du mob => " +event.getAmount());
 
@@ -284,7 +282,7 @@ public class ModEvents
 
                 if(attributeModifiers.containsKey(CustomAttributes.LIFE_LEECH_RAW.get()))
                 {
-                    float amountLifeLeechraw = (float)attributeModifiers.get(CustomAttributes.LIFE_LEECH_RAW.get()).stream().findFirst().get().getAmount();
+                    float amountLifeLeechraw = StaticClass.GetValueFromAttributeModifierMap(attributeModifiers, CustomAttributes.LIFE_LEECH_RAW.get());
 
                     //System.out.println("----- Makotache ----- pourcentage de vole de vie => " + amountLifeLeechraw);
 
@@ -292,24 +290,293 @@ public class ModEvents
 
                     //System.out.println("----- Makotache ----- vie regen => " + amountLifeLeechraw);
                 }
-
             }
-
         }
     }
-    /* degats infligé a une entité
-    * class event => inflige degats, moment precis, methode
-    *
-    * AttackEntityEvent => avant, start attack(), attack()
-    * LivingAttackEvent => avant, montant sans prendre en compte les resistances et crit de base, attack()
-    * CriticalHitEvent => avant, calcule crit, attack
-    * LivingDamageEvent => avant, montant en prenant en compte les resistances et crit de base, attack()
-    *
-    *
-    * autre ?
-    * LivingHurtEvent => avant, ?, actuallyHurt()
-     *
-     * */
 
-    //LivingAttackEvent
+
+
+
+    @SubscribeEvent
+    public static void onItemTooltipEvent(ItemTooltipEvent event)
+    {
+        if (event.getPlayer() != null && event.getPlayer().level.isClientSide())
+        {
+            //System.out.println("----- Makotache ----- onItemTooltipEvent => event.getEntity() != null");
+            ItemStack itemStack = event.getItemStack();
+
+            if(ModTags.ItemSupportedByMod(itemStack))
+            {
+                //System.out.println("----- Makotache ----- onItemTooltipEvent => ItemSupportedByMod");
+                Style loreStyle = Style.EMPTY.withColor(ChatFormatting.DARK_PURPLE).withItalic(true);
+
+                Player player = event.getPlayer();
+                TooltipFlag tooltipFlag = event.getFlags();
+                List<Component> listToolTip = event.getToolTip();
+
+                listToolTip.clear();
+
+                MutableComponent mutablecomponent = (new TextComponent("")).append(itemStack.getHoverName()).withStyle(itemStack.getRarity().color);
+                if (itemStack.hasCustomHoverName()) {
+                    mutablecomponent.withStyle(ChatFormatting.ITALIC);
+                }
+
+                listToolTip.add(mutablecomponent);
+                if (!tooltipFlag.isAdvanced() && !itemStack.hasCustomHoverName() && itemStack.is(Items.FILLED_MAP)) {
+                    Integer integer = MapItem.getMapId(itemStack);
+                    if (integer != null) {
+                        listToolTip.add((new TextComponent("#" + integer)).withStyle(ChatFormatting.GRAY));
+                    }
+                }
+
+                int j = getHideFlags(itemStack);
+                if (shouldShowInTooltip(j, ItemStack.TooltipPart.ADDITIONAL)) {
+                    itemStack.getItem().appendHoverText(itemStack, player == null ? null : player.level, listToolTip, tooltipFlag);
+                }
+
+                if (itemStack.hasTag()) {
+                    if (shouldShowInTooltip(j, ItemStack.TooltipPart.ENCHANTMENTS)) {
+                        itemStack.appendEnchantmentNames(listToolTip, itemStack.getEnchantmentTags());
+                    }
+
+                    if (itemStack.getTag().contains("display", 10)) {
+                        CompoundTag compoundtag = itemStack.getTag().getCompound("display");
+                        if (shouldShowInTooltip(j, ItemStack.TooltipPart.DYE) && compoundtag.contains("color", 99)) {
+                            if (tooltipFlag.isAdvanced()) {
+                                listToolTip.add((new TranslatableComponent("item.color", String.format("#%06X", compoundtag.getInt("color")))).withStyle(ChatFormatting.GRAY));
+                            } else {
+                                listToolTip.add((new TranslatableComponent("item.dyed")).withStyle(new ChatFormatting[]{ChatFormatting.GRAY, ChatFormatting.ITALIC}));
+                            }
+                        }
+
+                        if (compoundtag.getTagType("Lore") == 9) {
+                            ListTag listtag = compoundtag.getList("Lore", 8);
+
+                            for(int i = 0; i < listtag.size(); ++i) {
+                                String s = listtag.getString(i);
+
+                                try {
+                                    MutableComponent mutablecomponent1 = Component.Serializer.fromJson(s);
+                                    if (mutablecomponent1 != null) {
+                                        listToolTip.add(ComponentUtils.mergeStyles(mutablecomponent1, loreStyle));
+                                    }
+                                } catch (Exception exception) {
+                                    compoundtag.remove("Lore");
+                                }
+                            }
+                        }
+                    }
+                }
+
+                if (shouldShowInTooltip(j, ItemStack.TooltipPart.MODIFIERS))
+                {
+
+                    //System.out.println("----- Makotache ----- onItemTooltipEvent.AttributeModifier => start");
+
+                    EquipmentSlot[] equipmentSlots = ModTags.GetEquipmentSlotOf(itemStack);
+                    for(int i =0; i < equipmentSlots.length; i++)
+                    {
+                        listToolTip.add(TextComponent.EMPTY);
+                        listToolTip.add((new TranslatableComponent("item.modifiers." + equipmentSlots[i].getName())).withStyle(ChatFormatting.GRAY));
+
+                        //System.out.println("----- Makotache ----- onItemTooltipEvent.for => equipmentSlots");
+
+                        Multimap<Attribute, AttributeModifier> attributeModifierMaps = itemStack.getAttributeModifiers(equipmentSlots[i]);
+
+
+                        Map<String, Component> unSortedAttributeModifierMaps = new HashMap<>();
+                        for(Map.Entry<Attribute, AttributeModifier> entry : attributeModifierMaps.entries())
+                        {
+                            AttributeModifier attributeModifier = entry.getValue();
+                            Attribute attribute = entry.getKey();
+                            ChatFormatting chatFormatting = ChatFormatting.BLUE;
+                            boolean customToolTip = false;
+
+                            if (player != null)
+                            {
+                                double value = (float)attributeModifier.getAmount();
+                                boolean modifierPlus = true;
+
+                                if (attribute.equals(Attributes.ATTACK_DAMAGE))
+                                {
+                                    value += player.getAttributeBaseValue(Attributes.ATTACK_DAMAGE);
+
+                                    value += EnchantmentHelper.getDamageBonus(itemStack, MobType.UNDEFINED);
+
+
+                                    modifierPlus = false;
+                                    chatFormatting = ChatFormatting.DARK_GREEN;
+                                }
+                                else if (attribute.equals(Attributes.ATTACK_SPEED))
+                                {
+                                    value += player.getAttributeBaseValue(Attributes.ATTACK_SPEED);
+
+                                    modifierPlus = false;
+                                    chatFormatting = ChatFormatting.GRAY;
+                                }
+                                else if(attribute.equals(CustomAttributes.CRITICAL_CHANCE.get()))
+                                {
+                                    chatFormatting = ChatFormatting.YELLOW;
+                                }
+                                else if(attribute.equals(CustomAttributes.CRITICAL_DAMAGE.get()))
+                                {
+                                    chatFormatting = ChatFormatting.GOLD;//ModColor.RED_ORANGE;
+                                }
+                                else if(attribute.equals(Attributes.MAX_HEALTH))
+                                {
+                                    chatFormatting = ChatFormatting.LIGHT_PURPLE;
+                                }
+                                else if(attribute.equals(CustomAttributes.GEM_SLOT.get()))
+                                {
+                                    if(itemStack.hasTag() && itemStack.getTag().contains(ModItems.GEM_TYPE))
+                                    {
+                                        /*Item[] allGemsEquiped = ModTags.GetGems(itemStack);
+                                        for (Item item : allGemsEquiped)
+                                        {
+                                            Map.Entry<String, Component> componentToolTip;
+                                            if(item == null)
+                                            {
+                                                componentToolTip = createComponentToolTip(modifierPlus, entry, , chatFormatting);
+                                            }
+                                            else
+                                            {
+
+                                            }
+                                            unSortedAttributeModifierMaps.put(componentToolTip.getKey(), componentToolTip.getValue());
+                                        }*/
+                                        //customToolTip = true;
+                                    }
+
+                                }
+
+                                double finalValue;
+                                if (attributeModifier.getOperation() != AttributeModifier.Operation.MULTIPLY_BASE && attributeModifier.getOperation() != AttributeModifier.Operation.MULTIPLY_TOTAL) {
+                                    if (entry.getKey().equals(Attributes.KNOCKBACK_RESISTANCE)) {
+                                        finalValue = value * 10.0D;
+                                    } else {
+                                        finalValue = value;
+                                    }
+                                } else {
+                                    finalValue = value * 100.0D;
+                                }
+
+                                if(!customToolTip)
+                                {
+                                    Map.Entry<String, Component> componentToolTip = createComponentToolTip(modifierPlus, entry, finalValue, chatFormatting);
+                                    unSortedAttributeModifierMaps.put(componentToolTip.getKey(), componentToolTip.getValue());
+                                }
+                            }
+                        }
+                        Map<String, Component> sortedAttributeModifierMaps = new TreeMap<>(unSortedAttributeModifierMaps);
+
+                        sortedAttributeModifierMaps.forEach((k, v) -> listToolTip.add(v));
+                    }
+                    //System.out.println("----- Makotache ----- onItemTooltipEvent.AttributeModifier => end");
+
+                }
+
+                if (itemStack.hasTag()) {
+                    if (shouldShowInTooltip(j, ItemStack.TooltipPart.UNBREAKABLE) && itemStack.getTag().getBoolean("Unbreakable")) {
+                        listToolTip.add((new TranslatableComponent("item.unbreakable")).withStyle(ChatFormatting.BLUE));
+                    }
+
+                    if (shouldShowInTooltip(j, ItemStack.TooltipPart.CAN_DESTROY) && itemStack.getTag().contains("CanDestroy", 9)) {
+                        ListTag listtag1 = itemStack.getTag().getList("CanDestroy", 8);
+                        if (!listtag1.isEmpty()) {
+                            listToolTip.add(TextComponent.EMPTY);
+                            listToolTip.add((new TranslatableComponent("item.canBreak")).withStyle(ChatFormatting.GRAY));
+
+                            for(int k = 0; k < listtag1.size(); ++k) {
+                                try
+                                {
+                                    Class[] cArg = new Class[1];
+                                    cArg[0] = Component.class;
+                                    Method method = ItemStack.class.getDeclaredMethod("expandBlockState", cArg);
+                                    method.setAccessible(true);
+                                    listToolTip.addAll((Collection<? extends Component>) method.invoke(null, listtag1.getString(k)));
+
+                                    //listToolTip.addAll(ItemStack.expandBlockState(listtag1.getString(k)));
+                                }
+                                catch (Exception ex)
+                                {
+                                    System.out.println("----- Makotache ----- onItemTooltipEvent.CAN_DESTROY");
+                                    ex.printStackTrace();
+                                }
+                            }
+                        }
+                    }
+                }
+
+                if (tooltipFlag.isAdvanced()) {
+                    if (itemStack.isDamaged()) {
+                        listToolTip.add(new TranslatableComponent("item.durability", itemStack.getMaxDamage() - itemStack.getDamageValue(), itemStack.getMaxDamage()));
+                    }
+
+                    listToolTip.add((new TextComponent(Registry.ITEM.getKey(itemStack.getItem()).toString())).withStyle(ChatFormatting.DARK_GRAY));
+                    if (itemStack.hasTag()) {
+                        listToolTip.add((new TranslatableComponent("item.nbt_tags", itemStack.getTag().getAllKeys().size())).withStyle(ChatFormatting.DARK_GRAY));
+                    }
+                }
+            }
+        }
+    }
+
+    /*@SubscribeEvent
+    public static void clientLoad(FMLClientSetupEvent event) {
+        event.enqueueWork(() -> {
+            MenuScreens.register(TestCaveUpdateModMenus.GUITEST_1, Guitest1Screen::new);
+        });
+    }*/
+
+
+
+    //methode ItemStack pour toolTips
+    private static Map.Entry<String, Component> createComponentToolTip(boolean modifierPlus, Map.Entry<Attribute, AttributeModifier> entry, double value, ChatFormatting chatFormatting)
+    {
+        AttributeModifier attributeModifier = entry.getValue();
+        TranslatableComponent name = new TranslatableComponent(entry.getKey().getDescriptionId());
+
+        String modifierPlusStr = modifierPlus ? "attribute.modifier.plus." : "attribute.modifier.equals.";
+
+        Component component = (new TranslatableComponent(modifierPlusStr + attributeModifier.getOperation().toValue(), ATTRIBUTE_MODIFIER_FORMAT.format(value), name)).withStyle(chatFormatting);
+
+        if(!modifierPlus)
+        {
+            component = new TextComponent(" ").append(component);
+        }
+
+
+        String s = Language.getInstance().getOrDefault(name.getKey()).replace("% ", "");
+        return Map.entry(s, component);
+        //listToolTip.add(component);
+    }
+
+    private static Map.Entry<String, Component> createComponentToolTip(boolean modifierPlus, Map.Entry<Attribute, AttributeModifier> entry, String value, ChatFormatting chatFormatting)
+    {
+        AttributeModifier attributeModifier = entry.getValue();
+        TranslatableComponent name = new TranslatableComponent(entry.getKey().getDescriptionId());
+
+        String modifierPlusStr = modifierPlus ? "attribute.modifier.plus." : "attribute.modifier.equals.";
+
+        Component component = (new TranslatableComponent(modifierPlusStr + attributeModifier.getOperation().toValue(), value, name)).withStyle(chatFormatting);
+
+        if(!modifierPlus)
+        {
+            component = new TextComponent(" ").append(component);
+        }
+
+
+        String s = Language.getInstance().getOrDefault(name.getKey()).replace("% ", "");
+        return Map.entry(s, component);
+        //listToolTip.add(component);
+    }
+
+
+    private static boolean shouldShowInTooltip(int p_41627_, ItemStack.TooltipPart p_41628_) {
+        return (p_41627_ & p_41628_.getMask()) == 0;
+    }
+
+    private static int getHideFlags(ItemStack itemStack) {
+        return itemStack.hasTag() && itemStack.getTag().contains("HideFlags", 99) ? itemStack.getTag().getInt("HideFlags") : itemStack.getItem().getDefaultTooltipHideFlags(itemStack);
+    }
 }

@@ -74,16 +74,15 @@ public class ModTags
 
             if (!gem_slot_loaded && attributeModifiers.containsKey(CustomAttributes.GEM_SLOT.get()))
             {
-                maxSlotGem += StaticClass.GetValueFromAttributeModifier(itemStack, CustomAttributes.GEM_SLOT.get());
+                maxSlotGem += StaticClass.GetValueFromAttributeModifierMap(itemStack, CustomAttributes.GEM_SLOT.get());
                 gem_slot_loaded = true;
             }
 
             if (!more_gem_slot_loaded && attributeModifiers.containsKey(CustomAttributes.MORE_GEM_SLOT.get()))
             {
-                maxSlotGem += StaticClass.GetValueFromAttributeModifier(itemStack, CustomAttributes.MORE_GEM_SLOT.get());
+                maxSlotGem += StaticClass.GetValueFromAttributeModifierMap(itemStack, CustomAttributes.MORE_GEM_SLOT.get());
                 more_gem_slot_loaded = true;
             }
-
         }
 
 
@@ -96,6 +95,11 @@ public class ModTags
         }
 
         return false;
+    }
+
+    public static boolean AddGemTag(@Nonnull ItemStack itemStack, @Nonnull StringTag tagItem)
+    {
+        return AddGemTag(itemStack, tagItem.toString().replace("\"", ""));
     }
 
     public static boolean RemoveGemTag(@Nonnull ItemStack itemStack, int index)
@@ -334,11 +338,23 @@ public class ModTags
         return CountGem(itemStack.getOrCreateTag(), isEmpty);
     }
 
+    public static int CountGem(@Nonnull ItemStack itemStack)
+    {
+        CompoundTag tag = itemStack.getOrCreateTag();
+        if (!tag.contains(ModItems.GEM_TYPE))
+        {
+            return -1;
+        }
+
+        return ((ListTag)tag.get(ModItems.GEM_TYPE)).size();
+    }
+
     public static String GetTagGem(Item gem)
     {
         return StaticClass.GetKeyByValue(ModItems.GEMS_REFERENCES, gem);
     }
 
+    @Nullable
     public static String[] GetGemTags(@Nonnull CompoundTag tag)
     {
         if (tag.contains(ModItems.GEM_TYPE))
@@ -444,6 +460,11 @@ public class ModTags
         return HaveGemOfType(GetGemTags(itemStack), type);
     }
 
+    public static boolean HaveGem(@Nonnull ItemStack itemStack)
+    {
+        CompoundTag tag = itemStack.getOrCreateTag();
+        return tag.contains(ModItems.GEM_TYPE);
+    }
 
     public static float GetGemValue(String tag)
     {
@@ -497,6 +518,7 @@ public class ModTags
     }
 
     public static final StringTag DEFAULT_TAG_VALUE = StringTag.valueOf("none");
+    public static final String RPGNLOOT_MODIFIER = "rpgnloot_modifier";
 
 
     private static String StringValue(@Nonnull Tag tag)
@@ -504,6 +526,10 @@ public class ModTags
         return tag.toString().replace("\"", "");//.replace("'", "");
     }
 
+    public static boolean ItemSupportedByMod(ItemStack itemStack)
+    {
+        return itemStack.getOrCreateTag().contains(RPGNLOOT_MODIFIER);
+    }
 
     /*public static class Blocks {
         public static final TagKey<Block> DOWSING_ROD_VALUABLES =
