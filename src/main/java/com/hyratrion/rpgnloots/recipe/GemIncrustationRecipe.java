@@ -74,6 +74,7 @@ public class GemIncrustationRecipe implements Recipe<SimpleContainer> {
         public static final Serializer INSTANCE = new Serializer();
         public static final ResourceLocation ID = new ResourceLocation(RPGNLOOT.MOD_ID,"gem_incrustation");
 
+
         @Override
         public GemIncrustationRecipe fromJson(ResourceLocation id, JsonObject json) {
             ItemStack output = ShapedRecipe.itemStackFromJson(GsonHelper.getAsJsonObject(json, "output"));

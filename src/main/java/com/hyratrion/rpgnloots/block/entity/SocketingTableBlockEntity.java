@@ -53,7 +53,7 @@ public class SocketingTableBlockEntity extends BlockEntity implements MenuProvid
     @Nullable
     @Override
     public AbstractContainerMenu createMenu(int pContainerId, Inventory pInventory, Player pPlayer) {
-        return new SocketingTableMenu(pContainerId, pInventory, this);
+        return null; //new SocketingTableMenu(pContainerId, pInventory, this);
     }
 
     @Nonnull
@@ -98,7 +98,7 @@ public class SocketingTableBlockEntity extends BlockEntity implements MenuProvid
 
         Containers.dropContents(this.level, this.worldPosition, inventory);
     }
-
+/*
     private static boolean hasRecipe(SocketingTableBlockEntity entity) {
         Level level = entity.level;
         SimpleContainer inventory = new SimpleContainer(entity.itemHandler.getSlots());
@@ -130,7 +130,7 @@ public class SocketingTableBlockEntity extends BlockEntity implements MenuProvid
             entity.itemHandler.setStackInSlot(2, new ItemStack(match.get().getResultItem().getItem(),
                     entity.itemHandler.getStackInSlot(3).getCount() + 1));
         }
-    }
+    }*/
 
     private static boolean canInsertItemIntoOutputSlot(SimpleContainer inventory, ItemStack output) {
         return inventory.getItem(2).getItem() == output.getItem() || inventory.getItem(2).isEmpty();
