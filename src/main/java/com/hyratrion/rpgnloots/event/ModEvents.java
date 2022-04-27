@@ -7,6 +7,7 @@ import com.hyratrion.rpgnloots.item.ModItems;
 import com.hyratrion.rpgnloots.util.ModTags;
 import com.hyratrion.rpgnloots.util.StaticClass;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.core.Registry;
 import net.minecraft.locale.Language;
 import net.minecraft.nbt.CompoundTag;
@@ -86,7 +87,7 @@ public class ModEvents
             {
                 //récupération des chances de critiques
                 float criticalChanceBase = StaticClass.GetValueFromAttributeModifierMap(attributeModifiers, CustomAttributes.CRITICAL_CHANCE.get());
-                //System.out.println("----- Makotache ----- base crit chance " + criticalChanceBase);
+                System.out.println("----- Makotache ----- base crit chance " + criticalChanceBase);
 
 
                 String[] allGemsEquiped = ModTags.GetGemTags(itemStack);
@@ -104,11 +105,11 @@ public class ModEvents
                 //on check notre chance de faire un critique
                 if(criticalChanceRNG < criticalChanceBase)
                 {
-                    //System.out.println("----- Makotache ----- crit EXISTANT");
+                    System.out.println("----- Makotache ----- crit EXISTANT");
 
                     //récupération du multiplicateur des dégâts crtitique de minecraft Vanilla
                     float criticalDamage = event.getOldDamageModifier();
-                    //System.out.println("----- Makotache ----- crit base " + criticalDamage);
+                    System.out.println("----- Makotache ----- crit base " + criticalDamage);
 
                     if(ModTags.HaveGemOfType(allGemsEquiped, ModTags.Items.GEM_TYPE_CRITICAL_DAMAGE))
                     {
@@ -128,7 +129,7 @@ public class ModEvents
                     event.setDamageModifier(criticalDamage);
                     event.setResult(Event.Result.ALLOW);
 
-                    System.out.println("----- Makotache ----- Degats suivant => " + criticalDamage);
+                    System.out.println("----- Makotache ----- Degats multiplicateur => " + criticalDamage);
                 }
                 /*else
                 {
@@ -387,15 +388,17 @@ public class ModEvents
                         Map<String, Component> unSortedAttributeModifierMaps = new HashMap<>();
                         for(Map.Entry<Attribute, AttributeModifier> entry : attributeModifierMaps.entries())
                         {
-                            AttributeModifier attributeModifier = entry.getValue();
-                            Attribute attribute = entry.getKey();
-                            ChatFormatting chatFormatting = ChatFormatting.BLUE;
-                            boolean customToolTip = false;
-
                             if (player != null)
                             {
-                                double value = (float)attributeModifier.getAmount();
+                                AttributeModifier attributeModifier = entry.getValue();
+                                Attribute attribute = entry.getKey();
+                                boolean customToolTip = false;
+                                boolean showPercent = false;
                                 boolean modifierPlus = true;
+                                ChatFormatting chatFormatting = ChatFormatting.BLUE;
+
+                                double value = (float)attributeModifier.getAmount();
+
 
                                 if (attribute.equals(Attributes.ATTACK_DAMAGE))
                                 {
@@ -416,10 +419,12 @@ public class ModEvents
                                 }
                                 else if(attribute.equals(CustomAttributes.CRITICAL_CHANCE.get()))
                                 {
+                                    showPercent = true;
                                     chatFormatting = ChatFormatting.YELLOW;
                                 }
                                 else if(attribute.equals(CustomAttributes.CRITICAL_DAMAGE.get()))
                                 {
+                                    showPercent = true;
                                     chatFormatting = ChatFormatting.GOLD;//ModColor.RED_ORANGE;
                                 }
                                 else if(attribute.equals(Attributes.MAX_HEALTH))
@@ -430,23 +435,50 @@ public class ModEvents
                                 {
                                     if(itemStack.hasTag() && itemStack.getTag().contains(ModItems.GEM_TYPE))
                                     {
-                                        /*Item[] allGemsEquiped = ModTags.GetGems(itemStack);
-                                        for (Item item : allGemsEquiped)
-                                        {
-                                            Map.Entry<String, Component> componentToolTip;
-                                            if(item == null)
-                                            {
-                                                componentToolTip = createComponentToolTip(modifierPlus, entry, , chatFormatting);
-                                            }
-                                            else
-                                            {
+                                        Map.Entry<String, Component> componentToolTip = createComponentToolTip(modifierPlus, entry, value, showPercent, chatFormatting);
+                                        unSortedAttributeModifierMaps.put(componentToolTip.getKey(), componentToolTip.getValue());
 
+                                        String gemText = componentToolTip.getKey();
+
+                                        chatFormatting = ChatFormatting.GRAY;
+
+                                        Item[] allGemsEquiped = ModTags.GetGems(itemStack);
+
+                                        //on doit appuyer sur shift pou plus de détail
+                                        if(Screen.hasShiftDown())
+                                        {
+                                            for (int u = 0; u < allGemsEquiped.length; u++)
+                                            {
+                                                int ub = u+1;
+                                                Item item = allGemsEquiped[u];
+
+                                                if(item == null)
+                                                {
+                                                    componentToolTip = createComponentToolTipGem(gemText + ub, "", "attribute.name.rpgnloots.empty", showPercent, chatFormatting);
+                                                }
+                                                else
+                                                {
+                                                    componentToolTip = createComponentToolTipGem(gemText + ub, String.valueOf(ModTags.GetGemValue(item)), item, showPercent, chatFormatting);
+                                                }
+                                                unSortedAttributeModifierMaps.put(componentToolTip.getKey(), componentToolTip.getValue());
                                             }
-                                            unSortedAttributeModifierMaps.put(componentToolTip.getKey(), componentToolTip.getValue());
-                                        }*/
-                                        //customToolTip = true;
+                                        }
+
+                                        customToolTip = true;
                                     }
 
+                                }
+                                else if(attribute.equals(CustomAttributes.DODGE.get()))
+                                {
+                                    showPercent = true;
+                                }
+                                else if(attribute.equals(CustomAttributes.LIFE_LEECH_PERCENT.get()))
+                                {
+                                    showPercent = true;
+                                }
+                                else if(attribute.equals(CustomAttributes.REFLECT_DAMAGE_PERCENT.get()))
+                                {
+                                    showPercent = true;
                                 }
 
                                 double finalValue;
@@ -462,7 +494,7 @@ public class ModEvents
 
                                 if(!customToolTip)
                                 {
-                                    Map.Entry<String, Component> componentToolTip = createComponentToolTip(modifierPlus, entry, finalValue, chatFormatting);
+                                    Map.Entry<String, Component> componentToolTip = createComponentToolTip(modifierPlus, entry, finalValue, showPercent, chatFormatting);
                                     unSortedAttributeModifierMaps.put(componentToolTip.getKey(), componentToolTip.getValue());
                                 }
                             }
@@ -531,46 +563,47 @@ public class ModEvents
 
 
     //methode ItemStack pour toolTips
-    private static Map.Entry<String, Component> createComponentToolTip(boolean modifierPlus, Map.Entry<Attribute, AttributeModifier> entry, double value, ChatFormatting chatFormatting)
+    private static Map.Entry<String, Component> createComponentToolTip(boolean modifierPlus, Map.Entry<Attribute, AttributeModifier> entry, double value, boolean showPercent, ChatFormatting chatFormatting)
     {
         AttributeModifier attributeModifier = entry.getValue();
+        Attribute attribute = entry.getKey();
         TranslatableComponent name = new TranslatableComponent(entry.getKey().getDescriptionId());
 
         String modifierPlusStr = modifierPlus ? "attribute.modifier.plus." : "attribute.modifier.equals.";
+        String showPercentStr = showPercent ? "%" : "";
 
-        Component component = (new TranslatableComponent(modifierPlusStr + attributeModifier.getOperation().toValue(), ATTRIBUTE_MODIFIER_FORMAT.format(value), name)).withStyle(chatFormatting);
+
+        Component component = (new TranslatableComponent(modifierPlusStr + attributeModifier.getOperation().toValue(), ATTRIBUTE_MODIFIER_FORMAT.format(value) + showPercentStr, name)).withStyle(chatFormatting);
 
         if(!modifierPlus)
         {
             component = new TextComponent(" ").append(component);
         }
 
-
-        String s = Language.getInstance().getOrDefault(name.getKey()).replace("% ", "");
-        return Map.entry(s, component);
-        //listToolTip.add(component);
-    }
-
-    private static Map.Entry<String, Component> createComponentToolTip(boolean modifierPlus, Map.Entry<Attribute, AttributeModifier> entry, String value, ChatFormatting chatFormatting)
-    {
-        AttributeModifier attributeModifier = entry.getValue();
-        TranslatableComponent name = new TranslatableComponent(entry.getKey().getDescriptionId());
-
-        String modifierPlusStr = modifierPlus ? "attribute.modifier.plus." : "attribute.modifier.equals.";
-
-        Component component = (new TranslatableComponent(modifierPlusStr + attributeModifier.getOperation().toValue(), value, name)).withStyle(chatFormatting);
-
-        if(!modifierPlus)
+        String str = Language.getInstance().getOrDefault(name.getKey());
+        if(attribute.equals(CustomAttributes.GEM_SLOT.get()))
         {
-            component = new TextComponent(" ").append(component);
+            str += "0";
         }
 
-
-        String s = Language.getInstance().getOrDefault(name.getKey()).replace("% ", "");
-        return Map.entry(s, component);
-        //listToolTip.add(component);
+        return Map.entry(str, component);
     }
 
+    private static Map.Entry<String, Component> createComponentToolTipGem(String pos, String value, String name_str, boolean showPercent, ChatFormatting chatFormatting)
+    {
+        value += value.length() > 0 ?  " " : "";
+        String showPercentStr = showPercent ? "%" : "";
+
+        Component component = (new TextComponent("  <" + value + showPercentStr).withStyle(chatFormatting)).append((new TranslatableComponent(name_str)).append(">"));
+
+        String str = Language.getInstance().getOrDefault(name_str);
+        return Map.entry(pos + str, component);
+    }
+
+    private static Map.Entry<String, Component> createComponentToolTipGem(String pos, String value, Item item, boolean showPercent, ChatFormatting chatFormatting)
+    {
+        return createComponentToolTipGem(pos, value, item.getDescriptionId(), showPercent, chatFormatting);
+    }
 
     private static boolean shouldShowInTooltip(int p_41627_, ItemStack.TooltipPart p_41628_) {
         return (p_41627_ & p_41628_.getMask()) == 0;

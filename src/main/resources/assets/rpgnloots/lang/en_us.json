@@ -58,16 +58,17 @@
 
   "itemGroup.rpgnlootstab": "RPGnLoots",
 
-  "attribute.name.rpgnloots.critical_chance": "% Critical Chance",
-  "attribute.name.rpgnloots.critical_damage": "% Critique Damage",
+  "attribute.name.rpgnloots.critical_chance": "Critical Chance",
+  "attribute.name.rpgnloots.critical_damage": "Critical Damage",
   "attribute.name.rpgnloots.life_leech_raw" : "Life leech",
-  "attribute.name.rpgnloots.life_leech_percent" :  "% Life leech",
+  "attribute.name.rpgnloots.life_leech_percent" :  "Life leech",
   "attribute.name.rpgnloots.gem_lvl_increase": "Level of Gem increase",
   "attribute.name.rpgnloots.more_gem_slot": "Slot of Gem increase",
   "attribute.name.rpgnloots.gem_slot" : "Gem Slot",
   "attribute.name.rpgnloots.reflect_damage_raw" : "Reflect damage",
-  "attribute.name.rpgnloots.reflect_damage_percent" : "% Reflect damage",
-  "attribute.name.rpgnloots.dodge" : "% Of Dodge",
+  "attribute.name.rpgnloots.reflect_damage_percent" : "Reflect damage",
+  "attribute.name.rpgnloots.dodge" : "Dodge",
+  "attribute.name.rpgnloots.empty" : "Empty",
 
   "block.rpgloots.socketing_table": "Socketing table"
 }
