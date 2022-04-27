@@ -1,6 +1,9 @@
 package com.hyratrion.rpgnloots.util;
 
 import com.hyratrion.rpgnloots.RPGNLOOT;
+import com.hyratrion.rpgnloots.screen.ModMenuTypes;
+import com.hyratrion.rpgnloots.screen.SocketingTableScreen;
+import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.stats.Stat;
@@ -9,6 +12,8 @@ import net.minecraft.stats.Stats;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.item.Item;
 import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.ForgeRegistry;
@@ -33,3 +38,11 @@ public class ModStats extends Stats{
     }*/
 
 }
+/*
+    @SubscribeEvent
+    public static void clientLoad(FMLClientSetupEvent event) {
+        event.enqueueWork(() -> {
+            MenuScreens.register(ModMenuTypes.SOCKETING_TABLE_MENU_TYPE, SocketingTableScreen::new);
+        });
+    }
+ */

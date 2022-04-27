@@ -4,9 +4,12 @@ import com.hyratrion.rpgnloots.block.entity.ModBlockEntities;
 import com.hyratrion.rpgnloots.block.entity.SocketingTableBlockEntity;
 import com.hyratrion.rpgnloots.screen.SocketingTableMenu;
 import com.hyratrion.rpgnloots.util.ModStats;
+import io.netty.buffer.Unpooled;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.stats.Stats;
@@ -14,7 +17,9 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.SimpleMenuProvider;
+import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.AnvilMenu;
 import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -231,8 +236,27 @@ public class SocketingTableBlock extends FallingBlock {
             }
         }
     }
+    public InteractionResult use(BlockState pState, Level pLevel, BlockPos pPos,
+                                 Player pPlayer, InteractionHand pHand, BlockHitResult pHit) {
 
-    @Override
+        super.use(pState, pLevel, pPos, pPlayer, pHand, pHit);
+        if (pPlayer instanceof ServerPlayer player) {
+            NetworkHooks.openGui(player, new MenuProvider() {
+                @Override
+                public Component getDisplayName() {
+                    return new TranslatableComponent("block.rpgloots.socketing_table");
+                }
+
+                @Override
+                public AbstractContainerMenu createMenu(int id, Inventory inventory, Player player) {
+                    return new SocketingTableMenu(id, inventory, new FriendlyByteBuf(Unpooled.buffer()).writeBlockPos(pPos));
+                }
+            }, pPos);
+        }
+        System.out.println("Test ouverture gui SocketingTableMenu --> 3");
+        return InteractionResult.SUCCESS;
+    }
+ /*   @Override
     public InteractionResult use(BlockState pState, Level pLevel, BlockPos pPos,
                                  Player pPlayer, InteractionHand pHand, BlockHitResult pHit) {
         if (pLevel.isClientSide) {
@@ -242,15 +266,15 @@ public class SocketingTableBlock extends FallingBlock {
             pPlayer.awardStat(ModStats.INTERACT_WITH_SOCKETING_TABLE);
             return InteractionResult.CONSUME;
         }
-    }
+    }*/
 
-    @Nullable
+ /*   @Nullable
     @Override
     public MenuProvider getMenuProvider(BlockState pBlockState, Level pLevel, BlockPos pBlockPos) {
         return new SimpleMenuProvider((p_48785_, p_48786_, p_48787_) -> {
             return new SocketingTableMenu(p_48785_, p_48786_, ContainerLevelAccess.create(pLevel, pBlockPos));
         }, CONTAINER_TITLE);
-    }
+    }*/
 
 
     /*

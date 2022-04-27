@@ -39,7 +39,7 @@ public class RPGNLOOT
         CustomAttributes.register(eventBus);
 
         ModBlockEntities.register(eventBus);
-        ModMenuTypes.register(eventBus);
+ //       ModMenuTypes.register(eventBus);
 
         ModRecipes.register(eventBus);
  //       ModStats.register(eventBus);
@@ -54,7 +54,7 @@ public class RPGNLOOT
     private void clientSetup(final FMLClientSetupEvent event) {
         ItemBlockRenderTypes.setRenderLayer(ModBlocks.SOCKETING_TABLE.get(), RenderType.cutout());
 
-        MenuScreens.register(ModMenuTypes.SOCKETING_TABLE_MENU.get(), SocketingTableScreen::new);
+        MenuScreens.register(ModMenuTypes.SOCKETING_TABLE_MENU_TYPE, SocketingTableScreen::new);
 
     }
 
