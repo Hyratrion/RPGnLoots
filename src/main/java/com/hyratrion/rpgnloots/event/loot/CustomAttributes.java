@@ -28,6 +28,7 @@ public class CustomAttributes extends Attributes
     public static final UUID REFLECT_DAMAGE_RAW_ID = UUID.fromString("FB0D8918-95A8-463A-828D-544CD6974661");
     public static final UUID REFLECT_DAMAGE_PERCENT_ID = UUID.fromString("2C2FB8D0-B723-49EE-AE5F-ACF76361686B");
     public static final UUID DODGE_ID = UUID.fromString("EB9D70D1-4081-45CD-8F94-5AB7FCF0A539");
+    public static final UUID REINFORCED_ID = UUID.fromString("2DCBEF17-B72B-469A-A334-6A0C7733448F");
 
     public static final RegistryObject<Attribute> CRITICAL_CHANCE = ATTRIBUTES.register("rpgnloots.critical_chance", () -> new RangedAttribute("attribute.name.rpgnloots.critical_chance", 10.0D, 1.0D, 1024.0D));
     public static final RegistryObject<Attribute> CRITICAL_DAMAGE = ATTRIBUTES.register("rpgnloots.critical_damage", () -> new RangedAttribute("attribute.name.rpgnloots.critical_damage", 2.0D, 1.0D, 1024.0D));
@@ -39,6 +40,8 @@ public class CustomAttributes extends Attributes
     public static final RegistryObject<Attribute> REFLECT_DAMAGE_RAW = ATTRIBUTES.register("rpgnloots.reflect_damage_raw", () -> new RangedAttribute("attribute.name.rpgnloots.reflect_damage_raw", 10.0D, 1.0D, 1024.0D));
     public static final RegistryObject<Attribute> REFLECT_DAMAGE_PERCENT = ATTRIBUTES.register("rpgnloots.reflect_damage_percent", () -> new RangedAttribute("attribute.name.rpgnloots.reflect_damage_percent", 10.0D, 1.0D, 1024.0D));
     public static final RegistryObject<Attribute> DODGE = ATTRIBUTES.register("rpgnloots.dodge", () -> new RangedAttribute("attribute.name.rpgnloots.dodge", 10.0D, 1.0D, 1024.0D));
+    public static final RegistryObject<Attribute> REINFORCED = ATTRIBUTES.register("rpgnloots.reinforced", () -> new RangedAttribute("attribute.name.rpgnloots.reinforced", 10.0D, 1.0D, 1024.0D));
+
 
     public static void register(IEventBus eventBus)
     {
