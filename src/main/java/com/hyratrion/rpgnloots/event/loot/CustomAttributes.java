@@ -217,5 +217,13 @@ public class CustomAttributes extends Attributes
             10,
             20
     };
+    static float[] getValuesTierReinforced = new float[]{
+            0,
+            5,
+            10,
+            20,
+            40,
+            80
+    };
     //endregion
 }

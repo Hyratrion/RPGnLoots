@@ -1,23 +1,25 @@
 package com.hyratrion.rpgnloots.event.loot;
 
+import com.google.common.base.Equivalence;
+import com.hyratrion.rpgnloots.util.ModTags;
+import net.minecraft.nbt.StringTag;
+import net.minecraft.util.random.WeightedEntry;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.item.*;
 import org.apache.commons.lang3.ArrayUtils;
+import org.apache.logging.log4j.spi.ObjectThreadContextMap;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 import static com.hyratrion.rpgnloots.event.loot.CustomAttributes.*;
 
 public class ItemAttributGeneration
 {
     static Random rand = new Random();
-    static int gemSlot = 0;
+    //static int gemSlot = 0;
 
     //region Tableaux des items par tiers
     /**
@@ -353,81 +355,138 @@ public class ItemAttributGeneration
      * @return l'item récupérer aléatoirement
      */
     public static ItemStack GenerateItemAndAttributes(int tier){
-        Item[] itemsLootablesParLeTier = new Item[0];
+        List<Item> itemsLootablesParLeTier = new ArrayList<>();
         for(int k = 0; k < tier; k++){
-            itemsLootablesParLeTier = (Item[])ArrayUtils.add(itemsLootablesParLeTier,lesItemsTier[k]);
+            itemsLootablesParLeTier.addAll(Arrays.stream(lesItemsTier[k]).toList()); //= (Item[])ArrayUtils.add(itemsLootablesParLeTier,lesItemsTier[k]);
         }
-        int nombreAleatoire = rand.nextInt(itemsLootablesParLeTier.length);
-        Item itemLooted = itemsLootablesParLeTier[nombreAleatoire];
+        int nombreAleatoire = rand.nextInt(itemsLootablesParLeTier.size());
+        Item itemLooted = itemsLootablesParLeTier.get(nombreAleatoire);//[nombreAleatoire];
 
         //détermination de l'instance de l'item pour générer la liste des attributs
         List<Attribute> attributsTypeItem = new ArrayList<>();
         if(itemLooted instanceof SwordItem){
-            attributsTypeItem = Arrays.asList(attributsItemSword);
+            attributsTypeItem = new ArrayList<>(Arrays.asList(attributsItemSword));
         } else if (itemLooted instanceof PickaxeItem){
-            attributsTypeItem = Arrays.asList(attributsItemPickaxe);
+            attributsTypeItem = new ArrayList<>(Arrays.asList(attributsItemPickaxe));
         } else if(itemLooted instanceof AxeItem){
-            attributsTypeItem = Arrays.asList(attributsItemAxe);
+            attributsTypeItem = new ArrayList<>(Arrays.asList(attributsItemAxe));
         } else if (itemLooted instanceof ShovelItem){
-            attributsTypeItem = Arrays.asList(attributsItemShovel);
+            attributsTypeItem = new ArrayList<>(Arrays.asList(attributsItemShovel));
         } else if (itemLooted instanceof HoeItem){
-            attributsTypeItem = Arrays.asList(attributsItemHoe);
+            attributsTypeItem = new ArrayList<>(Arrays.asList(attributsItemHoe));
         } else if (itemLooted instanceof ArmorItem armorItem){
             EquipmentSlot slot = armorItem.getSlot();
             if(slot == EquipmentSlot.HEAD){
-                attributsTypeItem = Arrays.asList(attributsItemHelmet);
+                attributsTypeItem = new ArrayList<>(Arrays.asList(attributsItemHelmet));
             } else if (slot == EquipmentSlot.CHEST)
             {
-                attributsTypeItem = Arrays.asList(attributsItemChestplate);
+                attributsTypeItem = new ArrayList<>(Arrays.asList(attributsItemChestplate));
             } else if (slot == EquipmentSlot.LEGS)
             {
-                attributsTypeItem = Arrays.asList(attributsItemLeggings);
+                attributsTypeItem = new ArrayList<>(Arrays.asList(attributsItemLeggings));
             }else{
-                attributsTypeItem = Arrays.asList(attributsItemBoots);
+                attributsTypeItem = new ArrayList<>(Arrays.asList(attributsItemBoots));
             }
         } else if (itemLooted instanceof ElytraItem){
-            attributsTypeItem = Arrays.asList(attributsItemElytra);
+            attributsTypeItem = new ArrayList<>(Arrays.asList(attributsItemElytra));
         } else if (itemLooted instanceof ShearsItem){
-            attributsTypeItem = Arrays.asList(attributsItemShears);
+            attributsTypeItem = new ArrayList<>(Arrays.asList(attributsItemShears));
         } else if (itemLooted instanceof ShieldItem){
-            attributsTypeItem = Arrays.asList(attributsItemShield);
+            attributsTypeItem = new ArrayList<>(Arrays.asList(attributsItemShield));
         } else if (itemLooted instanceof FishingRodItem){
-            attributsTypeItem = Arrays.asList(attributsItemFishingRod);
+            attributsTypeItem = new ArrayList<>(Arrays.asList(attributsItemFishingRod));
         } else if (itemLooted instanceof BowItem){
-            attributsTypeItem = Arrays.asList(attributsItemBow);
+            attributsTypeItem = new ArrayList<>(Arrays.asList(attributsItemBow));
         } else if (itemLooted instanceof CrossbowItem){
-            attributsTypeItem = Arrays.asList(attributsItemCrossbow);
+            attributsTypeItem = new ArrayList<>(Arrays.asList(attributsItemCrossbow));
         } else if (itemLooted instanceof TridentItem){
-            attributsTypeItem = Arrays.asList(attributsItemTrident);
+            attributsTypeItem = new ArrayList<>(Arrays.asList(attributsItemTrident));
         }
 
-        System.err.println("taille liste attribut généré" + attributsTypeItem.size());
         //Crée l'objet d'item à partir de l'item
         ItemStack itemStack = new ItemStack(itemLooted, 1);
-        //Bouble sur le nombre d'attribute modifier a ajouter
+        if(itemLooted instanceof ArmorItem armorItem){
+            itemStack.addAttributeModifier(
+                    ARMOR,
+                    new AttributeModifier("modifier rpgnloots", armorItem.getDefense(), AttributeModifier.Operation.ADDITION),
+                    armorItem.getSlot()
+            );
+            if(armorItem.getToughness() > 0){
+                itemStack.addAttributeModifier(
+                        ARMOR_TOUGHNESS,
+                        new AttributeModifier("modifier rpgnloots", armorItem.getToughness(), AttributeModifier.Operation.ADDITION),
+                        armorItem.getSlot()
+                );
+            }
+            if (armorItem.getMaterial().getKnockbackResistance() > 0){
+                itemStack.addAttributeModifier(
+                        KNOCKBACK_RESISTANCE,
+                        new AttributeModifier("modifier rpgnloots", armorItem.getMaterial().getKnockbackResistance(), AttributeModifier.Operation.ADDITION),
+                        armorItem.getSlot()
+                );
+            }
+
+        }
+        else if (itemLooted instanceof TieredItem tieredItem)
+        {
+            itemStack.addAttributeModifier(
+                    ATTACK_DAMAGE,
+                    new AttributeModifier("modifier rpgnloots", tieredItem.getTier().getAttackDamageBonus() + 3, AttributeModifier.Operation.ADDITION),
+                    EquipmentSlot.MAINHAND
+            );
+            itemStack.addAttributeModifier(
+                    ATTACK_SPEED,
+                    new AttributeModifier("modifier rpgnloots", -2.8f, AttributeModifier.Operation.ADDITION),
+                    EquipmentSlot.MAINHAND
+            );
+        }
+        int gemSlot = 0;
+        //Boucle sur le nombre d'attribut modifier à ajouter
         for(int k = 0; k < tier; k++){
             nombreAleatoire = rand.nextInt(attributsTypeItem.size());
             Attribute attribute = attributsTypeItem.get(nombreAleatoire);
+
+            /*Débug
+            System.out.println("_________________________attributsTypeItem.size(): " + attributsTypeItem.size());
+            System.out.println("_________________________attribute.getRegistryName(): " + attribute.getRegistryName());
+
+             */
             attributsTypeItem.remove(nombreAleatoire);
-            itemStack = AddAttributesIntoItem(attribute, tier, itemLooted,itemStack);
+            Object[] result = AddAttributesIntoItem(attribute, tier, itemLooted,itemStack);
+            itemStack = (ItemStack)result[0];
+            gemSlot += (int)result[1];
         }
-        //Affectation des gam_Slot en fonction du tier
-        if(tier > 3){
-            if(tier > 4){
-                itemStack.addAttributeModifier(
-                        GEM_SLOT.get(),
-                        new AttributeModifier(GEM_SLOT_ID, "modifier rpgnloots", gemSlot + 2, AttributeModifier.Operation.ADDITION),
-                        itemLooted.getEquipmentSlot(itemStack)
-                );
-            }else{
-                itemStack.addAttributeModifier(
-                        GEM_SLOT.get(),
-                        new AttributeModifier(GEM_SLOT_ID, "modifier rpgnloots", gemSlot + 1, AttributeModifier.Operation.ADDITION),
-                        itemLooted.getEquipmentSlot(itemStack)
-                );
+        //Ajout des emplacements des gemslot supplémentaires
+        if(tier > 2)
+        {
+            if (tier > 4)
+            {
+                gemSlot += 2;
+            } else
+            {
+                gemSlot += 1;
             }
         }
-        gemSlot = 0;
+        //Ajout des gemslot sur l'item
+        if(gemSlot > 0){
+
+            itemStack.addAttributeModifier(
+                    GEM_SLOT.get(),
+                    new AttributeModifier(GEM_SLOT_ID, "modifier rpgnloots", gemSlot, AttributeModifier.Operation.ADDITION),
+                    itemLooted.getEquipmentSlot(itemStack)
+            );
+            for(int i = 0; i < gemSlot; i++)
+            {
+                ModTags.AddGemTag(itemStack, ModTags.DEFAULT_TAG_VALUE);
+            }
+        }
+
+        itemStack.addTagElement(ModTags.RPGNLOOT_MODIFIER, StringTag.valueOf(tier + ""));
+
+        /* Debug
+        System.out.println("_________________________itemStack.getTag(): " + itemStack.getTag());
+
+         */
         return itemStack;
     }
 
@@ -437,10 +496,12 @@ public class ItemAttributGeneration
      * @param tier le tier de l'item qui defini la valeur de modification de l'attribut
      * @param itemLooted item qui est looté
      * @param leItemStack l'objet item de l'item looté
-     * @return l'objet item avec le nouvel attribut ajouté
+     * @return un tableau d'objet avec l'item stack et le nombre de gemslot à ajouter
      */
-    public static ItemStack AddAttributesIntoItem(Attribute attribute, int tier, Item itemLooted, ItemStack leItemStack){
+    public static Object[] AddAttributesIntoItem(Attribute attribute, int tier, Item itemLooted, ItemStack leItemStack){
         float value;
+        int gemSlot = 0;
+        Object[] result = new Object[2];
         if(attribute == Attributes.ATTACK_DAMAGE){
             value = (((TieredItem) itemLooted).getTier().getAttackDamageBonus() + 3) * (rand.nextFloat(CustomAttributes.getValuesTierAttackDamage[tier - 1], CustomAttributes.getValuesTierAttackDamage[tier]) / 100 + 1);
             leItemStack.addAttributeModifier(
@@ -448,7 +509,6 @@ public class ItemAttributGeneration
                     new AttributeModifier("modifier rpgnloots", value, AttributeModifier.Operation.ADDITION),
                     EquipmentSlot.MAINHAND
             );
-            return leItemStack;
         } else if (attribute == ATTACK_SPEED)
         {
             value = (((TieredItem) itemLooted).getTier().getSpeed()) * (rand.nextFloat(CustomAttributes.getValuesTierAttackSpeed[tier - 1], CustomAttributes.getValuesTierAttackSpeed[tier]) / 100 + 1);
@@ -457,7 +517,7 @@ public class ItemAttributGeneration
                     new AttributeModifier("modifier rpgnloots", value, AttributeModifier.Operation.ADDITION),
                     EquipmentSlot.MAINHAND
             );
-            return leItemStack;
+            
         } else if (attribute == ARMOR)
         {
             value = (((ArmorItem) itemLooted).getDefense()) * (rand.nextFloat(CustomAttributes.getValuesTierArmor[tier - 1], CustomAttributes.getValuesTierArmor[tier]) / 100 + 1);
@@ -466,25 +526,29 @@ public class ItemAttributGeneration
                     new AttributeModifier("modifier rpgnloots", value, AttributeModifier.Operation.ADDITION),
                     ((ArmorItem) itemLooted).getSlot()
             );
-            return leItemStack;
+            
         } else if (attribute == ARMOR_TOUGHNESS)
         {
-            value = (((ArmorItem) itemLooted).getToughness()) * (rand.nextFloat(CustomAttributes.getValuesTierArmorToughness[tier - 1], CustomAttributes.getValuesTierArmorToughness[tier]) / 100 + 1);
+            value = rand.nextFloat(CustomAttributes.getValuesTierArmorToughness[tier - 1], CustomAttributes.getValuesTierArmorToughness[tier]) / 100;
+            if(((ArmorItem) itemLooted).getToughness() != 0)
+            {
+                value = (((ArmorItem) itemLooted).getToughness() * (value + 1));
+            }
             leItemStack.addAttributeModifier(
                     attribute,
                     new AttributeModifier("modifier rpgnloots", value, AttributeModifier.Operation.ADDITION),
                     ((ArmorItem) itemLooted).getSlot()
             );
-            return leItemStack;
+            
         } else if (attribute == KNOCKBACK_RESISTANCE)
         {
-            value = (rand.nextFloat(CustomAttributes.getValuesTierKnockbackResistance[tier - 1], CustomAttributes.getValuesTierKnockbackResistance[tier]) / 100);
+            value = (rand.nextFloat(CustomAttributes.getValuesTierKnockbackResistance[tier - 1], CustomAttributes.getValuesTierKnockbackResistance[tier]));
             leItemStack.addAttributeModifier(
                     attribute,
                     new AttributeModifier("modifier rpgnloots", value, AttributeModifier.Operation.ADDITION),
                     ((ArmorItem) itemLooted).getSlot()
             );
-            return leItemStack;
+            
         } else if (attribute == LIFE_LEECH_PERCENT.get())
         {
             value = (rand.nextFloat(CustomAttributes.getValuesTierLifeLeechPercent[tier - 1], CustomAttributes.getValuesTierLifeLeechPercent[tier]) / 100);
@@ -493,7 +557,7 @@ public class ItemAttributGeneration
                     new AttributeModifier(LIFE_LEECH_PERCENT_ID, "modifier rpgnloots", value, AttributeModifier.Operation.ADDITION),
                     EquipmentSlot.MAINHAND
             );
-            return leItemStack;
+            
         } else if (attribute == LIFE_LEECH_RAW.get())
         {
             value = rand.nextFloat(CustomAttributes.getValuesTierLifeLeechRaw[tier - 1], CustomAttributes.getValuesTierLifeLeechRaw[tier]);
@@ -502,7 +566,7 @@ public class ItemAttributGeneration
                     new AttributeModifier(LIFE_LEECH_RAW_ID, "modifier rpgnloots", value, AttributeModifier.Operation.ADDITION),
                     EquipmentSlot.MAINHAND
             );
-            return leItemStack;
+            
         } else if (attribute == REFLECT_DAMAGE_PERCENT.get())
         {
             value = (rand.nextFloat(CustomAttributes.getValuesTierReflectDamagePercent[tier - 1], CustomAttributes.getValuesTierReflectDamagePercent[tier]) / 100);
@@ -511,7 +575,7 @@ public class ItemAttributGeneration
                     new AttributeModifier(REFLECT_DAMAGE_PERCENT_ID, "modifier rpgnloots", value, AttributeModifier.Operation.ADDITION),
                     ((ArmorItem) itemLooted).getSlot()
             );
-            return leItemStack;
+            
         } else if (attribute == REFLECT_DAMAGE_RAW.get())
         {
             value = rand.nextFloat(CustomAttributes.getValuesTierReflectDamageRaw[tier - 1], CustomAttributes.getValuesTierReflectDamageRaw[tier]);
@@ -520,7 +584,7 @@ public class ItemAttributGeneration
                     new AttributeModifier(REFLECT_DAMAGE_RAW_ID, "modifier rpgnloots", value, AttributeModifier.Operation.ADDITION),
                     ((ArmorItem) itemLooted).getSlot()
             );
-            return leItemStack;
+            
         } else if (attribute == CRITICAL_CHANCE.get())
         {
             value = (rand.nextFloat(CustomAttributes.getValuesTierCriticalChance[tier - 1], CustomAttributes.getValuesTierCriticalChance[tier]) / 100);
@@ -529,7 +593,7 @@ public class ItemAttributGeneration
                     new AttributeModifier(CRITICAL_CHANCE_ID, "modifier rpgnloots", value, AttributeModifier.Operation.ADDITION),
                     EquipmentSlot.MAINHAND
             );
-            return leItemStack;
+            
         } else if (attribute == CRITICAL_DAMAGE.get())
         {
             value = (rand.nextFloat(CustomAttributes.getValuesTierCriticalDamage[tier - 1], CustomAttributes.getValuesTierCriticalDamage[tier]) / 100 + 1);
@@ -538,37 +602,48 @@ public class ItemAttributGeneration
                     new AttributeModifier(CRITICAL_DAMAGE_ID, "modifier rpgnloots", value, AttributeModifier.Operation.ADDITION),
                     EquipmentSlot.MAINHAND
             );
-            return leItemStack;
+            
         } else if (attribute == GEM_LVL_INCREASE.get())
         {
-            value = rand.nextFloat(CustomAttributes.getValuesTierGemLevelIncrease[tier - 1], CustomAttributes.getValuesTierGemLevelIncrease[tier]);
+            //value = rand.nextFloat(CustomAttributes.getValuesTierGemLevelIncrease[tier - 1], CustomAttributes.getValuesTierGemLevelIncrease[tier]);
+            value = 1;
             leItemStack.addAttributeModifier(
                     attribute,
                     new AttributeModifier(GEM_LVL_INCREASE_ID, "modifier rpgnloots", value, AttributeModifier.Operation.ADDITION),
                     itemLooted.getEquipmentSlot(leItemStack)
             );
-            return leItemStack;
+            
         } else if (attribute == MORE_GEM_SLOT.get())
         {
-            value = rand.nextFloat(CustomAttributes.getValuesTierMoreGemSlot[tier - 1], CustomAttributes.getValuesTierMoreGemSlot[tier]);
+            //value = rand.nextFloat(CustomAttributes.getValuesTierMoreGemSlot[tier - 1], CustomAttributes.getValuesTierMoreGemSlot[tier]);
+            value = 1;
             leItemStack.addAttributeModifier(
                     attribute,
                     new AttributeModifier(MORE_GEM_SLOT_ID, "modifier rpgnloots", value, AttributeModifier.Operation.ADDITION),
                     itemLooted.getEquipmentSlot(leItemStack)
             );
-            gemSlot += 1;
-            return leItemStack;
+            gemSlot = 1;
+            
         } else if (attribute == DODGE.get())
         {
-            value = (rand.nextFloat(CustomAttributes.getValuesTierDodge[tier - 1], CustomAttributes.getValuesTierDodge[tier]) / 100 + 1);
+            value = (rand.nextFloat(CustomAttributes.getValuesTierDodge[tier - 1], CustomAttributes.getValuesTierDodge[tier]));
             leItemStack.addAttributeModifier(
                     attribute,
                     new AttributeModifier(DODGE_ID, "modifier rpgnloots", value, AttributeModifier.Operation.ADDITION),
                     ((ArmorItem) itemLooted).getSlot()
             );
-            return leItemStack;
+            
+        }else if (attribute == REINFORCED.get()){
+            value = (rand.nextFloat(getValuesTierReinforced[tier - 1], CustomAttributes.getValuesTierReinforced[tier]) / 100 + 1);
+            leItemStack.addAttributeModifier(
+                    attribute,
+                    new AttributeModifier(REINFORCED_ID, "modifier rpgnloots", value, AttributeModifier.Operation.ADDITION),
+                    ((ArmorItem) itemLooted).getSlot()
+            );
         }
-        return leItemStack;
+        result[0] = leItemStack;
+        result[1] = gemSlot;
+        return result;
     }
 
 
