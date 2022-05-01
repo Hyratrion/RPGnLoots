@@ -257,14 +257,13 @@ public class LootGemToolFromMobs extends LootModifier {
         int tier = DetermineTierChance(chanceValue);
 
         //Créer l'item avec le tier
-        ItemStack itemStackLooted = ItemAttributGeneration.GenerateItemAndAttributes(tier);
+        if(tier > 0)
+        {
+            ItemStack itemStackLooted = ItemAttributGeneration.GenerateItemAndAttributes(tier);
 
-        //Génère le tooltip
-        //itemStackLooted.getTooltipImage();
-
-        //Ajoute l'item aux loot du mob
-        generatedLoot.add(itemStackLooted);
-
+            //Ajoute l'item aux loot du mob
+            generatedLoot.add(itemStackLooted);
+        }
 
         return generatedLoot;
     }
