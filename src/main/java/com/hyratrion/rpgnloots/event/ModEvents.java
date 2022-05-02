@@ -73,48 +73,88 @@ public class ModEvents
             Multimap<Attribute, AttributeModifier> attributeModifiers = itemStack.getAttributeModifiers(EquipmentSlot.MAINHAND);
 
             //debug
-            if(attributeModifiers.containsKey(CustomAttributes.ATTACK_DAMAGE))
+            /*if(attributeModifiers.containsKey(CustomAttributes.ATTACK_DAMAGE))
             {
                 float degatBase = (float)attributeModifiers.get(CustomAttributes.ATTACK_DAMAGE).stream().findFirst().get().getAmount();
                 System.out.println("----- Makotache ----- Degats precedant => " + degatBase);
                 //System.out.println("----- Makotache ----- itemStack.getTag().toString() => " + itemStack.getTag().toString());
-            }
+            }*/
+
+            float criticalChanceArmor = getValueAttributeOfArmor(CustomAttributes.CRITICAL_CHANCE.get(), event.getPlayer());
+            float criticalDamage = event.getOldDamageModifier();
 
             //on vérifie si "attributeModifiers" contiens
             //"Attributes.ATTACK_DAMAGE" ET "CustomAttributes.CRITICAL_CHANCE"
+            /*System.out.println("attributeModifiers.containsKey(Attributes.ATTACK_DAMAGE)" + attributeModifiers.containsKey(Attributes.ATTACK_DAMAGE));
+            System.out.println("attributeModifiers.containsKey(Attributes.CRITICAL_CHANCE)" + attributeModifiers.containsKey(CustomAttributes.CRITICAL_CHANCE.get()));
+            System.out.println("criticalChanceArmor" + criticalChanceArmor);*/
             if(attributeModifiers.containsKey(Attributes.ATTACK_DAMAGE) &&
-                    attributeModifiers.containsKey(CustomAttributes.CRITICAL_CHANCE.get()))
+                    (attributeModifiers.containsKey(CustomAttributes.CRITICAL_CHANCE.get()) || criticalChanceArmor > 0 || criticalDamage != 1))
             {
+                float criticalChanceBase = 0;
                 //récupération des chances de critiques
-                float criticalChanceBase = StaticClass.GetValueFromAttributeModifierMap(attributeModifiers, CustomAttributes.CRITICAL_CHANCE.get());
-                System.out.println("----- Makotache ----- base crit chance " + criticalChanceBase);
-
-
-                String[] allGemsEquiped = ModTags.GetGemTags(itemStack);
-                //System.out.println("----- Makotache ----- itemStack.getTag() => "+ itemStack.getTag());
-                System.out.println("----- Makotache ----- allGemsEquiped.length => "+ allGemsEquiped.length);
-
-                if(ModTags.HaveGemOfType(allGemsEquiped, ModTags.Items.GEM_TYPE_CRITICAL_CHANCE))
+                if(attributeModifiers.containsKey(CustomAttributes.CRITICAL_CHANCE.get()))
                 {
-                    criticalChanceBase += ModTags.GetGemTotalValueOfType(itemStack, ModTags.Items.GEM_TYPE_CRITICAL_CHANCE);
-                    System.out.println("----- Makotache ----- base +gem crit chance " + criticalChanceBase);
+                    criticalChanceBase = StaticClass.GetValueFromAttributeModifierMap(attributeModifiers, CustomAttributes.CRITICAL_CHANCE.get());
                 }
+                System.out.println("----- Makotache ----- base crit chance " + criticalChanceBase);
+                criticalChanceBase += criticalChanceArmor;
+                System.out.println("----- Makotache ----- base crit chance +armor " + criticalChanceBase);
+
+                String[] allGemsEquiped = null;
+                if(ModTags.HaveGem(itemStack))
+                {
+                    allGemsEquiped = ModTags.GetGemTags(itemStack);
+                    //System.out.println("----- Makotache ----- itemStack.getTag() => "+ itemStack.getTag());
+                    //System.out.println("----- Makotache ----- allGemsEquiped.length => "+ allGemsEquiped.length);
+
+                    if(ModTags.HaveGemOfType(allGemsEquiped, ModTags.Items.GEM_TYPE_CRITICAL_CHANCE))
+                    {
+                        criticalChanceBase += ModTags.GetGemTotalValueOfType(itemStack, ModTags.Items.GEM_TYPE_CRITICAL_CHANCE);
+                        //System.out.println("----- Makotache ----- base +gem crit chance " + criticalChanceBase);
+                    }
+                }
+
                 //récupération de la valeur de chance d'appliquer un critique
                 float criticalChanceRNG = rand.nextFloat(100);
 
+
                 //on check notre chance de faire un critique
-                if(criticalChanceRNG < criticalChanceBase)
+                if(criticalChanceRNG < criticalChanceBase || criticalChanceBase >= 100 || criticalDamage != 1)
                 {
+                    int multiplicator = 1;
+                    if(criticalChanceBase >= 100)
+                    {
+                        String critChanceStr = String.valueOf(criticalChanceBase);
+                        int posComma = critChanceStr.indexOf(".");//par ce que 94 % sure de micro
+                        posComma = posComma != -1 ? posComma - 2 : 1;
+                        multiplicator += Integer.valueOf(critChanceStr.substring(0, posComma));
+                        System.out.println("----- Makotache ----- avant multiplicator => " + multiplicator);
+
+                        criticalChanceRNG = rand.nextFloat(100);
+                        if(criticalChanceRNG < criticalChanceBase - 100 * (multiplicator -1))
+                        {
+                            multiplicator += 1;
+                        }
+                    }
+                    System.out.println("----- Makotache ----- apres multiplicator => " + multiplicator);
+
                     System.out.println("----- Makotache ----- crit EXISTANT");
 
-                    //récupération du multiplicateur des dégâts crtitique de minecraft Vanilla
-                    float criticalDamage = event.getOldDamageModifier();
-                    System.out.println("----- Makotache ----- crit base " + criticalDamage);
+                    float criticalDamageArmor = getValueAttributeOfArmor(CustomAttributes.CRITICAL_DAMAGE.get(), event.getPlayer());
 
-                    if(ModTags.HaveGemOfType(allGemsEquiped, ModTags.Items.GEM_TYPE_CRITICAL_DAMAGE))
+                    //récupération du multiplicateur des dégâts crtitique de minecraft Vanilla
+                    System.out.println("----- Makotache ----- crit base " + criticalDamage);
+                    criticalDamage += criticalDamageArmor;
+                    System.out.println("----- Makotache ----- crit base +armor " + criticalDamage);
+
+                    if(ModTags.HaveGem(itemStack))
                     {
-                        criticalDamage += ModTags.GetGemTotalValueOfType(itemStack, ModTags.Items.GEM_TYPE_CRITICAL_DAMAGE) / 100;
-                        //System.out.println("----- Makotache ----- base +gem crit damage " + criticalDamage);
+                        if(ModTags.HaveGemOfType(allGemsEquiped, ModTags.Items.GEM_TYPE_CRITICAL_DAMAGE))
+                        {
+                            criticalDamage += ModTags.GetGemTotalValueOfType(itemStack, ModTags.Items.GEM_TYPE_CRITICAL_DAMAGE) / 100;
+                            //System.out.println("----- Makotache ----- base +gem crit damage " + criticalDamage);
+                        }
                     }
 
                     //SI on possède "CustomAttributes.CRITICAL_DAMAGE"
@@ -124,6 +164,8 @@ public class ModEvents
                         criticalDamage += StaticClass.GetValueFromAttributeModifierMap(attributeModifiers, CustomAttributes.CRITICAL_DAMAGE.get()) / 100;
                         //System.out.println("----- Makotache ----- nouveau crit  " + criticalDamage);
                     }
+
+                    criticalDamage *= multiplicator;
 
                     //on change la valeur des dégâts
                     event.setDamageModifier(criticalDamage);
@@ -155,26 +197,9 @@ public class ModEvents
                 Entity entity = event.getSource().getDirectEntity();
 
                 boolean dodgeDone = false;
-                float amountDodge = 0;
 
                 //esquive
-                for (ItemStack itemStack : itemStacks)
-                {
-                    //si l'equipement d'amure est bien une armure et pas un slot vide
-                    if (itemStack.getItem() instanceof ArmorItem armorItem)
-                    {
-                        //System.out.println("Get equipement slot --> " + armorItem.getSlot());
-                        //récupération des attributeModifiers de l'item en question
-                        Multimap<Attribute, AttributeModifier> attributeModifiers = itemStack.getAttributeModifiers(armorItem.getSlot());
-
-                        //si attributeModifiers contient "CustomAttributes.DODGE.get())"
-                        if (attributeModifiers.containsKey(CustomAttributes.DODGE.get()))
-                        {
-                            //on réucpère le montant d'esquive
-                            amountDodge += StaticClass.GetValueFromAttributeModifierMap(attributeModifiers, CustomAttributes.DODGE.get());
-                        }
-                    }
-                }
+                float amountDodge = getValueAttributeOfArmor(CustomAttributes.DODGE.get(), player);
 
                 //si on a une chance de faire une equive
                 if (amountDodge > 0)
@@ -317,7 +342,32 @@ public class ModEvents
 
                 listToolTip.clear();
 
-                MutableComponent mutablecomponent = (new TextComponent("")).append(itemStack.getHoverName()).withStyle(itemStack.getRarity().color);
+                ChatFormatting color = null;
+
+                switch (ModTags.GetTier(itemStack))
+                {
+                    case 1 :
+                        color = ChatFormatting.GREEN;
+                        break;
+
+                    case 2 :
+                        color = ChatFormatting.BLUE;
+                        break;
+
+                    case 3 :
+                        color = ChatFormatting.LIGHT_PURPLE;
+                        break;
+
+                    case 4 :
+                        color = ChatFormatting.GOLD;
+                        break;
+
+                    case 5 :
+                        color = ChatFormatting.DARK_RED;
+                        break;
+                }
+
+                MutableComponent mutablecomponent = (new TextComponent("")).append(itemStack.getHoverName()).withStyle(color).withStyle(ChatFormatting.ITALIC);
                 if (itemStack.hasCustomHoverName()) {
                     mutablecomponent.withStyle(ChatFormatting.ITALIC);
                 }
@@ -373,8 +423,17 @@ public class ModEvents
                 {
 
                     //System.out.println("----- Makotache ----- onItemTooltipEvent.AttributeModifier => start");
+                    EquipmentSlot[] equipmentSlots;
 
-                    EquipmentSlot[] equipmentSlots = ModTags.GetEquipmentSlotOf(itemStack);
+                    if(itemStack.getItem().equals(Items.SHIELD))
+                    {
+                        equipmentSlots = new EquipmentSlot[]{EquipmentSlot.MAINHAND};
+                    }
+                    else
+                    {
+                        equipmentSlots = ModTags.GetEquipmentSlotOf(itemStack);
+                    }
+                    //EquipmentSlot[] equipmentSlots = ModTags.GetEquipmentSlotOf(itemStack);
                     for(int i =0; i < equipmentSlots.length; i++)
                     {
                         listToolTip.add(TextComponent.EMPTY);
@@ -408,7 +467,7 @@ public class ModEvents
 
 
                                     modifierPlus = false;
-                                    chatFormatting = ChatFormatting.DARK_GREEN;
+                                    chatFormatting = ChatFormatting.RED;
                                 }
                                 else if (attribute.equals(Attributes.ATTACK_SPEED))
                                 {
@@ -612,4 +671,32 @@ public class ModEvents
     private static int getHideFlags(ItemStack itemStack) {
         return itemStack.hasTag() && itemStack.getTag().contains("HideFlags", 99) ? itemStack.getTag().getInt("HideFlags") : itemStack.getItem().getDefaultTooltipHideFlags(itemStack);
     }
+
+
+    private static float getValueAttributeOfArmor(Attribute attribute, Player player)
+    {
+        float result = 0;
+
+        Iterable<ItemStack> itemStacks = player.getArmorSlots();
+
+        for (ItemStack itemStack : itemStacks)
+        {
+            //si l'equipement d'amure est bien une armure et pas un slot vide
+            if (itemStack.getItem() instanceof ArmorItem armorItem)
+            {
+                //récupération des attributeModifiers de l'item en question
+                Multimap<Attribute, AttributeModifier> attributeModifiers = itemStack.getAttributeModifiers(armorItem.getSlot());
+
+                //si attributeModifiers contient "CustomAttributes.DODGE.get())"
+                if (attributeModifiers.containsKey(attribute))
+                {
+                    //on réucpère le montant d'esquive
+                    result += StaticClass.GetValueFromAttributeModifierMap(attributeModifiers, attribute);
+                }
+            }
+        }
+
+        return result;
+    }
+
 }

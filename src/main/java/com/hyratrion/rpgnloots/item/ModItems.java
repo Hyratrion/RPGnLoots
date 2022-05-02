@@ -169,31 +169,6 @@ public class ModItems
     public static final RegistryObject<Item> GEM_SPEED_LVL_5 = ITEMS.register("gem_speed_lvl_5",
             () -> new Item(new Item.Properties().tab(ModCreativeModeTab.RPGNLOOTS_TAB)));
 
-    //Gemmes lvl 6
-    public static final RegistryObject<Item> GEM_DAMAGE_LVL_6 = ITEMS.register("gem_damage_lvl_6",
-            () -> new Item(new Item.Properties().tab(ModCreativeModeTab.RPGNLOOTS_TAB)));
-
-    public static final RegistryObject<Item> GEM_SHIELD_LVL_6 = ITEMS.register("gem_shield_lvl_6",
-            () -> new Item(new Item.Properties().tab(ModCreativeModeTab.RPGNLOOTS_TAB)));
-
-    public static final RegistryObject<Item> GEM_MAX_LIFE_LVL_6 = ITEMS.register("gem_max_life_lvl_6",
-            () -> new Item(new Item.Properties().tab(ModCreativeModeTab.RPGNLOOTS_TAB)));
-
-    public static final RegistryObject<Item> GEM_CHANCE_LVL_6 = ITEMS.register("gem_chance_lvl_6",
-            () -> new Item(new Item.Properties().tab(ModCreativeModeTab.RPGNLOOTS_TAB)));
-
-    public static final RegistryObject<Item> GEM_CRITICAL_CHANCE_LVL_6 = ITEMS.register("gem_critical_chance_lvl_6",
-            () -> new Item(new Item.Properties().tab(ModCreativeModeTab.RPGNLOOTS_TAB)));
-
-    public static final RegistryObject<Item> GEM_CRITICAL_DAMAGE_LVL_6 = ITEMS.register("gem_critical_damage_lvl_6",
-            () -> new Item(new Item.Properties().tab(ModCreativeModeTab.RPGNLOOTS_TAB)));
-
-    public static final RegistryObject<Item> GEM_REPARATION_LVL_6 = ITEMS.register("gem_reparation_lvl_6",
-            () -> new Item(new Item.Properties().tab(ModCreativeModeTab.RPGNLOOTS_TAB)));
-
-    public static final RegistryObject<Item> GEM_SPEED_LVL_6 = ITEMS.register("gem_speed_lvl_6",
-            () -> new Item(new Item.Properties().tab(ModCreativeModeTab.RPGNLOOTS_TAB)));
-
     public static Item[] GEM_LVL_0;
     public static Item[] GEM_LVL_1;
     public static Item[] GEM_LVL_2;
