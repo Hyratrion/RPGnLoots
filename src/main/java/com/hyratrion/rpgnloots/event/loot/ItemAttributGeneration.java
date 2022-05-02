@@ -1,6 +1,7 @@
 package com.hyratrion.rpgnloots.event.loot;
 
 import com.google.common.base.Equivalence;
+import com.hyratrion.rpgnloots.util.ModStats;
 import com.hyratrion.rpgnloots.util.ModTags;
 import net.minecraft.nbt.StringTag;
 import net.minecraft.util.random.WeightedEntry;
@@ -15,6 +16,7 @@ import org.apache.logging.log4j.spi.ObjectThreadContextMap;
 import java.util.*;
 
 import static com.hyratrion.rpgnloots.event.loot.CustomAttributes.*;
+import static net.minecraft.world.item.Tiers.*;
 
 public class ItemAttributGeneration
 {
@@ -38,7 +40,7 @@ public class ItemAttributGeneration
             Items.WOODEN_HOE,
             Items.WOODEN_PICKAXE,
             Items.WOODEN_SHOVEL,
-            Items.FISHING_ROD
+            //Items.FISHING_ROD
     };
     /**
      * Tableau des items tier 2
@@ -58,7 +60,7 @@ public class ItemAttributGeneration
             Items.IRON_HOE,
             Items.IRON_PICKAXE,
             Items.IRON_SHOVEL,
-            Items.SHEARS
+            //Items.SHEARS
 
     };
     /**
@@ -276,7 +278,6 @@ public class ItemAttributGeneration
      * Liste des attributs pour les items de type Bow
      */
     static final Attribute[] attributsItemBow = new Attribute[]{
-            Attributes.ATTACK_DAMAGE,
             CustomAttributes.REINFORCED.get(),
             Attributes.KNOCKBACK_RESISTANCE,
             CustomAttributes.LIFE_LEECH_PERCENT.get(),
@@ -290,7 +291,6 @@ public class ItemAttributGeneration
      * Liste des attributs pour les items de type Crossbow
      */
     static final Attribute[] attributsItemCrossbow = new Attribute[]{
-            Attributes.ATTACK_DAMAGE,
             CustomAttributes.REINFORCED.get(),
             Attributes.KNOCKBACK_RESISTANCE,
             CustomAttributes.LIFE_LEECH_PERCENT.get(),
@@ -304,7 +304,6 @@ public class ItemAttributGeneration
      * Liste des attributs pour les items de type Shears
      */
     static final Attribute[] attributsItemShears = new Attribute[]{
-            Attributes.ATTACK_SPEED,
             CustomAttributes.REINFORCED.get(),
             Attributes.KNOCKBACK_RESISTANCE,
             CustomAttributes.GEM_LVL_INCREASE.get(),
@@ -314,8 +313,6 @@ public class ItemAttributGeneration
      * Liste des attributs pour les items de type FishingRod
      */
     static final Attribute[] attributsItemFishingRod = new Attribute[]{
-            Attributes.ATTACK_DAMAGE,
-            Attributes.ATTACK_SPEED,
             CustomAttributes.REINFORCED.get(),
             Attributes.KNOCKBACK_RESISTANCE,
             CustomAttributes.LIFE_LEECH_PERCENT.get(),
@@ -357,10 +354,10 @@ public class ItemAttributGeneration
     public static ItemStack GenerateItemAndAttributes(int tier){
         List<Item> itemsLootablesParLeTier = new ArrayList<>();
         for(int k = 0; k < tier; k++){
-            itemsLootablesParLeTier.addAll(Arrays.stream(lesItemsTier[k]).toList()); //= (Item[])ArrayUtils.add(itemsLootablesParLeTier,lesItemsTier[k]);
+            itemsLootablesParLeTier.addAll(Arrays.stream(lesItemsTier[k]).toList());
         }
         int nombreAleatoire = rand.nextInt(itemsLootablesParLeTier.size());
-        Item itemLooted = itemsLootablesParLeTier.get(nombreAleatoire);//[nombreAleatoire];
+        Item itemLooted = itemsLootablesParLeTier.get(nombreAleatoire);
 
         //détermination de l'instance de l'item pour générer la liste des attributs
         List<Attribute> attributsTypeItem = new ArrayList<>();
@@ -434,11 +431,121 @@ public class ItemAttributGeneration
                     new AttributeModifier("modifier rpgnloots", tieredItem.getTier().getAttackDamageBonus() + 3, AttributeModifier.Operation.ADDITION),
                     EquipmentSlot.MAINHAND
             );
-            itemStack.addAttributeModifier(
+            
+            if(itemLooted instanceof PickaxeItem){
+                itemStack.addAttributeModifier(
+                        ATTACK_SPEED,
+                        new AttributeModifier("modifier rpgnloots", -2.8f, AttributeModifier.Operation.ADDITION),
+                        EquipmentSlot.MAINHAND
+                );
+            }
+            else if (itemLooted instanceof SwordItem){
+                itemStack.addAttributeModifier(
                     ATTACK_SPEED,
-                    new AttributeModifier("modifier rpgnloots", -2.8f, AttributeModifier.Operation.ADDITION),
+                    new AttributeModifier("modifier rpgnloots", -2.4f, AttributeModifier.Operation.ADDITION),
                     EquipmentSlot.MAINHAND
             );
+            } else if (itemLooted instanceof ShovelItem)
+            {
+                itemStack.addAttributeModifier(
+                        ATTACK_SPEED,
+                        new AttributeModifier("modifier rpgnloots", -3f, AttributeModifier.Operation.ADDITION),
+                        EquipmentSlot.MAINHAND
+                );
+            } else if (itemLooted instanceof AxeItem axeItem)
+            {
+                if(axeItem.getTier() == WOOD){
+                    itemStack.addAttributeModifier(
+                            ATTACK_SPEED,
+                            new AttributeModifier("modifier rpgnloots", -3.2f, AttributeModifier.Operation.ADDITION),
+                            EquipmentSlot.MAINHAND
+                    );
+                } else if (axeItem.getTier() == STONE)
+                {
+                    itemStack.addAttributeModifier(
+                            ATTACK_SPEED,
+                            new AttributeModifier("modifier rpgnloots", -3f, AttributeModifier.Operation.ADDITION),
+                            EquipmentSlot.MAINHAND
+                    );
+                } else if (axeItem.getTier() == GOLD)
+                {
+                    itemStack.addAttributeModifier(
+                            ATTACK_SPEED,
+                            new AttributeModifier("modifier rpgnloots", -3f, AttributeModifier.Operation.ADDITION),
+                            EquipmentSlot.MAINHAND
+                    );
+                } else if (axeItem.getTier() == IRON)
+                {
+                    itemStack.addAttributeModifier(
+                            ATTACK_SPEED,
+                            new AttributeModifier("modifier rpgnloots", -3.1f, AttributeModifier.Operation.ADDITION),
+                            EquipmentSlot.MAINHAND
+                    );
+                } else if (axeItem.getTier() == DIAMOND)
+                {
+                    itemStack.addAttributeModifier(
+                            ATTACK_SPEED,
+                            new AttributeModifier("modifier rpgnloots", -3f, AttributeModifier.Operation.ADDITION),
+                            EquipmentSlot.MAINHAND
+                    );
+                } else if (axeItem.getTier() == NETHERITE)
+                {
+                    itemStack.addAttributeModifier(
+                            ATTACK_SPEED,
+                            new AttributeModifier("modifier rpgnloots", -3f, AttributeModifier.Operation.ADDITION),
+                            EquipmentSlot.MAINHAND
+                    );
+                }
+            } else if (itemLooted instanceof HoeItem hoeItem)
+            {
+                if(hoeItem.getTier() == WOOD){
+                    itemStack.addAttributeModifier(
+                            ATTACK_SPEED,
+                            new AttributeModifier("modifier rpgnloots", -3f, AttributeModifier.Operation.ADDITION),
+                            EquipmentSlot.MAINHAND
+                    );
+                } else if (hoeItem.getTier() == STONE)
+                {
+                    itemStack.addAttributeModifier(
+                            ATTACK_SPEED,
+                            new AttributeModifier("modifier rpgnloots", -2f, AttributeModifier.Operation.ADDITION),
+                            EquipmentSlot.MAINHAND
+                    );
+                } else if (hoeItem.getTier() == GOLD)
+                {
+                    itemStack.addAttributeModifier(
+                            ATTACK_SPEED,
+                            new AttributeModifier("modifier rpgnloots", -3f, AttributeModifier.Operation.ADDITION),
+                            EquipmentSlot.MAINHAND
+                    );
+                } else if (hoeItem.getTier() == IRON)
+                {
+                    itemStack.addAttributeModifier(
+                            ATTACK_SPEED,
+                            new AttributeModifier("modifier rpgnloots", -1f, AttributeModifier.Operation.ADDITION),
+                            EquipmentSlot.MAINHAND
+                    );
+                }
+
+                else if (hoeItem.getTier() == DIAMOND)
+                {
+                    itemStack.addAttributeModifier(
+                            ATTACK_SPEED,
+                            new AttributeModifier("modifier rpgnloots", 0f, AttributeModifier.Operation.ADDITION),
+                            EquipmentSlot.MAINHAND
+                    );
+                } else if (hoeItem.getTier() == NETHERITE)
+                {
+                    itemStack.addAttributeModifier(
+                            ATTACK_SPEED,
+                            new AttributeModifier("modifier rpgnloots", 0f, AttributeModifier.Operation.ADDITION),
+                            EquipmentSlot.MAINHAND
+                    );
+                }
+
+
+            }
+            
         }
         int gemSlot = 0;
         //Boucle sur le nombre d'attribut modifier à ajouter
@@ -543,12 +650,16 @@ public class ItemAttributGeneration
         } else if (attribute == KNOCKBACK_RESISTANCE)
         {
             value = (rand.nextFloat(CustomAttributes.getValuesTierKnockbackResistance[tier - 1], CustomAttributes.getValuesTierKnockbackResistance[tier]));
-            leItemStack.addAttributeModifier(
-                    attribute,
-                    new AttributeModifier("modifier rpgnloots", value, AttributeModifier.Operation.ADDITION),
-                    ((ArmorItem) itemLooted).getSlot()
-            );
-            
+            EquipmentSlot[] temp = ModTags.GetEquipmentSlotOf(leItemStack);
+            for (EquipmentSlot slot : temp)
+            {
+                leItemStack.addAttributeModifier(
+                        attribute,
+                        new AttributeModifier("modifier rpgnloots", value, AttributeModifier.Operation.ADDITION),
+                        slot
+                );
+            }
+
         } else if (attribute == LIFE_LEECH_PERCENT.get())
         {
             value = (rand.nextFloat(CustomAttributes.getValuesTierLifeLeechPercent[tier - 1], CustomAttributes.getValuesTierLifeLeechPercent[tier]) / 100);
@@ -638,7 +749,7 @@ public class ItemAttributGeneration
             leItemStack.addAttributeModifier(
                     attribute,
                     new AttributeModifier(REINFORCED_ID, "modifier rpgnloots", value, AttributeModifier.Operation.ADDITION),
-                    ((ArmorItem) itemLooted).getSlot()
+                    EquipmentSlot.MAINHAND
             );
         }
         result[0] = leItemStack;
