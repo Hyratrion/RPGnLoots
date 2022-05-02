@@ -204,11 +204,9 @@ public class LootGemToolFromMobs extends LootModifier {
                         stuff.getEquipmentSlot(itemStackStuff)
                 );
 
-                ModTags.AddGemTag(itemStackStuff, ModTags.CreateTagFromItem(ModItems.GEM_CRITICAL_CHANCE_LVL_4.get()));
-                if(tier > 1 )
+                for(int i = 0; i < tier; i++)
                 {
-                    ModTags.AddGemTag(itemStackStuff, ModTags.CreateTagFromItem(ModItems.GEM_CRITICAL_DAMAGE_LVL_4.get()));
-
+                    ModTags.AddGemTag(itemStackStuff, ModTags.DEFAULT_TAG_VALUE);
                 }
 
             }
@@ -240,7 +238,7 @@ public class LootGemToolFromMobs extends LootModifier {
             itemStackStuff.getTooltipImage();
             //SWORD.getDescription().add new TranslatableComponent("this.getDescriptionId()");
 
-
+            itemStackStuff.addTagElement(ModTags.RPGNLOOT_MODIFIER, StringTag.valueOf(ModTags.RPGNLOOT_MODIFIER));
             generatedLoot.add(itemStackStuff);
         }
 
