@@ -181,6 +181,34 @@ public class ModTags
         return ReplaceInListTag(listtag, index, StringTag.valueOf(GetGemTag(newGem)));
     }
 
+    public static boolean ReplaceFirstEmptyGemTag( ItemStack itemStack,  Item newGem)
+    {
+        CompoundTag tag = itemStack.getOrCreateTag();
+ //       System.out.println("'"+"MA GROSSE GITE"+"'");
+        if (!tag.contains(ModItems.GEM_TYPE) || CountGem(itemStack, true) == 0)
+        {
+            return false;
+        }
+
+        ListTag listtag = (ListTag)tag.get(ModItems.GEM_TYPE);
+        int index = -1;
+        for(int i = 0; i < listtag.size(); i++)
+        {
+            String value = StringValue(listtag.getCompound(i).get("Name"));
+
+  //          System.out.println("StringValue(DEFAULT_TAG_VALUE)'"+StringValue(DEFAULT_TAG_VALUE)+"'");
+  //          System.out.println("'"+value+"'");
+            if(value.equals(StringValue(DEFAULT_TAG_VALUE)))
+            {
+                index = i;
+                break;
+            }
+        }
+
+
+        return index > -1 && ReplaceInListTag(listtag, index, StringTag.valueOf(GetGemTag(newGem)));
+    }
+
     public static boolean ReplaceGemTag( ItemStack itemStack,  Item gem,  Item newGem)
     {
         CompoundTag tag = itemStack.getOrCreateTag();
@@ -325,7 +353,7 @@ public class ModTags
         {
             String value = StringValue(listtag.getCompound(i).get("Name"));
 
-            if(isEmpty == value.equals(DEFAULT_TAG_VALUE.toString()))
+            if(isEmpty == value.equals(StringValue(DEFAULT_TAG_VALUE)))
             {
                 result++;
             }
