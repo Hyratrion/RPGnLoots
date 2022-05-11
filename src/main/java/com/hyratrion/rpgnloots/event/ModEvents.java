@@ -643,4 +643,5 @@ public class ModEvents
             MenuScreens.register(ModMenuTypes.SOCKETING_TABLE_MENU_TYPE, SocketingTableScreen::new);
         });
     }*/
+
 }

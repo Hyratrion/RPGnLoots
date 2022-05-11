@@ -34,6 +34,7 @@ public class ModMenuTypes {
     }
 
 
+
  /*   public static final DeferredRegister<MenuType<?>> MENUS =
             DeferredRegister.create(ForgeRegistries.CONTAINERS, RPGNLOOT.MOD_ID);
 

@@ -439,6 +439,7 @@ public class SocketingTableMenu extends AbstractContainerMenu implements Supplie
         }
     }*/
 
+
     @Override
     public Map<Integer, Slot> get() {
         return customSlots;
