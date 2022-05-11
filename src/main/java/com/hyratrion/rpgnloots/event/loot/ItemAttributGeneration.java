@@ -33,8 +33,8 @@ public class ItemAttributGeneration
             Items.LEATHER_CHESTPLATE,
             Items.LEATHER_LEGGINGS,
             Items.LEATHER_BOOTS,
-            Items.BOW,
-            Items.CROSSBOW,
+//            Items.BOW,
+//            Items.CROSSBOW,
             Items.WOODEN_SWORD,
             Items.WOODEN_AXE,
             Items.WOODEN_HOE,
@@ -75,8 +75,8 @@ public class ItemAttributGeneration
             Items.GOLDEN_AXE,
             Items.GOLDEN_HOE,
             Items.GOLDEN_PICKAXE,
-            Items.GOLDEN_SHOVEL,
-            Items.TRIDENT
+            Items.GOLDEN_SHOVEL//,
+ //           Items.TRIDENT
     };
     /**
      * Tableau des items tier 4
@@ -125,7 +125,7 @@ public class ItemAttributGeneration
     static final Attribute[] attributsItemSword = new Attribute[]{
             Attributes.ATTACK_DAMAGE,
             Attributes.ATTACK_SPEED,
-            CustomAttributes.REINFORCED.get(),
+//            CustomAttributes.REINFORCED.get(),
             Attributes.KNOCKBACK_RESISTANCE,
             CustomAttributes.LIFE_LEECH_PERCENT.get(),
             CustomAttributes.LIFE_LEECH_RAW.get(),
@@ -138,7 +138,7 @@ public class ItemAttributGeneration
      * Liste des attributs pour les items de type Helmet
      */
     static final Attribute[] attributsItemHelmet = new Attribute[]{
-            CustomAttributes.REINFORCED.get(),
+//            CustomAttributes.REINFORCED.get(),
             Attributes.ARMOR,
             Attributes.ARMOR_TOUGHNESS,
             Attributes.KNOCKBACK_RESISTANCE,
@@ -154,7 +154,7 @@ public class ItemAttributGeneration
      * Liste des attributs pour les items de type Chestplate
      */
     static final Attribute[] attributsItemChestplate = new Attribute[]{
-            CustomAttributes.REINFORCED.get(),
+//            CustomAttributes.REINFORCED.get(),
             Attributes.ARMOR,
             Attributes.ARMOR_TOUGHNESS,
             Attributes.KNOCKBACK_RESISTANCE,
@@ -170,7 +170,7 @@ public class ItemAttributGeneration
      * Liste des attributs pour les items de type Leggings
      */
     static final Attribute[] attributsItemLeggings = new Attribute[]{
-            CustomAttributes.REINFORCED.get(),
+ //           CustomAttributes.REINFORCED.get(),
             Attributes.ARMOR,
             Attributes.ARMOR_TOUGHNESS,
             Attributes.KNOCKBACK_RESISTANCE,
@@ -186,7 +186,7 @@ public class ItemAttributGeneration
      * Liste des attributs pour les items de type Boots
      */
     static final Attribute[] attributsItemBoots = new Attribute[]{
-            CustomAttributes.REINFORCED.get(),
+ //           CustomAttributes.REINFORCED.get(),
             Attributes.ARMOR,
             Attributes.ARMOR_TOUGHNESS,
             Attributes.KNOCKBACK_RESISTANCE,
@@ -202,7 +202,7 @@ public class ItemAttributGeneration
      * Liste des attributs pour les items de type Elytra
      */
     static final Attribute[] attributsItemElytra = new Attribute[]{
-            CustomAttributes.REINFORCED.get(),
+ //           CustomAttributes.REINFORCED.get(),
             Attributes.ARMOR,
             Attributes.ARMOR_TOUGHNESS,
             Attributes.KNOCKBACK_RESISTANCE,
@@ -220,7 +220,7 @@ public class ItemAttributGeneration
     static final Attribute[] attributsItemPickaxe = new Attribute[]{
             Attributes.ATTACK_DAMAGE,
             Attributes.ATTACK_SPEED,
-            CustomAttributes.REINFORCED.get(),
+  //          CustomAttributes.REINFORCED.get(),
             Attributes.KNOCKBACK_RESISTANCE,
             CustomAttributes.LIFE_LEECH_PERCENT.get(),
             CustomAttributes.LIFE_LEECH_RAW.get(),
@@ -235,7 +235,7 @@ public class ItemAttributGeneration
     static final Attribute[] attributsItemAxe = new Attribute[]{
             Attributes.ATTACK_DAMAGE,
             Attributes.ATTACK_SPEED,
-            CustomAttributes.REINFORCED.get(),
+  //          CustomAttributes.REINFORCED.get(),
             Attributes.KNOCKBACK_RESISTANCE,
             CustomAttributes.LIFE_LEECH_PERCENT.get(),
             CustomAttributes.LIFE_LEECH_RAW.get(),
@@ -250,7 +250,7 @@ public class ItemAttributGeneration
     static final Attribute[] attributsItemShovel = new Attribute[]{
             Attributes.ATTACK_DAMAGE,
             Attributes.ATTACK_SPEED,
-            CustomAttributes.REINFORCED.get(),
+  //          CustomAttributes.REINFORCED.get(),
             Attributes.KNOCKBACK_RESISTANCE,
             CustomAttributes.LIFE_LEECH_PERCENT.get(),
             CustomAttributes.LIFE_LEECH_RAW.get(),
@@ -265,7 +265,7 @@ public class ItemAttributGeneration
     static final Attribute[] attributsItemHoe = new Attribute[]{
             Attributes.ATTACK_DAMAGE,
             Attributes.ATTACK_SPEED,
-            CustomAttributes.REINFORCED.get(),
+   //         CustomAttributes.REINFORCED.get(),
             Attributes.KNOCKBACK_RESISTANCE,
             CustomAttributes.LIFE_LEECH_PERCENT.get(),
             CustomAttributes.LIFE_LEECH_RAW.get(),
@@ -278,7 +278,7 @@ public class ItemAttributGeneration
      * Liste des attributs pour les items de type Bow
      */
     static final Attribute[] attributsItemBow = new Attribute[]{
-            CustomAttributes.REINFORCED.get(),
+   //         CustomAttributes.REINFORCED.get(),
             Attributes.KNOCKBACK_RESISTANCE,
             CustomAttributes.LIFE_LEECH_PERCENT.get(),
             CustomAttributes.LIFE_LEECH_RAW.get(),
@@ -291,7 +291,7 @@ public class ItemAttributGeneration
      * Liste des attributs pour les items de type Crossbow
      */
     static final Attribute[] attributsItemCrossbow = new Attribute[]{
-            CustomAttributes.REINFORCED.get(),
+ //           CustomAttributes.REINFORCED.get(),
             Attributes.KNOCKBACK_RESISTANCE,
             CustomAttributes.LIFE_LEECH_PERCENT.get(),
             CustomAttributes.LIFE_LEECH_RAW.get(),
@@ -304,7 +304,7 @@ public class ItemAttributGeneration
      * Liste des attributs pour les items de type Shears
      */
     static final Attribute[] attributsItemShears = new Attribute[]{
-            CustomAttributes.REINFORCED.get(),
+   //         CustomAttributes.REINFORCED.get(),
             Attributes.KNOCKBACK_RESISTANCE,
             CustomAttributes.GEM_LVL_INCREASE.get(),
             CustomAttributes.MORE_GEM_SLOT.get()
@@ -313,7 +313,7 @@ public class ItemAttributGeneration
      * Liste des attributs pour les items de type FishingRod
      */
     static final Attribute[] attributsItemFishingRod = new Attribute[]{
-            CustomAttributes.REINFORCED.get(),
+    //        CustomAttributes.REINFORCED.get(),
             Attributes.KNOCKBACK_RESISTANCE,
             CustomAttributes.LIFE_LEECH_PERCENT.get(),
             CustomAttributes.LIFE_LEECH_RAW.get(),
@@ -328,7 +328,7 @@ public class ItemAttributGeneration
     static final Attribute[] attributsItemTrident = new Attribute[]{
             Attributes.ATTACK_DAMAGE,
             Attributes.ATTACK_SPEED,
-            CustomAttributes.REINFORCED.get(),
+  //          CustomAttributes.REINFORCED.get(),
             Attributes.KNOCKBACK_RESISTANCE,
             CustomAttributes.LIFE_LEECH_PERCENT.get(),
             CustomAttributes.LIFE_LEECH_RAW.get(),
@@ -339,7 +339,7 @@ public class ItemAttributGeneration
      * Liste des attributs pour les items de type Shield
      */
     static final Attribute[] attributsItemShield = new Attribute[]{
-            CustomAttributes.REINFORCED.get(),
+    //        CustomAttributes.REINFORCED.get(),
             Attributes.KNOCKBACK_RESISTANCE,
             CustomAttributes.GEM_LVL_INCREASE.get(),
             CustomAttributes.MORE_GEM_SLOT.get()
@@ -549,7 +549,11 @@ public class ItemAttributGeneration
         }
         int gemSlot = 0;
         //Boucle sur le nombre d'attribut modifier à ajouter
-        for(int k = 0; k < tier; k++){
+        for(int k = 0; k < tier; k++) {
+            if(attributsTypeItem.size() <= 0)
+            {
+                break;
+            }
             nombreAleatoire = rand.nextInt(attributsTypeItem.size());
             Attribute attribute = attributsTypeItem.get(nombreAleatoire);
 
@@ -590,10 +594,10 @@ public class ItemAttributGeneration
 
         itemStack.addTagElement(ModTags.RPGNLOOT_MODIFIER, StringTag.valueOf(tier + ""));
 
-        /* Debug
-        System.out.println("_________________________itemStack.getTag(): " + itemStack.getTag());
+        //Debug
+        //System.out.println("_________________________itemStack.getTag(): " + itemStack.getTag());
 
-         */
+
         return itemStack;
     }
 
@@ -662,7 +666,7 @@ public class ItemAttributGeneration
 
         } else if (attribute == LIFE_LEECH_PERCENT.get())
         {
-            value = (rand.nextFloat(CustomAttributes.getValuesTierLifeLeechPercent[tier - 1], CustomAttributes.getValuesTierLifeLeechPercent[tier]) / 100);
+            value = (rand.nextFloat(CustomAttributes.getValuesTierLifeLeechPercent[tier - 1], CustomAttributes.getValuesTierLifeLeechPercent[tier]));
             leItemStack.addAttributeModifier(
                     attribute,
                     new AttributeModifier(LIFE_LEECH_PERCENT_ID, "modifier rpgnloots", value, AttributeModifier.Operation.ADDITION),
@@ -680,7 +684,7 @@ public class ItemAttributGeneration
             
         } else if (attribute == REFLECT_DAMAGE_PERCENT.get())
         {
-            value = (rand.nextFloat(CustomAttributes.getValuesTierReflectDamagePercent[tier - 1], CustomAttributes.getValuesTierReflectDamagePercent[tier]) / 100);
+            value = (rand.nextFloat(CustomAttributes.getValuesTierReflectDamagePercent[tier - 1], CustomAttributes.getValuesTierReflectDamagePercent[tier]));
             leItemStack.addAttributeModifier(
                     attribute,
                     new AttributeModifier(REFLECT_DAMAGE_PERCENT_ID, "modifier rpgnloots", value, AttributeModifier.Operation.ADDITION),
@@ -698,22 +702,31 @@ public class ItemAttributGeneration
             
         } else if (attribute == CRITICAL_CHANCE.get())
         {
-            value = (rand.nextFloat(CustomAttributes.getValuesTierCriticalChance[tier - 1], CustomAttributes.getValuesTierCriticalChance[tier]) / 100);
-            leItemStack.addAttributeModifier(
-                    attribute,
-                    new AttributeModifier(CRITICAL_CHANCE_ID, "modifier rpgnloots", value, AttributeModifier.Operation.ADDITION),
-                    EquipmentSlot.MAINHAND
-            );
+            value = (rand.nextFloat(CustomAttributes.getValuesTierCriticalChance[tier - 1], CustomAttributes.getValuesTierCriticalChance[tier]));
+            EquipmentSlot[] temp = ModTags.GetEquipmentSlotOf(leItemStack);
+            for (EquipmentSlot slot : temp)
+            {
+                leItemStack.addAttributeModifier(
+                        attribute,
+                        new AttributeModifier(CRITICAL_CHANCE_ID, "modifier rpgnloots", value, AttributeModifier.Operation.ADDITION),
+                        slot
+                );
+            }
             
         } else if (attribute == CRITICAL_DAMAGE.get())
         {
-            value = (rand.nextFloat(CustomAttributes.getValuesTierCriticalDamage[tier - 1], CustomAttributes.getValuesTierCriticalDamage[tier]) / 100 + 1);
-            leItemStack.addAttributeModifier(
+            value = (rand.nextFloat(CustomAttributes.getValuesTierCriticalDamage[tier - 1], CustomAttributes.getValuesTierCriticalDamage[tier]));
+
+            EquipmentSlot[] temp = ModTags.GetEquipmentSlotOf(leItemStack);
+            for (EquipmentSlot slot : temp)
+            {
+                leItemStack.addAttributeModifier(
                     attribute,
                     new AttributeModifier(CRITICAL_DAMAGE_ID, "modifier rpgnloots", value, AttributeModifier.Operation.ADDITION),
-                    EquipmentSlot.MAINHAND
-            );
-            
+                    slot
+                );
+            }
+
         } else if (attribute == GEM_LVL_INCREASE.get())
         {
             //value = rand.nextFloat(CustomAttributes.getValuesTierGemLevelIncrease[tier - 1], CustomAttributes.getValuesTierGemLevelIncrease[tier]);

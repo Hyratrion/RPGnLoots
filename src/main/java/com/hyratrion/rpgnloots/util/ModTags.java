@@ -521,6 +521,10 @@ public class ModTags
         return GetGemTotalValueOfType(GetGemTags(itemStack), type);
     }
 
+    public static int GetTier(ItemStack itemStack)
+    {
+        return Integer.valueOf(StringValue(itemStack.getOrCreateTag().get(RPGNLOOT_MODIFIER)));
+    }
 
     public static StringTag CreateTagFromItem( Item item)
     {
