@@ -31,10 +31,10 @@ logoFile="examplemod.png" #optional
 # A text field displayed in the mod UI
 credits="Thanks for this example mod goes to Java" #optional
 # A text field displayed in the mod UI
-authors="Love, Cheese and small house plants" #optional
+authors="Inspiré par Hyratrion, développé par Makotache avec l'aide de Microcraft530" #optional
 # The description text for the mod (multi line!) (#mandatory)
 description='''
-Best mod ever test
+Ce mod permet de loot des armes et armure avec des stats modifié
 '''
 # A dependency - use the . to indicate dependency for a specific modid. Dependencies are optional.
 [[dependencies.rpgnloots]] #optional

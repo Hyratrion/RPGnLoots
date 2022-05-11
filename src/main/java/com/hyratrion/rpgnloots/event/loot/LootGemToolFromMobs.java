@@ -1,18 +1,12 @@
 package com.hyratrion.rpgnloots.event.loot;
 
-import com.google.common.collect.Multimap;
 import com.google.gson.JsonObject;
 import com.hyratrion.rpgnloots.item.ModItems;
 import com.hyratrion.rpgnloots.util.ModTags;
-import net.minecraft.core.Registry;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.StringTag;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.item.*;
@@ -22,7 +16,6 @@ import net.minecraftforge.common.loot.GlobalLootModifierSerializer;
 import net.minecraftforge.common.loot.LootModifier;
 
 import javax.annotation.Nonnull;
-import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Random;
 
@@ -35,33 +28,34 @@ public class LootGemToolFromMobs extends LootModifier {
     private final float chanceLootStuffTier2;
     private final float chanceLootStuffTier3;
     private final float chanceLootStuffTier4;
-    private final float chanceLootStuff;
+    private final float chanceLootStuffTier5;
+    Random rand = new Random();
+
 
 
     protected LootGemToolFromMobs(LootItemCondition[] conditionsIn, float chanceLootGemTier1) {
         super(conditionsIn);
-
         //ce code
         //ModItems.createArrayGems();
         //en mettant 5
         //cela veux dire que l'on a ces valeurs : 0, 1, 2, 3, 4
         //pour loot l'item tier 1
         this.chanceLootGemTier1 = chanceLootGemTier1;
-        this.chanceLootStuffTier1 = 20;
-        this.chanceLootStuffTier2 = this.chanceLootStuffTier1 + 20;
-        this.chanceLootStuffTier3 = this.chanceLootStuffTier2 + 20;
-        this.chanceLootStuffTier4 = this.chanceLootStuffTier3 + 20;
-        this.chanceLootStuff = this.chanceLootStuffTier4 + 20;
+        this.chanceLootStuffTier1 = 15;
+        this.chanceLootStuffTier2 = this.chanceLootStuffTier1 + 11;
+        this.chanceLootStuffTier3 = this.chanceLootStuffTier2 + 6;
+        this.chanceLootStuffTier4 = this.chanceLootStuffTier3 + 1.2f;
+        this.chanceLootStuffTier5 = this.chanceLootStuffTier4 + 0.1f;
     }
 
-    @Nonnull
-    @Override
-    protected List<ItemStack> doApply(List<ItemStack> generatedLoot, LootContext context) {
+
+
+    protected List<ItemStack> doApplys(List<ItemStack> generatedLoot, LootContext context) {
         // generatedLoot is the loot that would be dropped, if we wouldn't add or replace
         // anything!
         //
 
-        Random rand = new Random();
+
         float chanceValue = rand.nextFloat(100);
 
         //0, 1, 2, 3, 4 < 5
@@ -78,7 +72,7 @@ public class LootGemToolFromMobs extends LootModifier {
 
         chanceValue = rand.nextFloat(100);
 
-        if(chanceValue < chanceLootStuff) {
+        if(chanceValue < chanceLootStuffTier5) {
             Item stuff;
             //choix du tier
             //(pour le moment juste de l'épée
@@ -245,7 +239,83 @@ public class LootGemToolFromMobs extends LootModifier {
         generatedLoot.add(new ItemStack(addition, 1));
         return generatedLoot;
     }
+    @Nonnull
+    @Override
+    protected List<ItemStack> doApply(List<ItemStack> generatedLoot, LootContext context) {
+        //Détermine la chance du joueur
+        float chanceValue = rand.nextFloat(100);
 
+        //Génère la gem looté
+        GenerateGemLooted(chanceValue);
+
+        //Ajouter le gem aux loot du mob
+        generatedLoot.add(new ItemStack(addition, 1));
+
+        //Génère puis récupère le tier de l'item à looter
+        int tier = DetermineTierChance(chanceValue);
+
+        //Créer l'item avec le tier
+        if(tier > 0)
+        {
+            ItemStack itemStackLooted = ItemAttributGeneration.GenerateItemAndAttributes(tier);
+
+            //Ajoute l'item aux loot du mob
+            generatedLoot.add(itemStackLooted);
+        }
+
+        return generatedLoot;
+    }
+
+    /**
+     * Permet de générer la gemme looté en fonction de la chance envoyé
+     * @param chance chance obtenue
+     */
+    private void GenerateGemLooted(float chance){
+        //0, 1, 2, 3, 4 < 5
+        if(chance < chanceLootGemTier1)
+        {
+            int item_index = rand.nextInt(ModItems.GEM_LVL_1.length);
+            this.addition = ModItems.GEM_LVL_1[item_index];
+        }
+        else //donc supérieur a chanceLootGemTier1
+        {
+            int item_index = rand.nextInt(ModItems.GEM_LVL_0.length);
+            this.addition = ModItems.GEM_LVL_0[item_index];
+        }
+    }
+
+    /**
+     * Determine le tier du stuff qui sera looté en fonction de la chance envoyé
+     * @param chance chance obtenue
+     * @return le tier (0 si la chance est en dessous du tier 1 -> ne lootera rien)
+     */
+    private int DetermineTierChance(float chance){
+        int tier = 0;
+        if(chance < chanceLootStuffTier5)
+        {
+            if (chance < chanceLootStuffTier1)
+            {
+                tier = 1;
+
+            } else if (chance < chanceLootStuffTier2)
+            {
+                tier = 2;
+
+            } else if (chance < chanceLootStuffTier3)
+            {
+                tier = 3;
+
+            } else if (chance < chanceLootStuffTier4)
+            {
+                tier = 4;
+
+            } else
+            {
+                tier = 5;
+            }
+        }
+        return tier;
+    }
     public static class Serializer extends GlobalLootModifierSerializer<LootGemToolFromMobs> {
 
         @Override

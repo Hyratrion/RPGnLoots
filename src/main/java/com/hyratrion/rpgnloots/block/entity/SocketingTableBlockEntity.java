@@ -42,7 +42,8 @@ public class SocketingTableBlockEntity extends BlockEntity implements MenuProvid
     private LazyOptional<IItemHandler> lazyItemHandler = LazyOptional.empty();
 
     public SocketingTableBlockEntity(BlockPos pWorldPosition, BlockState pBlockState) {
-        super(ModBlockEntities.SOCKETING_TABLE.get(), pWorldPosition, pBlockState);
+        //super(ModBlockEntities.SOCKETING_TABLE.get(), pWorldPosition, pBlockState);
+        super(null, pWorldPosition, pBlockState);
     }
 
     @Override
