@@ -141,7 +141,7 @@ public class ModEvents
 
                     System.out.println("----- Makotache ----- crit EXISTANT");
 
-                    float criticalDamageArmor = getValueAttributeOfArmor(CustomAttributes.CRITICAL_DAMAGE.get(), event.getPlayer());
+                    float criticalDamageArmor = getValueAttributeOfArmor(CustomAttributes.CRITICAL_DAMAGE.get(), event.getPlayer()) / 100;
 
                     //récupération du multiplicateur des dégâts crtitique de minecraft Vanilla
                     System.out.println("----- Makotache ----- crit base " + criticalDamage);
@@ -162,8 +162,8 @@ public class ModEvents
                     {
                         //on ajoute plus de dégâts critique
                         criticalDamage += StaticClass.GetValueFromAttributeModifierMap(attributeModifiers, CustomAttributes.CRITICAL_DAMAGE.get()) / 100;
-                        //System.out.println("----- Makotache ----- nouveau crit  " + criticalDamage);
                     }
+                    System.out.println("----- Makotache ----- nouveau crit  " + criticalDamage);
 
                     criticalDamage *= multiplicator;
 
@@ -185,6 +185,8 @@ public class ModEvents
     @SubscribeEvent
     public static void onLivingHurtEvent(LivingHurtEvent event)
     {
+
+
         if (!event.getEntity().level.isClientSide())
         {
             //si l'entité qui SUBIT des dégâts est un joueur
@@ -193,8 +195,6 @@ public class ModEvents
                 //on récupère tous les equipement dans les slots d'armure du joueur
                 Iterable<ItemStack> itemStacks = player.getArmorSlots();
 
-                //réucpération de l'entitié qui INFLIGE les dégats
-                Entity entity = event.getSource().getDirectEntity();
 
                 boolean dodgeDone = false;
 
@@ -249,8 +249,12 @@ public class ModEvents
                         }
                     }
 
+                    //réucpération de l'entitié qui INFLIGE les dégats
+                    Entity entity = event.getSource().getDirectEntity();
+
+
                     //si on a un renvoie de dégâts
-                    if(amountReflectedDamagePercent > 0 || amountReflectedDamageRaw > 0)
+                    if(entity != null && (amountReflectedDamagePercent > 0 || amountReflectedDamageRaw > 0))
                     {
                         //calcule du montant de dégâs a infligé en pourcentage
                         float damgeToReflect = amountReflectedDamagePercent * event.getAmount();

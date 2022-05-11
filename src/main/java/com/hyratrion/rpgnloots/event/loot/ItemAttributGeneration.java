@@ -549,7 +549,11 @@ public class ItemAttributGeneration
         }
         int gemSlot = 0;
         //Boucle sur le nombre d'attribut modifier à ajouter
-        for(int k = 0; k < tier; k++){
+        for(int k = 0; k < tier; k++) {
+            if(attributsTypeItem.size() <= 0)
+            {
+                break;
+            }
             nombreAleatoire = rand.nextInt(attributsTypeItem.size());
             Attribute attribute = attributsTypeItem.get(nombreAleatoire);
 
@@ -662,7 +666,7 @@ public class ItemAttributGeneration
 
         } else if (attribute == LIFE_LEECH_PERCENT.get())
         {
-            value = (rand.nextFloat(CustomAttributes.getValuesTierLifeLeechPercent[tier - 1], CustomAttributes.getValuesTierLifeLeechPercent[tier]) / 100);
+            value = (rand.nextFloat(CustomAttributes.getValuesTierLifeLeechPercent[tier - 1], CustomAttributes.getValuesTierLifeLeechPercent[tier]));
             leItemStack.addAttributeModifier(
                     attribute,
                     new AttributeModifier(LIFE_LEECH_PERCENT_ID, "modifier rpgnloots", value, AttributeModifier.Operation.ADDITION),
@@ -680,7 +684,7 @@ public class ItemAttributGeneration
             
         } else if (attribute == REFLECT_DAMAGE_PERCENT.get())
         {
-            value = (rand.nextFloat(CustomAttributes.getValuesTierReflectDamagePercent[tier - 1], CustomAttributes.getValuesTierReflectDamagePercent[tier]) / 100);
+            value = (rand.nextFloat(CustomAttributes.getValuesTierReflectDamagePercent[tier - 1], CustomAttributes.getValuesTierReflectDamagePercent[tier]));
             leItemStack.addAttributeModifier(
                     attribute,
                     new AttributeModifier(REFLECT_DAMAGE_PERCENT_ID, "modifier rpgnloots", value, AttributeModifier.Operation.ADDITION),
