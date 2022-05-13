@@ -1,7 +1,8 @@
 {
 	"credit": "Made with Blockbench",
 	"textures": {
-		"7": "rpgnloots:machines/socketing_table"
+		"7": "rpgnloots:machines/socketing_table",
+		"particle" : "rpgnloots:machines/socketing_table"
 	},
 	"elements": [
 		{

@@ -1,0 +1,10 @@
+{
+  "replace": false,
+  "values": [
+    "rpgnloots:gem_speed_lvl_1",
+    "rpgnloots:gem_speed_lvl_2",
+    "rpgnloots:gem_speed_lvl_3",
+    "rpgnloots:gem_speed_lvl_4",
+    "rpgnloots:gem_speed_lvl_5"
+  ]
+}

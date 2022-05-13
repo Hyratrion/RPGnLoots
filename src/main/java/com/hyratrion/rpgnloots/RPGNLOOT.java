@@ -51,14 +51,15 @@ public class RPGNLOOT
         MinecraftForge.EVENT_BUS.register(this);
     }
 
-    private void clientSetup(final FMLClientSetupEvent event) {
+    private void clientSetup(final FMLClientSetupEvent event)
+    {
         ItemBlockRenderTypes.setRenderLayer(ModBlocks.SOCKETING_TABLE.get(), RenderType.cutout());
 
         MenuScreens.register(ModMenuTypes.SOCKETING_TABLE_MENU_TYPE, SocketingTableScreen::new);
-
     }
 
-    private void setup(final FMLCommonSetupEvent event) {
+    private void setup(final FMLCommonSetupEvent event)
+    {
         ModItems.createArrayGems();
         ModItems.initGemsValuesAndReferences();
     }

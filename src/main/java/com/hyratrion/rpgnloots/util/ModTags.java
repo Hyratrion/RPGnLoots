@@ -22,7 +22,7 @@ import java.util.List;
 
 public class ModTags
 {
-    public static EquipmentSlot[] GetEquipmentSlotOf( Item item)
+    public static EquipmentSlot[] GetEquipmentSlotOf(Item item)
     {
         List<EquipmentSlot> result = new ArrayList<>();
 
@@ -46,12 +46,12 @@ public class ModTags
         return result.toArray(new EquipmentSlot[result.size() - 1]);
     }
 
-    public static EquipmentSlot[] GetEquipmentSlotOf( ItemStack itemStack)
+    public static EquipmentSlot[] GetEquipmentSlotOf(ItemStack itemStack)
     {
         return GetEquipmentSlotOf(itemStack.getItem());
     }
 
-    public static boolean AddGemTag( ItemStack itemStack,  String tagItem)
+    public static boolean AddGemSlot(ItemStack itemStack,  String tagItem)
     {
         CompoundTag tag = itemStack.getOrCreateTag();
         if (!tag.contains(ModItems.GEM_TYPE))
@@ -97,12 +97,12 @@ public class ModTags
         return false;
     }
 
-    public static boolean AddGemTag( ItemStack itemStack,  StringTag tagItem)
+    public static boolean AddGemSlot(ItemStack itemStack,  StringTag tagItem)
     {
-        return AddGemTag(itemStack, tagItem.toString().replace("\"", ""));
+        return AddGemSlot(itemStack, StringValue(tagItem));
     }
 
-    public static boolean RemoveGemTag( ItemStack itemStack, int index)
+    public static boolean RemoveGemSlot(ItemStack itemStack, int index)
     {
         CompoundTag tag = itemStack.getOrCreateTag();
         ListTag listtag = (ListTag)tag.get(ModItems.GEM_TYPE);
@@ -117,7 +117,7 @@ public class ModTags
         return true;
     }
 
-    public static boolean RemoveGemTag( ItemStack itemStack,  Item gem)
+    public static boolean RemoveAllGemSlot(ItemStack itemStack,  Item gem)
     {
         CompoundTag tag = itemStack.getOrCreateTag();
         if (!tag.contains(ModItems.GEM_TYPE))
@@ -143,7 +143,7 @@ public class ModTags
         return result;
     }
 
-    public static boolean RemoveGemTag( ItemStack itemStack,  TagKey<Item> type)
+    public static boolean RemoveAllGemSlot(ItemStack itemStack,  TagKey<Item> type)
     {
         CompoundTag tag = itemStack.getOrCreateTag();
         if (!tag.contains(ModItems.GEM_TYPE))
@@ -168,7 +168,7 @@ public class ModTags
         return result;
     }
 
-    public static boolean ReplaceGemTag( ItemStack itemStack, int index,  Item newGem)
+    public static boolean ReplaceGemSlot(ItemStack itemStack, int index,  Item newGem)
     {
         CompoundTag tag = itemStack.getOrCreateTag();
         ListTag listtag = (ListTag)tag.get(ModItems.GEM_TYPE);
@@ -181,7 +181,31 @@ public class ModTags
         return ReplaceInListTag(listtag, index, StringTag.valueOf(GetGemTag(newGem)));
     }
 
-    public static boolean ReplaceGemTag( ItemStack itemStack,  Item gem,  Item newGem)
+    public static boolean ReplaceFirstEmptyGemSlot(ItemStack itemStack,  Item newGem)
+    {
+        CompoundTag tag = itemStack.getOrCreateTag();
+        if (!tag.contains(ModItems.GEM_TYPE) || CountGem(itemStack, true) == 0)
+        {
+            return false;
+        }
+
+        ListTag listtag = (ListTag)tag.get(ModItems.GEM_TYPE);
+        int index = -1;
+        for(int i = 0; i < listtag.size(); i++)
+        {
+            String value = StringValue(listtag.getCompound(i).get("Name"));
+
+            if(value.equals(StringValue(DEFAULT_TAG_VALUE)))
+            {
+                index = i;
+                break;
+            }
+        }
+
+        return index > -1 && ReplaceInListTag(listtag, index, StringTag.valueOf(GetGemTag(newGem)));
+    }
+
+    public static boolean ReplaceAllGemSlot(ItemStack itemStack,  Item gem,  Item newGem)
     {
         CompoundTag tag = itemStack.getOrCreateTag();
         if (!tag.contains(ModItems.GEM_TYPE))
@@ -205,7 +229,7 @@ public class ModTags
         return result;
     }
 
-    public static boolean ReplaceGemTag( ItemStack itemStack,  TagKey<Item> type,  Item newGem)
+    public static boolean ReplaceAllGemSlot(ItemStack itemStack,  TagKey<Item> type,  Item newGem)
     {
         CompoundTag tag = itemStack.getOrCreateTag();
         if (!tag.contains(ModItems.GEM_TYPE))
@@ -229,7 +253,7 @@ public class ModTags
         return result;
     }
 
-    public static boolean ReplaceGemTagByEmpty( ItemStack itemStack, int index)
+    public static boolean ReplaceGemSlotByEmpty(ItemStack itemStack, int index)
     {
         CompoundTag tag = itemStack.getOrCreateTag();
         ListTag listtag = (ListTag)tag.get(ModItems.GEM_TYPE);
@@ -242,7 +266,7 @@ public class ModTags
         return ReplaceInListTag(listtag, index, DEFAULT_TAG_VALUE);
     }
 
-    public static boolean ReplaceGemTagByEmpty( ItemStack itemStack,  Item gem)
+    public static boolean ReplaceAllGemSlotByEmpty(ItemStack itemStack,  Item gem)
     {
         CompoundTag tag = itemStack.getOrCreateTag();
         if (!tag.contains(ModItems.GEM_TYPE))
@@ -266,7 +290,7 @@ public class ModTags
         return result;
     }
 
-    public static boolean ReplaceGemTagByEmpty( ItemStack itemStack,  TagKey<Item> type)
+    public static boolean ReplaceAllGemSlotByEmpty(ItemStack itemStack,  TagKey<Item> type)
     {
         CompoundTag tag = itemStack.getOrCreateTag();
         if (!tag.contains(ModItems.GEM_TYPE))
@@ -289,7 +313,28 @@ public class ModTags
         return result;
     }
 
-    private static boolean ReplaceInListTag( ListTag listtag, int index,  Tag newTag)
+    public static boolean ReplaceAllGemSlotByEmpty(ItemStack itemStack)
+    {
+        CompoundTag tag = itemStack.getOrCreateTag();
+        if (!tag.contains(ModItems.GEM_TYPE))
+        {
+            return false;
+        }
+
+        ListTag listtag = (ListTag)tag.get(ModItems.GEM_TYPE);
+        boolean result = false;
+
+        for(int i = listtag.size()-1; i >= 0; i--)
+        {
+            String value = StringValue(listtag.getCompound(i).get("Name"));
+            result = ReplaceInListTag(listtag, i, DEFAULT_TAG_VALUE);
+        }
+
+        return result;
+    }
+
+
+    private static boolean ReplaceInListTag(ListTag listtag, int index, Tag newTag)
     {
         boolean result = false;
         try
@@ -325,7 +370,7 @@ public class ModTags
         {
             String value = StringValue(listtag.getCompound(i).get("Name"));
 
-            if(isEmpty == value.equals(DEFAULT_TAG_VALUE.toString()))
+            if(isEmpty == value.equals(StringValue(DEFAULT_TAG_VALUE)))
             {
                 result++;
             }
@@ -437,12 +482,41 @@ public class ModTags
         return false;
     }
 
+    public static boolean GemIsType(Item gem,  TagKey<Item>[] types)
+    {
+        if(gem == null || types == null || types.length == 0)
+        {
+            return false;
+        }
+
+        for(TagKey<Item> gem_type : Registry.ITEM.getHolderOrThrow(Registry.ITEM.getResourceKey(gem).get()).tags().toList())
+        {
+            for (TagKey<Item> type : types)
+            {
+                if(gem_type.equals(type))
+                {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    public static boolean GemIsType(Item gem,  List<TagKey<Item>> types)
+    {
+        if(gem == null || types == null || types.size() == 0)
+        {
+            return false;
+        }
+        return GemIsType(gem, types.toArray(new TagKey[types.size()]));
+    }
+
     public static boolean GemIsType( String tag, TagKey<Item> type)
     {
         return GemIsType(GetGem(tag), type);
     }
 
-    public static boolean HaveGemOfType( String[] allGemsEquiped,  TagKey<Item> type)
+    public static boolean HasGemOfType( String[] allGemsEquiped,  TagKey<Item> type)
     {
         if(allGemsEquiped.length == 0)
         {
@@ -460,12 +534,12 @@ public class ModTags
         return false;
     }
 
-    public static boolean HaveGemOfType( ItemStack itemStack,  TagKey<Item> type)
+    public static boolean HasGemOfType(ItemStack itemStack,  TagKey<Item> type)
     {
-        return HaveGemOfType(GetGemTags(itemStack), type);
+        return HasGemOfType(GetGemTags(itemStack), type);
     }
 
-    public static boolean HaveGem( ItemStack itemStack)
+    public static boolean HasGemSlot(ItemStack itemStack)
     {
         CompoundTag tag = itemStack.getOrCreateTag();
         return tag.contains(ModItems.GEM_TYPE);
@@ -481,7 +555,86 @@ public class ModTags
         return ModItems.GEMS_VALUES.get(item);
     }
 
-    public static Float[] GetGemValueOfType( String[] allGemsEquiped, TagKey<Item> type)
+    public static float GetGemValue(TagKey<Item> type, int level)
+    {
+        Item[] arr;
+
+        switch (level)
+        {
+            case 0 :
+                arr = ModItems.GEM_LVL_0;
+                break;
+
+            case 1 :
+                arr = ModItems.GEM_LVL_1;
+                break;
+
+            case 2 :
+                arr = ModItems.GEM_LVL_2;
+                break;
+
+            case 3 :
+                arr = ModItems.GEM_LVL_3;
+                break;
+
+            case 4 :
+                arr = ModItems.GEM_LVL_4;
+                break;
+
+            case 5 :
+                arr = ModItems.GEM_LVL_5;
+                break;
+
+            default:
+                return 0;
+        }
+
+        Item gem = GetGemByType(type, arr);
+
+        return ModItems.GEMS_VALUES.get(gem);
+    }
+
+    public static Item GetGemByType(TagKey<Item> type, Item[] gems)
+    {
+        if(type == null || gems == null || gems.length == 0)
+        {
+            return null;
+        }
+
+        for(Item gem : gems)
+        {
+            if(GemIsType(gem, type))
+            {
+                return gem;
+            }
+        }
+
+        return null;
+    }
+
+    public static TagKey<Item> GetGemType(Item gem)
+    {
+        if(gem == null)
+        {
+            return null;
+        }
+
+        for(TagKey<Item> gem_type : Registry.ITEM.getHolderOrThrow(Registry.ITEM.getResourceKey(gem).get()).tags().toList())
+        {
+            for (TagKey<Item> type : Items.GEM_ALL)
+            {
+                if(gem_type.equals(type))
+                {
+                    return type;
+                }
+            }
+        }
+
+        return null;
+    }
+
+
+    public static Float[] GetGemValueOfType( String[] allGemsEquiped, TagKey<Item> type, boolean gemLevelIncrease)
     {
         if(allGemsEquiped.length == 0)
         {
@@ -493,20 +646,26 @@ public class ModTags
         {
             if(GemIsType(allGemsEquiped[i], type))
             {
-                result.add(GetGemValue(allGemsEquiped[i]));
+                float value = 0;
+                if(gemLevelIncrease)
+                {
+                    value += GetGemValue(type, 1);
+                }
+                value += GetGemValue(allGemsEquiped[i]);
+                result.add(value);
             }
         }
         return result.toArray(new Float[result.size()-1]);   }
 
-    public static Float[] GetGemValueOfType( ItemStack itemStack, TagKey<Item> type)
+    public static Float[] GetGemValueOfType(ItemStack itemStack, TagKey<Item> type, boolean gemLevelIncrease)
     {
-        return GetGemValueOfType(GetGemTags(itemStack), type);
+        return GetGemValueOfType(GetGemTags(itemStack), type, gemLevelIncrease);
     }
 
 
-    public static float GetGemTotalValueOfType( String[] allGemsEquiped, TagKey<Item> type)
+    public static float GetGemTotalValueOfType(String[] allGemsEquiped, TagKey<Item> type, boolean gemLevelIncrease)
     {
-        Float[] allGemsValue = GetGemValueOfType(allGemsEquiped, type);
+        Float[] allGemsValue = GetGemValueOfType(allGemsEquiped, type, gemLevelIncrease);
         float result = 0;
 
         for(int i = 0; i < allGemsValue.length; i++)
@@ -516,15 +675,22 @@ public class ModTags
         return result;
     }
 
-    public static float GetGemTotalValueOfType( ItemStack itemStack, TagKey<Item> type)
+    public static float GetGemTotalValueOfType(ItemStack itemStack, TagKey<Item> type, boolean gemLevelIncrease)
     {
-        return GetGemTotalValueOfType(GetGemTags(itemStack), type);
+        return GetGemTotalValueOfType(GetGemTags(itemStack), type, gemLevelIncrease);
     }
+
 
     public static int GetTier(ItemStack itemStack)
     {
-        return Integer.valueOf(StringValue(itemStack.getOrCreateTag().get(RPGNLOOT_MODIFIER)));
+        CompoundTag tag = itemStack.getOrCreateTag();
+        if (!tag.contains(RPGNLOOT_MODIFIER))
+        {
+            return -1;
+        }
+        return Integer.parseInt(StringValue(tag.get(RPGNLOOT_MODIFIER)));
     }
+
 
     public static StringTag CreateTagFromItem( Item item)
     {
@@ -535,7 +701,7 @@ public class ModTags
     public static final String RPGNLOOT_MODIFIER = "rpgnloot_modifier";
 
 
-    private static String StringValue( Tag tag)
+    private static String StringValue(Tag tag)
     {
         return tag.toString().replace("\"", "");//.replace("'", "");
     }
@@ -561,23 +727,40 @@ public class ModTags
 
     public static class Items
     {
-        public static final TagKey<Item> GEM_TYPE_DAMAGE = tag("gems/gem_type_damage");
-        public static final TagKey<Item> GEM_TYPE_SHIELD = tag("gems/gem_type_shield");
-        public static final TagKey<Item> GEM_TYPE_MAX_LIFE = tag("gems/gem_type_max_life");
-        public static final TagKey<Item> GEM_TYPE_CHANCE = tag("gems/gem_type_chance");
-        public static final TagKey<Item> GEM_TYPE_CRITICAL_CHANCE = tag("gems/gem_type_critical_chance");
-        public static final TagKey<Item> GEM_TYPE_CRITICAL_DAMAGE = tag("gems/gem_type_critical_damage");
-        public static final TagKey<Item> GEM_TYPE_REPARATION = tag("gems/gem_type_reparation");
-        public static final TagKey<Item> GEM_TYPE_SPEED = tag("gems/gem_type_speed");
+        public static List<TagKey<Item>> GEM_PERCENT = new ArrayList<>();
+        public static List<TagKey<Item>> GEM_RAW = new ArrayList<>();
+        public static List<TagKey<Item>> GEM_ALL = new ArrayList<>();
 
-        private static TagKey<Item> tag(String name) {
-            return ItemTags.create(new ResourceLocation(RPGNLOOT.MOD_ID, name));
+        public static final TagKey<Item> GEM_TYPE_DAMAGE = tag("gems/gem_type_damage", true);
+        public static final TagKey<Item> GEM_TYPE_SHIELD = tag("gems/gem_type_shield", false);
+        public static final TagKey<Item> GEM_TYPE_MAX_LIFE = tag("gems/gem_type_max_life", false);
+        public static final TagKey<Item> GEM_TYPE_CHANCE = tag("gems/gem_type_chance", false);
+        public static final TagKey<Item> GEM_TYPE_CRITICAL_CHANCE = tag("gems/gem_type_critical_chance", true);
+        public static final TagKey<Item> GEM_TYPE_CRITICAL_DAMAGE = tag("gems/gem_type_critical_damage", true);
+        public static final TagKey<Item> GEM_TYPE_REPARATION = tag("gems/gem_type_reparation", false);
+        public static final TagKey<Item> GEM_TYPE_SPEED = tag("gems/gem_type_speed", true);
+
+        private static TagKey<Item> tag(String name, boolean percent)
+        {
+            TagKey<Item> result = ItemTags.create(new ResourceLocation(RPGNLOOT.MOD_ID, name));
+            if(percent)
+            {
+                GEM_PERCENT.add(result);
+            }
+            else
+            {
+                GEM_RAW.add(result);
+            }
+
+            GEM_ALL.add(result);
+            return result;
         }
 
         private static TagKey<Item> forgeTag(String name) {
             return ItemTags.create(new ResourceLocation("forge", name));
         }
     }
+
 
 
 }

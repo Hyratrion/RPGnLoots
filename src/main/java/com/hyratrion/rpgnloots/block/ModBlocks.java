@@ -23,19 +23,9 @@ public class ModBlocks {
     public static final DeferredRegister<Block> BLOCKS =
             DeferredRegister.create(ForgeRegistries.BLOCKS, RPGNLOOT.MOD_ID);
 
-    public static final RegistryObject<Block> SOCKETING_TABLE = registerBlock("socketing_table",
-            () -> new SocketingTableBlock(BlockBehaviour.Properties.of(Material.HEAVY_METAL, MaterialColor.METAL).strength(5.0f).requiresCorrectToolForDrops().sound(SoundType.ANVIL).noOcclusion()),
-            ModCreativeModeTab.RPGNLOOTS_TAB);
+    public static final RegistryObject<Block> SOCKETING_TABLE = BLOCKS.register("socketing_table",
+            () -> new SocketingTableBlock(BlockBehaviour.Properties.of(Material.HEAVY_METAL, MaterialColor.METAL).strength(5.0f).requiresCorrectToolForDrops().sound(SoundType.ANVIL).noOcclusion()));
 
-    private static <T extends Block> RegistryObject<T> registerBlock (String name, Supplier<T> block, CreativeModeTab tab) {
-        RegistryObject<T> toReturn = BLOCKS.register(name, block);
-        registerBlockItem(name, toReturn, tab);
-        return  toReturn;
-    }
-
-    private static <T extends Block>RegistryObject<Item> registerBlockItem(String name, RegistryObject<T> block, CreativeModeTab tab) {
-        return ModItems.ITEMS.register(name, () -> new BlockItem(block.get(), new Item.Properties().tab(tab)));
-    }
 
     public static void register(IEventBus eventBus)
     {

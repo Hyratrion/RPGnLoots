@@ -7,6 +7,7 @@ import net.minecraftforge.common.extensions.IForgeMenuType;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.network.IContainerFactory;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -15,9 +16,10 @@ import net.minecraftforge.registries.RegistryObject;
 import java.util.ArrayList;
 import java.util.List;
 
+@Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
 public class ModMenuTypes {
     private static final List<MenuType<?>> REGISTRY = new ArrayList<>();
-    public static final MenuType<SocketingTableMenu> SOCKETING_TABLE_MENU_TYPE = register("socketing_table_menu", (id, inv, extraData) -> new SocketingTableMenu(id, inv, extraData));
+    public static final MenuType<SocketingTableMenu> SOCKETING_TABLE_MENU_TYPE = register("socketing_table_menu", SocketingTableMenu::new);
 
     private static <T extends AbstractContainerMenu> MenuType<T> register(String registryname, IContainerFactory<T> containerFactory) {
         MenuType<T> menuType = new MenuType<T>(containerFactory);

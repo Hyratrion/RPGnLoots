@@ -43,10 +43,13 @@ public class CustomAttributes extends Attributes
     public static final RegistryObject<Attribute> REINFORCED = ATTRIBUTES.register("rpgnloots.reinforced", () -> new RangedAttribute("attribute.name.rpgnloots.reinforced", 10.0D, 1.0D, 1024.0D));
 
 
+
     public static void register(IEventBus eventBus)
     {
         ATTRIBUTES.register(eventBus);
     }
+
+
 
     //region Les Get sur les valeurs des tiers
     /**

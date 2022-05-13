@@ -15,6 +15,7 @@ public class SocketingTableScreen extends AbstractContainerScreen<SocketingTable
 
     public SocketingTableScreen(SocketingTableMenu pMenu, Inventory pPlayerInventory, Component pTitle) {
         super(pMenu, pPlayerInventory, pTitle);
+        System.out.println("---- Makotache ---- SocketingTableScreen");
     }
 
     @Override
@@ -38,5 +39,11 @@ public class SocketingTableScreen extends AbstractContainerScreen<SocketingTable
         renderBackground(pPoseStack);
         super.render(pPoseStack, mouseX, mouseY, delta);
         renderTooltip(pPoseStack, mouseX, mouseY);
+    }
+
+    @Override
+    protected void containerTick()
+    {
+        super.containerTick();
     }
 }

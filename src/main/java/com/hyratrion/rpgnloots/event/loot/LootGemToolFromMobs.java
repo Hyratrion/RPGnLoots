@@ -198,10 +198,10 @@ public class LootGemToolFromMobs extends LootModifier {
                         stuff.getEquipmentSlot(itemStackStuff)
                 );
 
-                ModTags.AddGemTag(itemStackStuff, ModTags.CreateTagFromItem(ModItems.GEM_CRITICAL_CHANCE_LVL_4.get()));
+                ModTags.AddGemSlot(itemStackStuff, ModTags.CreateTagFromItem(ModItems.GEM_CRITICAL_CHANCE_LVL_4.get()));
                 if(tier > 1 )
                 {
-                    ModTags.AddGemTag(itemStackStuff, ModTags.CreateTagFromItem(ModItems.GEM_CRITICAL_DAMAGE_LVL_4.get()));
+                    ModTags.AddGemSlot(itemStackStuff, ModTags.CreateTagFromItem(ModItems.GEM_CRITICAL_DAMAGE_LVL_4.get()));
 
                 }
 

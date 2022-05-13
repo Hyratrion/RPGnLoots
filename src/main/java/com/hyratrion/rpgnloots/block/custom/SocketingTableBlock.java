@@ -46,7 +46,7 @@ import java.util.stream.Stream;
 public class SocketingTableBlock extends FallingBlock {
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
 
-    private static final Component CONTAINER_TITLE = new TranslatableComponent("block.rpgloots.socketing_table");
+    private static final Component CONTAINER_TITLE = new TranslatableComponent("block.rpgnloots.socketing_table");
 
     public SocketingTableBlock(Properties properties) {
         super(properties);
@@ -236,22 +236,23 @@ public class SocketingTableBlock extends FallingBlock {
             }
         }
     }
-    public InteractionResult use(BlockState pState, Level pLevel, BlockPos pPos,
-                                 Player pPlayer, InteractionHand pHand, BlockHitResult pHit) {
 
-        super.use(pState, pLevel, pPos, pPlayer, pHand, pHit);
-        if (pPlayer instanceof ServerPlayer player) {
-            NetworkHooks.openGui(player, new MenuProvider() {
+    public InteractionResult use(BlockState state, Level level, BlockPos pos,
+                                 Player player, InteractionHand hand, BlockHitResult hit) {
+
+        super.use(state, level, pos, player, hand, hit);
+        if (player instanceof ServerPlayer serverPlayer) {
+            NetworkHooks.openGui(serverPlayer, new MenuProvider() {
                 @Override
                 public Component getDisplayName() {
-                    return new TranslatableComponent("block.rpgloots.socketing_table");
+                    return CONTAINER_TITLE;
                 }
 
                 @Override
                 public AbstractContainerMenu createMenu(int id, Inventory inventory, Player player) {
-                    return new SocketingTableMenu(id, inventory, new FriendlyByteBuf(Unpooled.buffer()).writeBlockPos(pPos));
+                    return new SocketingTableMenu(id, inventory, new FriendlyByteBuf(Unpooled.buffer()).writeBlockPos(pos));
                 }
-            }, pPos);
+            }, pos);
         }
         System.out.println("Test ouverture gui SocketingTableMenu --> 3");
         return InteractionResult.SUCCESS;
