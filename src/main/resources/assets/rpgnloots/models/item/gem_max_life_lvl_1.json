@@ -1,6 +1,0 @@
-{
-  "parent": "item/generated",
-  "textures": {
-           "layer0": "rpgnloots:item/gem_max_life_lvl_1"
-  }
-}
