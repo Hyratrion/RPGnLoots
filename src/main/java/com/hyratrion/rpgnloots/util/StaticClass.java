@@ -7,6 +7,9 @@ import net.minecraft.world.item.ItemStack;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.lang.reflect.Executable;
+import java.lang.reflect.Field;
+import java.lang.reflect.Type;
 import java.util.Map;
 
 public final class StaticClass
@@ -33,9 +36,6 @@ public final class StaticClass
     {
         return GetValueFromAttributeModifierMap(itemStack.getAttributeModifiers(ModTags.GetEquipmentSlotOf(itemStack)[0]), attribute);
     }
-
-
-
 
     public static <T, E> T GetKeyByValue(Map<T, E> map, E value)
     {

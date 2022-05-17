@@ -1,7 +1,5 @@
-package com.hyratrion.rpgnloots.block.custom;
+package com.hyratrion.rpgnloots.block;
 
-import com.hyratrion.rpgnloots.block.entity.ModBlockEntities;
-import com.hyratrion.rpgnloots.block.entity.SocketingTableBlockEntity;
 import com.hyratrion.rpgnloots.screen.SocketingTableMenu;
 import com.hyratrion.rpgnloots.util.ModStats;
 import io.netty.buffer.Unpooled;
@@ -225,16 +223,6 @@ public class SocketingTableBlock extends FallingBlock {
     @Override
     public RenderShape getRenderShape(BlockState pState) {
         return RenderShape.MODEL;
-    }
-
-    @Override
-    public void onRemove(BlockState pState, Level pLevel, BlockPos pPos, BlockState pNewState, boolean pIsMoving) {
-        if (pState.getBlock() != pNewState.getBlock()) {
-            BlockEntity blockEntity = pLevel.getBlockEntity(pPos);
-            if (blockEntity instanceof SocketingTableBlockEntity) {
-                ((SocketingTableBlockEntity) blockEntity).drops();
-            }
-        }
     }
 
     public InteractionResult use(BlockState state, Level level, BlockPos pos,

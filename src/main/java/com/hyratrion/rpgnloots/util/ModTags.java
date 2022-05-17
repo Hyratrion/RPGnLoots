@@ -326,7 +326,7 @@ public class ModTags
 
         for(int i = listtag.size()-1; i >= 0; i--)
         {
-            String value = StringValue(listtag.getCompound(i).get("Name"));
+            //String value = StringValue(listtag.getCompound(i).get("Name"));
             result = ReplaceInListTag(listtag, i, DEFAULT_TAG_VALUE);
         }
 
@@ -339,7 +339,7 @@ public class ModTags
         boolean result = false;
         try
         {
-            Field listOfTag = ListTag.class.getDeclaredField("list");
+            Field listOfTag = GetListTagField("list");
             listOfTag.setAccessible(true);
 
             List<Tag> listToEdit = (List<Tag>)listOfTag.get(listtag);
@@ -356,6 +356,28 @@ public class ModTags
         return result;
     }
 
+
+    private static Field GetListTagField(String name)
+    {
+        try
+        {
+            Field[] privateFields = ListTag.class.getDeclaredFields();
+            for(Field field : privateFields)
+            {
+                //System.out.println("GetPrivateFieldByType fields => " + field.getName());
+
+                if(field.getName().equals(name) || field.getGenericType().toString().equals("java.util.List<net.minecraft.nbt.Tag>"))
+                {
+                    return field;
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            ex.printStackTrace();
+        }
+        return null;
+    }
 
     public static int CountGem( CompoundTag tag, boolean isEmpty)
     {

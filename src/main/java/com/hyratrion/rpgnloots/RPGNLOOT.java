@@ -1,10 +1,8 @@
 package com.hyratrion.rpgnloots;
 
 import com.hyratrion.rpgnloots.block.ModBlocks;
-import com.hyratrion.rpgnloots.block.entity.ModBlockEntities;
 import com.hyratrion.rpgnloots.event.loot.CustomAttributes;
 import com.hyratrion.rpgnloots.item.ModItems;
-import com.hyratrion.rpgnloots.recipe.ModRecipes;
 import com.hyratrion.rpgnloots.screen.ModMenuTypes;
 import com.hyratrion.rpgnloots.screen.SocketingTableScreen;
 import com.hyratrion.rpgnloots.util.ModStats;
@@ -37,12 +35,6 @@ public class RPGNLOOT
         ModItems.register(eventBus);
         ModBlocks.register(eventBus);
         CustomAttributes.register(eventBus);
-
-        ModBlockEntities.register(eventBus);
- //       ModMenuTypes.register(eventBus);
-
-        ModRecipes.register(eventBus);
- //       ModStats.register(eventBus);
 
         eventBus.addListener(this::setup);
         eventBus.addListener(this::clientSetup);
