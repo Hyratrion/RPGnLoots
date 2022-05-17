@@ -110,7 +110,7 @@ public class ModEvents
                 if(ModTags.HasGemOfType(allGemsEquiped, ModTags.Items.GEM_TYPE_CRITICAL_CHANCE))
                 {
                     float criticalChanceGemWeapon = ModTags.GetGemTotalValueOfType(itemStack, ModTags.Items.GEM_TYPE_CRITICAL_CHANCE, gemLevelIncrease);
-                    System.out.println("- RPG&Loots - crit chance gem weapon => " + criticalChance);
+                    System.out.println("- RPG&Loots - crit chance gem weapon => " + criticalChanceGemWeapon);
                     criticalChance += criticalChanceGemWeapon;
                 }
             }
@@ -120,10 +120,10 @@ public class ModEvents
             //récupération de la valeur de chance d'appliquer un critique
             float criticalChanceRNG = rand.nextFloat(100);
 
-            float criticalDamage = event.getOldDamageModifier();
+            float criticalDamage = event.getOldDamageModifier() - 1;
 
             //on check notre chance de faire un critique
-            if(criticalChanceRNG < criticalChance || criticalChance >= 100 || criticalDamage != 1)
+            if(criticalChanceRNG < criticalChance || criticalChance >= 100 || criticalDamage > 0)
             {
                 int multiplicator = 1;
                 if(criticalChance >= 100)
@@ -131,13 +131,15 @@ public class ModEvents
                     String critChanceStr = String.valueOf(criticalChance);
                     int posComma = critChanceStr.indexOf(".");//par ce que 94 % sure de micro
                     posComma = posComma != -1 ? posComma - 2 : 1;
-                    multiplicator += Integer.valueOf(critChanceStr.substring(0, posComma));
+                    multiplicator += Integer.valueOf(critChanceStr.substring(0, posComma)); // ajoute +1 au multiplicateur critique par centaine
+                    //multiplicator += (Integer.valueOf(critChanceStr.substring(0, posComma)) / 2); // ajoute +0.5 au multiplicateur critique par centaine
                     System.out.println("- RPG&Loots - before multiplicator => " + multiplicator);
 
                     criticalChanceRNG = rand.nextFloat(100);
                     if(criticalChanceRNG < criticalChance - 100 * (multiplicator -1))
                     {
-                        multiplicator += 1;
+                        multiplicator += 1; // ajoute +1 au multiplicateur critique
+                        //multiplicator += 0.5f; // ajoute +0.5 au multiplicateur critique
                     }
                 }
                 System.out.println("- RPG&Loots - after multiplicator => " + multiplicator);
@@ -175,7 +177,7 @@ public class ModEvents
                 }
 
 
-                criticalDamage *= multiplicator;
+                criticalDamage = criticalDamage * multiplicator + 1;
 
                 //on change la valeur des dégâts
                 event.setDamageModifier(criticalDamage);
@@ -515,7 +517,12 @@ public class ModEvents
                                             moreGem = (int)StaticClass.GetValueFromAttributeModifierMap(attributeModifierMaps, CustomAttributes.MORE_GEM_SLOT.get());
                                         }
                                         value -= moreGem;
-                                        Map.Entry<String, Component> componentToolTip = createComponentToolTip(false, entry, (int)value + "(+"+moreGem+")", false, chatFormatting);
+                                        String value_str = (int)value + "";
+                                        if(moreGem > 0)
+                                        {
+                                            value_str += "(+"+moreGem+")";
+                                        }
+                                        Map.Entry<String, Component> componentToolTip = createComponentToolTip(false, entry, value_str, false, chatFormatting);
                                         unSortedAttributeModifierMaps.put(componentToolTip.getKey(), componentToolTip.getValue());
 
                                         String gemText = componentToolTip.getKey();
@@ -710,11 +717,11 @@ public class ModEvents
     {
         String text = ATTRIBUTE_MODIFIER_FORMAT.format(value);
 
-        text += showPercent ? "%" : "";
+        text += showPercent ? "% " : " ";
 
         if(gemLevelIncrease)
         {
-            text += " (+" + ATTRIBUTE_MODIFIER_FORMAT.format(ModTags.GetGemValue(ModTags.GetGemType(item), 1)) + ") ";
+            text += "(+" + ATTRIBUTE_MODIFIER_FORMAT.format(ModTags.GetGemValue(ModTags.GetGemType(item), 1)) + ") ";
         }
 
         return createComponentToolTipGem(pos, text, item.getDescriptionId(), chatFormatting);
