@@ -56,6 +56,7 @@ public class RPGNLOOT
         ModItems.initGemsValuesAndReferences();
     }
 
+
 }
     /*@EventBusSubscriber(modid = MOD_ID, bus = EventBusSubscriber.Bus.MOD)
     public static class EventHandlers {
