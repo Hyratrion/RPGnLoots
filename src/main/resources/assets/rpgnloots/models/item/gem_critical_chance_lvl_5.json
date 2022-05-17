@@ -1,6 +1,0 @@
-{
-  "parent": "item/generated",
-  "textures": {
-           "layer0": "rpgnloots:item/gem_critical_chance_lvl_5"
-  }
-}
