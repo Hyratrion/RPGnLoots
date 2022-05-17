@@ -32,7 +32,9 @@ public class ModStats extends Stats{
         return resourcelocation;
     }
 
+
 /*    public static void register(IEventBus eventBus)
+
     {
         STATS.register(eventBus);
     }*/
