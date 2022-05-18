@@ -27,8 +27,6 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
-import net.minecraftforge.client.event.ScreenEvent;
-import net.minecraftforge.common.crafting.conditions.TrueCondition;
 import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.event.entity.living.LivingDamageEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
@@ -50,7 +48,6 @@ import static net.minecraft.world.item.ItemStack.ATTRIBUTE_MODIFIER_FORMAT;
 public class ModEvents
 {
     private static Random rand = new Random();
-    public static boolean MOUSE_PRIMARY_CLICKED=false;
 
     @SubscribeEvent
     public static void onCommandsRegister(RegisterCommandsEvent event)
@@ -339,25 +336,8 @@ public class ModEvents
         }
     }
 
-    @SubscribeEvent
-    public static void onMouseClickedEvent(ScreenEvent.MouseClickedEvent.Pre event)
-    {
-        System.out.println("Boutton Actif Pre--------->" + event.getButton());
-        if (event.getButton() == 0)
-        {
-            MOUSE_PRIMARY_CLICKED = true;
-        }
-    }
 
-    @SubscribeEvent
-    public static void onMouseReleasedEvent(ScreenEvent.MouseReleasedEvent.Pre event)
-    {
-        System.out.println("Boutton Actif Post--------->" + event.getButton());
-        if (event.getButton() == 0)
-        {
-            MOUSE_PRIMARY_CLICKED = false;
-        }
-    }
+
 
     @SubscribeEvent
     public static void onItemTooltipEvent(ItemTooltipEvent event)
@@ -753,14 +733,6 @@ public class ModEvents
 
     private static int getHideFlags(ItemStack itemStack) {
         return itemStack.hasTag() && itemStack.getTag().contains("HideFlags", 99) ? itemStack.getTag().getInt("HideFlags") : itemStack.getItem().getDefaultTooltipHideFlags(itemStack);
-    }
-
-
-    @SubscribeEvent
-    public static void clientLoad(FMLClientSetupEvent event) {
-        event.enqueueWork(() -> {
-            MenuScreens.register(ModMenuTypes.SOCKETING_TABLE_MENU_TYPE, SocketingTableScreen::new);
-        });
     }
 
 
