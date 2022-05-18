@@ -80,15 +80,15 @@ public class ModEvents
 
             boolean gemLevelIncrease = attributeModifiers.containsKey(CustomAttributes.GEM_LVL_INCREASE.get());
 
-            System.out.println("-- RPG&Loots -- player name => " + player.getDisplayName().getString());
+            //System.out.println("-- RPG&Loots -- player name => " + player.getDisplayName().getString());
 
             //chance critique
 
             float criticalChanceAttributeArmor = getValueAttributeOfArmor(CustomAttributes.CRITICAL_CHANCE.get(), player);
-            System.out.println("- RPG&Loots - crit chance attribute armor => " + criticalChanceAttributeArmor);
+            //System.out.println("- RPG&Loots - crit chance attribute armor => " + criticalChanceAttributeArmor);
 
             float criticalChanceGemArmor = getValueGemOfArmor(ModTags.Items.GEM_TYPE_CRITICAL_CHANCE, player);
-            System.out.println("- RPG&Loots - crit chance gem armor => " + criticalChanceGemArmor);
+            //System.out.println("- RPG&Loots - crit chance gem armor => " + criticalChanceGemArmor);
 
             float criticalChance = criticalChanceAttributeArmor + criticalChanceGemArmor;
 
@@ -96,7 +96,7 @@ public class ModEvents
             if(attributeModifiers.containsKey(CustomAttributes.CRITICAL_CHANCE.get()))
             {
                 float criticalChanceAttributeWeapon = StaticClass.GetValueFromAttributeModifierMap(attributeModifiers, CustomAttributes.CRITICAL_CHANCE.get());
-                System.out.println("- RPG&Loots - crit chance attribute weapon => " + criticalChanceAttributeWeapon);
+                //System.out.println("- RPG&Loots - crit chance attribute weapon => " + criticalChanceAttributeWeapon);
                 criticalChance += criticalChanceAttributeWeapon;
             }
 
@@ -110,7 +110,7 @@ public class ModEvents
                 if(ModTags.HasGemOfType(allGemsEquiped, ModTags.Items.GEM_TYPE_CRITICAL_CHANCE))
                 {
                     float criticalChanceGemWeapon = ModTags.GetGemTotalValueOfType(itemStack, ModTags.Items.GEM_TYPE_CRITICAL_CHANCE, gemLevelIncrease);
-                    System.out.println("- RPG&Loots - crit chance gem weapon => " + criticalChanceGemWeapon);
+                    //System.out.println("- RPG&Loots - crit chance gem weapon => " + criticalChanceGemWeapon);
                     criticalChance += criticalChanceGemWeapon;
                 }
             }
@@ -133,7 +133,7 @@ public class ModEvents
                     posComma = posComma != -1 ? posComma - 2 : 1;
                     multiplicator += Integer.valueOf(critChanceStr.substring(0, posComma)); // ajoute +1 au multiplicateur critique par centaine
                     //multiplicator += (Integer.valueOf(critChanceStr.substring(0, posComma)) / 2); // ajoute +0.5 au multiplicateur critique par centaine
-                    System.out.println("- RPG&Loots - before multiplicator => " + multiplicator);
+                    //System.out.println("- RPG&Loots - before multiplicator => " + multiplicator);
 
                     criticalChanceRNG = rand.nextFloat(100);
                     if(criticalChanceRNG < criticalChance - 100 * (multiplicator -1))
@@ -142,15 +142,15 @@ public class ModEvents
                         //multiplicator += 0.5f; // ajoute +0.5 au multiplicateur critique
                     }
                 }
-                System.out.println("- RPG&Loots - after multiplicator => " + multiplicator);
+                //System.out.println("- RPG&Loots - after multiplicator => " + multiplicator);
 
 
                 float criticalDamageAttributeArmor = getValueAttributeOfArmor(CustomAttributes.CRITICAL_DAMAGE.get(), player) / 100;
-                System.out.println("- RPG&Loots - crit damage attribute armor => " + criticalDamageAttributeArmor);
+                //System.out.println("- RPG&Loots - crit damage attribute armor => " + criticalDamageAttributeArmor);
                 criticalDamage += criticalDamageAttributeArmor;
 
                 float criticalDamageGemArmor = getValueGemOfArmor(ModTags.Items.GEM_TYPE_CRITICAL_DAMAGE, player) / 100;
-                System.out.println("- RPG&Loots - crit damage gem armor => " + criticalDamageGemArmor);
+                //System.out.println("- RPG&Loots - crit damage gem armor => " + criticalDamageGemArmor);
                 criticalDamage += criticalDamageGemArmor;
 
 
@@ -160,7 +160,7 @@ public class ModEvents
                 {
                     //on ajoute plus de dégâts critique
                     float criticalDamgeWeapon = StaticClass.GetValueFromAttributeModifierMap(attributeModifiers, CustomAttributes.CRITICAL_DAMAGE.get()) / 100;
-                    System.out.println("- RPG&Loots - crit damage attribute weapon => " + criticalDamgeWeapon);
+                    //System.out.println("- RPG&Loots - crit damage attribute weapon => " + criticalDamgeWeapon);
                     criticalDamage += criticalDamgeWeapon;
                 }
 
@@ -171,7 +171,7 @@ public class ModEvents
                     if(ModTags.HasGemOfType(allGemsEquiped, ModTags.Items.GEM_TYPE_CRITICAL_DAMAGE))
                     {
                         float criticalDamageGem = ModTags.GetGemTotalValueOfType(itemStack, ModTags.Items.GEM_TYPE_CRITICAL_DAMAGE, gemLevelIncrease) / 100;
-                        System.out.println("- RPG&Loots - crit chance gem weapon => " + criticalDamageGem);
+                        //System.out.println("- RPG&Loots - crit chance gem weapon => " + criticalDamageGem);
                         criticalDamage += criticalDamageGem;
                     }
                 }
@@ -183,11 +183,11 @@ public class ModEvents
                 event.setDamageModifier(criticalDamage);
                 event.setResult(Event.Result.ALLOW);
 
-                System.out.println("- RPG&Loots - multiplicator crit final => " + criticalDamage);
+                //System.out.println("- RPG&Loots - multiplicator crit final => " + criticalDamage);
             }
             /*else
             {
-                System.out.println("----- Makotache ----- AUCUN critique");
+                //System.out.println("----- Makotache ----- AUCUN critique");
             }*/
         }
 
@@ -296,7 +296,7 @@ public class ModEvents
 
                 Multimap<Attribute, AttributeModifier> attributeModifiers = itemStack.getAttributeModifiers(EquipmentSlot.MAINHAND);
 
-                System.out.println("-- RPG&Loots -- bobo of " + event.getEntity().getType().getRegistryName().getPath() + " => " + event.getAmount());
+                //System.out.println("-- RPG&Loots -- bobo of " + event.getEntity().getType().getRegistryName().getPath() + " => " + event.getAmount());
 
                 //vol de vie
                 if(attributeModifiers.containsKey(CustomAttributes.LIFE_LEECH_PERCENT.get()))
@@ -620,7 +620,7 @@ public class ModEvents
                                 }
                                 catch (Exception ex)
                                 {
-                                    System.out.println("----- Makotache ----- onItemTooltipEvent.CAN_DESTROY");
+                                    //System.out.println("----- Makotache ----- onItemTooltipEvent.CAN_DESTROY");
                                     ex.printStackTrace();
                                 }
                             }
