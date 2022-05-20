@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "XXX",
+    "X#X",
+    "XXX"
+  ],
+  "key": {
+    "#": {
+      "item": "minecraft:iron_block"
+    },
+    "X": {
+      "item": "rpgnloots:gem_damage_lvl_1"
+    }
+  },
+  "result": {
+    "item": "rpgnloots:gem_damage_lvl_2"
+  }
+}

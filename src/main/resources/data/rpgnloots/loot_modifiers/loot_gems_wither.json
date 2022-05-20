@@ -1,0 +1,10 @@
+{
+  "conditions": [
+    {
+      "condition": "forge:loot_table_id",
+      "loot_table_id": "minecraft:entities/wither"
+    }
+  ],
+  "chanceLootGemTier1": 99.0,
+  "type": "rpgnloots:loot_gems_wither"
+}

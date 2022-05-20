@@ -1,0 +1,10 @@
+{
+  "conditions": [
+    {
+      "condition": "forge:loot_table_id",
+      "loot_table_id": "minecraft:entities/skeleton_horse"
+    }
+  ],
+  "chanceLootGemTier1": 2.0,
+  "type": "rpgnloots:loot_gems_skeleton_horse"
+}

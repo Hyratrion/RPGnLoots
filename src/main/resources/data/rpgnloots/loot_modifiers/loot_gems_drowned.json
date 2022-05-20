@@ -1,0 +1,10 @@
+{
+  "conditions": [
+    {
+      "condition": "forge:loot_table_id",
+      "loot_table_id": "minecraft:entities/drowned"
+    }
+  ],
+  "chanceLootGemTier1": 6.5,
+  "type": "rpgnloots:loot_gems_drowned"
+}

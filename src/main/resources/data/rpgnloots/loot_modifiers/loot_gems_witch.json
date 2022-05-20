@@ -1,0 +1,10 @@
+{
+  "conditions": [
+    {
+      "condition": "forge:loot_table_id",
+      "loot_table_id": "minecraft:entities/witch"
+    }
+  ],
+  "chanceLootGemTier1": 7.0,
+  "type": "rpgnloots:loot_gems_witch"
+}

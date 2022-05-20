@@ -1,0 +1,10 @@
+{
+  "conditions": [
+    {
+      "condition": "forge:loot_table_id",
+      "loot_table_id": "minecraft:entities/zombie_villager"
+    }
+  ],
+  "chanceLootGemTier1": 5.0,
+  "type": "rpgnloots:loot_gems_zombie_villager"
+}
