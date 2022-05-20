@@ -29,7 +29,9 @@ public class RPGNLOOT
     private static final Logger LOGGER = LogManager.getLogger();
 
     // Very important Comment
-    public RPGNLOOT() {
+    public RPGNLOOT()
+    {
+        System.out.println("-- Load RPG&Loots --");
         IEventBus eventBus = FMLJavaModLoadingContext.get().getModEventBus();
 
         ModItems.register(eventBus);
@@ -55,7 +57,6 @@ public class RPGNLOOT
         ModItems.createArrayGems();
         ModItems.initGemsValuesAndReferences();
     }
-
 
 }
     /*@EventBusSubscriber(modid = MOD_ID, bus = EventBusSubscriber.Bus.MOD)

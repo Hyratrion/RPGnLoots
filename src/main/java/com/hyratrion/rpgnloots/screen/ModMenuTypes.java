@@ -15,7 +15,6 @@ import net.minecraftforge.registries.RegistryObject;
 
 import java.util.ArrayList;
 import java.util.List;
-@Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
 
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
 public class ModMenuTypes {
@@ -33,7 +32,6 @@ public class ModMenuTypes {
     public static void registerContainers(RegistryEvent.Register<MenuType<?>> event) {
         event.getRegistry().registerAll(REGISTRY.toArray(new MenuType[0]));
     }
-
 
 
  /*   public static final DeferredRegister<MenuType<?>> MENUS =

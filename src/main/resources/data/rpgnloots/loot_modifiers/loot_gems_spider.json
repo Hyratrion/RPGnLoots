@@ -1,0 +1,10 @@
+{
+  "conditions": [
+    {
+      "condition": "forge:loot_table_id",
+      "loot_table_id": "minecraft:entities/spider"
+    }
+  ],
+  "chanceLootGemTier1": 5.5,
+  "type": "rpgnloots:loot_gems_spider"
+}

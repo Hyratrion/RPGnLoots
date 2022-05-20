@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "XXX",
+    "X#X",
+    "XXX"
+  ],
+  "key": {
+    "#": {
+      "item": "minecraft:copper_block"
+    },
+    "X": {
+      "item": "rpgnloots:gem_shield_lvl_0"
+    }
+  },
+  "result": {
+    "item": "rpgnloots:gem_shield_lvl_1"
+  }
+}
