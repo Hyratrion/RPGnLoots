@@ -31,7 +31,6 @@ public class RPGNLOOT
     // Very important Comment
     public RPGNLOOT()
     {
-        System.out.println("-- Load RPG&Loots --");
         IEventBus eventBus = FMLJavaModLoadingContext.get().getModEventBus();
 
         ModItems.register(eventBus);
