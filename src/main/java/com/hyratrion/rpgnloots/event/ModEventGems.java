@@ -12,6 +12,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.*;
 import net.minecraftforge.event.RegisterCommandsEvent;
@@ -104,37 +105,38 @@ public class ModEventGems
 
             float criticalDamage = event.getOldDamageModifier() - 1;
 
+            float valueToReturnForDamage;
+
             //on check notre chance de faire un critique
             if(criticalChanceRNG < criticalChance || criticalChance >= 100 || criticalDamage > 0)
             {
                 int multiplicator = 1;
-                if(criticalChance >= 100)
+                if(criticalChance > 100)
                 {
                     String critChanceStr = String.valueOf(criticalChance);
                     int posComma = critChanceStr.indexOf(".");//par ce que 94 % sure de micro
                     posComma = posComma != -1 ? posComma - 2 : 1;
                     multiplicator += Integer.valueOf(critChanceStr.substring(0, posComma)); // ajoute +1 au multiplicateur critique par centaine
                     //multiplicator += (Integer.valueOf(critChanceStr.substring(0, posComma)) / 2); // ajoute +0.5 au multiplicateur critique par centaine
-                    //System.out.println("- RPG&Loots - before multiplicator => " + multiplicator);
+                   //System.out.println("- RPG&Loots - before multiplicator => " + multiplicator);
 
                     criticalChanceRNG = rand.nextFloat(100);
-                    if(criticalChanceRNG < criticalChance - 100 * (multiplicator -1))
+                    if(criticalChanceRNG < criticalChance - 100 * (multiplicator - 1))
                     {
                         multiplicator += 1; // ajoute +1 au multiplicateur critique
                         //multiplicator += 0.5f; // ajoute +0.5 au multiplicateur critique
                     }
                 }
-                //System.out.println("- RPG&Loots - after multiplicator => " + multiplicator);
+               //System.out.println("- RPG&Loots - after multiplicator => " + multiplicator);
 
 
                 float criticalDamageAttributeArmor = getValueAttributeOfArmor(CustomAttributes.CRITICAL_DAMAGE.get(), player) / 100;
-                //System.out.println("- RPG&Loots - crit damage attribute armor => " + criticalDamageAttributeArmor);
+               //System.out.println("- RPG&Loots - crit damage attribute armor => " + criticalDamageAttributeArmor);
                 criticalDamage += criticalDamageAttributeArmor;
 
                 float criticalDamageGemArmor = getValueGemOfArmor(ModTags.Items.GEM_TYPE_CRITICAL_DAMAGE, player) / 100;
-                //System.out.println("- RPG&Loots - crit damage gem armor => " + criticalDamageGemArmor);
+               //System.out.println("- RPG&Loots - crit damage gem armor => " + criticalDamageGemArmor);
                 criticalDamage += criticalDamageGemArmor;
-
 
 
                 //récupération des degats de critiques des attributes de l'arme
@@ -142,35 +144,62 @@ public class ModEventGems
                 {
                     //on ajoute plus de dégâts critique
                     float criticalDamgeWeapon = StaticClass.GetValueFromAttributeModifierMap(attributeModifiers, CustomAttributes.CRITICAL_DAMAGE.get()) / 100;
-                    //System.out.println("- RPG&Loots - crit damage attribute weapon => " + criticalDamgeWeapon);
+                   //System.out.println("- RPG&Loots - crit damage attribute weapon => " + criticalDamgeWeapon);
                     criticalDamage += criticalDamgeWeapon;
                 }
 
 
                 //récupération des degats de critiques des gems de l'arme
-                if(Gems.HasGemSlot(itemStack))
+                if(Gems.HasGemSlot(itemStack) && Gems.HasGemOfType(allGemsEquiped, ModTags.Items.GEM_TYPE_CRITICAL_DAMAGE))
                 {
-                    if(Gems.HasGemOfType(allGemsEquiped, ModTags.Items.GEM_TYPE_CRITICAL_DAMAGE))
-                    {
-                        float criticalDamageGem = Gems.GetGemTotalValueOfType(itemStack, ModTags.Items.GEM_TYPE_CRITICAL_DAMAGE, gemLevelIncrease) / 100;
-                        //System.out.println("- RPG&Loots - crit damage gem weapon => " + criticalDamageGem);
-                        criticalDamage += criticalDamageGem;
-                    }
+                    float criticalDamageGem = Gems.GetGemTotalValueOfType(itemStack, ModTags.Items.GEM_TYPE_CRITICAL_DAMAGE, gemLevelIncrease) / 100;
+                   //System.out.println("- RPG&Loots - crit damage gem weapon => " + criticalDamageGem);
+                    criticalDamage += criticalDamageGem;
                 }
 
+                //cacule final ou casi final du multiplicateur
+               //System.out.println("- RPG&Loots - critical Damage => " + criticalDamage);
 
-                criticalDamage = criticalDamage * multiplicator + 1;
-
-                //on change la valeur des dégâts
-                event.setDamageModifier(criticalDamage);
-                event.setResult(Event.Result.ALLOW);
-
-                //System.out.println("- RPG&Loots - multiplicator crit final => " + criticalDamage);
+                valueToReturnForDamage = criticalDamage * multiplicator + 1;
             }
-            /*else
+            else
             {
+                valueToReturnForDamage = 1;
                 //System.out.println("----- Makotache ----- AUCUN critique");
-            }*/
+            }
+
+            //récupération des degats des gems de l'arme
+            if(Gems.HasGemSlot(itemStack) && Gems.HasGemOfType(allGemsEquiped, ModTags.Items.GEM_TYPE_DAMAGE))
+            {
+                //calcul du nombre de dégats a infligé en plus fonction de la gem de degats
+                //on doit utiliser le//Systeme de calcule des degats de minecraft vanilla pour savoir PAR combien on devra multiplier notre multiplicateur final
+                float baseDamage = (float)player.getAttributeValue(Attributes.ATTACK_DAMAGE);
+
+                float f2 = player.getAttackStrengthScale(0.5F);
+                baseDamage *= 0.2F + f2 * f2 * 0.8F;
+               //System.out.println("- RPG&Loots - baseDamage => " + baseDamage);
+
+                //ce n'est que maintenant que l'on met la valeur de notre degats
+                float damageGem = Gems.GetGemTotalValueOfType(itemStack, ModTags.Items.GEM_TYPE_DAMAGE, gemLevelIncrease) / 100;
+               //System.out.println("- RPG&Loots - damage gem weapon => " + damageGem);
+
+                float realBaseDamage = baseDamage * (damageGem + 1);
+               //System.out.println("- RPG&Loots - realBaseDamage => " + realBaseDamage);
+
+                float finalDamage = realBaseDamage * valueToReturnForDamage;
+               //System.out.println("- RPG&Loots - finalDamage => " + finalDamage);
+
+                valueToReturnForDamage = finalDamage / baseDamage;
+            }
+
+            if(valueToReturnForDamage != 1)
+            {
+                //on change la valeur des dégâts
+                event.setDamageModifier(valueToReturnForDamage);
+                event.setResult(Event.Result.ALLOW);
+                //System.out.println("- RPG&Loots - valueToReturnForDamage => " + valueToReturnForDamage);
+            }
+
         }
 
     }
@@ -179,8 +208,6 @@ public class ModEventGems
     @SubscribeEvent
     public static void onLivingHurtEvent(LivingHurtEvent event)
     {
-
-
         if (!event.getEntity().level.isClientSide())
         {
             //si l'entité qui SUBIT des dégâts est un joueur
@@ -278,7 +305,7 @@ public class ModEventGems
 
                 Multimap<Attribute, AttributeModifier> attributeModifiers = itemStack.getAttributeModifiers(EquipmentSlot.MAINHAND);
 
-                //System.out.println("-- RPG&Loots -- bobo of " + event.getEntity().getType().getRegistryName().getPath() + " => " + event.getAmount());
+               //System.out.println("-- RPG&Loots -- bobo of " + event.getEntity().getType().getRegistryName().getPath() + " => " + event.getAmount());
 
                 //vol de vie
                 if(attributeModifiers.containsKey(CustomAttributes.LIFE_LEECH_PERCENT.get()))
