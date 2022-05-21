@@ -1,6 +1,7 @@
 package com.hyratrion.rpgnloots.event.loot;
 
 import com.google.gson.JsonObject;
+import com.hyratrion.rpgnloots.item.Gems;
 import com.hyratrion.rpgnloots.item.ModItems;
 import com.hyratrion.rpgnloots.util.ModTags;
 import net.minecraft.nbt.StringTag;
@@ -61,13 +62,13 @@ public class LootGemToolFromMobs extends LootModifier {
         //0, 1, 2, 3, 4 < 5
         if(chanceValue < chanceLootGemTier1)
         {
-            int item_index = rand.nextInt(ModItems.GEM_LVL_1.length);
-            this.addition = ModItems.GEM_LVL_1[item_index];
+            int item_index = rand.nextInt(Gems.GEM_LVL_1.size());
+            this.addition = Gems.GEM_LVL_1.get(item_index);
         }
         else //donc supérieur a chanceLootGemTier1
         {
-            int item_index = rand.nextInt(ModItems.GEM_LVL_0.length);
-            this.addition = ModItems.GEM_LVL_0[item_index];
+            int item_index = rand.nextInt(Gems.GEM_LVL_0.size());
+            this.addition = Gems.GEM_LVL_0.get(item_index);
         }
 
         chanceValue = rand.nextFloat(100);
@@ -198,10 +199,10 @@ public class LootGemToolFromMobs extends LootModifier {
                         stuff.getEquipmentSlot(itemStackStuff)
                 );
 
-                ModTags.AddGemSlot(itemStackStuff, ModTags.CreateTagFromItem(ModItems.GEM_CRITICAL_CHANCE_LVL_4.get()));
+                Gems.AddGemSlot(itemStackStuff, ModTags.CreateTagFromItem(ModItems.GEM_CRITICAL_CHANCE_LVL_4.get()));
                 if(tier > 1 )
                 {
-                    ModTags.AddGemSlot(itemStackStuff, ModTags.CreateTagFromItem(ModItems.GEM_CRITICAL_DAMAGE_LVL_4.get()));
+                    Gems.AddGemSlot(itemStackStuff, ModTags.CreateTagFromItem(ModItems.GEM_CRITICAL_DAMAGE_LVL_4.get()));
 
                 }
 
@@ -276,13 +277,13 @@ public class LootGemToolFromMobs extends LootModifier {
         //0, 1, 2, 3, 4 < 5
         if(chance < chanceLootGemTier1)
         {
-            int item_index = rand.nextInt(ModItems.GEM_LVL_1.length);
-            this.addition = ModItems.GEM_LVL_1[item_index];
+            int item_index = rand.nextInt(Gems.GEM_LVL_1.size());
+            this.addition = Gems.GEM_LVL_1.get(item_index);
         }
         else //donc supérieur a chanceLootGemTier1
         {
-            int item_index = rand.nextInt(ModItems.GEM_LVL_0.length);
-            this.addition = ModItems.GEM_LVL_0[item_index];
+            int item_index = rand.nextInt(Gems.GEM_LVL_0.size());
+            this.addition = Gems.GEM_LVL_0.get(item_index);
         }
     }
 

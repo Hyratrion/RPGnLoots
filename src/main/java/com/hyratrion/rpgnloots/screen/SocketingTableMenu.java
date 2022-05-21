@@ -1,6 +1,7 @@
 package com.hyratrion.rpgnloots.screen;
 
 import com.hyratrion.rpgnloots.inventory.ModResultContainer;
+import com.hyratrion.rpgnloots.item.Gems;
 import com.hyratrion.rpgnloots.item.ModItems;
 import com.hyratrion.rpgnloots.util.ModTags;
 import net.minecraft.core.BlockPos;
@@ -56,7 +57,7 @@ public class SocketingTableMenu extends AbstractContainerMenu implements Supplie
     public SocketingTableMenu(int id, Inventory inv, FriendlyByteBuf extraData) {
         super(ModMenuTypes.SOCKETING_TABLE_MENU_TYPE, id);
 
-        System.out.println("Test ouverture gui SocketingTableMenu --> 1");
+        //System.out.println("Test ouverture gui SocketingTableMenu --> 1");
 
         this.player = inv.player;
         this.level = inv.player.level;
@@ -199,7 +200,7 @@ public class SocketingTableMenu extends AbstractContainerMenu implements Supplie
                 this.addSlot(new Slot(inv, sj + (si + 1) * 9, 0 + 8 + sj * 18, 0 + 84 + si * 18));
         for (int si = 0; si < 9; ++si)
             this.addSlot(new Slot(inv, si, 0 + 8 + si * 18, 0 + 142));
-        System.out.println("Test ouverture gui SocketingTableMenu --> 2");
+        //System.out.println("Test ouverture gui SocketingTableMenu --> 2");
     }
 
     public void createResult() {
@@ -223,7 +224,7 @@ public class SocketingTableMenu extends AbstractContainerMenu implements Supplie
         {
             Item gemToAdd = null;
 
-            if(ModTags.ItemSupportedByMod(itemStack_0) && (isGem(itemStack_1.getItem()) || pliersPos == ItemPos.SLOT_1))
+            if(ModTags.ItemSupportedByMod(itemStack_0) && (Gems.isGem(itemStack_1.getItem()) || pliersPos == ItemPos.SLOT_1))
             {
                 itemStackResult_0 = itemStack_0.copy();
                 if(pliersPos == ItemPos.NONE)
@@ -232,7 +233,7 @@ public class SocketingTableMenu extends AbstractContainerMenu implements Supplie
                     gemPos = ItemPos.SLOT_1;
                 }
             }
-            else if(ModTags.ItemSupportedByMod(itemStack_1) && (isGem(itemStack_0.getItem()) || pliersPos == ItemPos.SLOT_0))
+            else if(ModTags.ItemSupportedByMod(itemStack_1) && (Gems.isGem(itemStack_0.getItem()) || pliersPos == ItemPos.SLOT_0))
             {
                 itemStackResult_0 = itemStack_1.copy();
                 if(pliersPos == ItemPos.NONE)
@@ -247,13 +248,13 @@ public class SocketingTableMenu extends AbstractContainerMenu implements Supplie
             }
 
 
-            if(ModTags.HasGemSlot(itemStackResult_0))
+            if(Gems.HasGemSlot(itemStackResult_0))
             {
 
-                int emptyGemSlot = ModTags.CountGem(itemStackResult_0, true);
+                int emptyGemSlot = Gems.CountGem(itemStackResult_0, true);
                 //System.out.println("---- Makotache ---- emptyGemSlot => " + emptyGemSlot);
 
-                int filledGemSlot = ModTags.CountGem(itemStackResult_0, false);
+                int filledGemSlot = Gems.CountGem(itemStackResult_0, false);
                 //System.out.println("---- Makotache ---- filledGemSlot => " + filledGemSlot);
 
 
@@ -261,19 +262,19 @@ public class SocketingTableMenu extends AbstractContainerMenu implements Supplie
 
                 if(pliersPos != ItemPos.NONE && filledGemSlot > 0)
                 {
-                    Item[] allGemsEquiped = ModTags.GetGems(itemStackResult_0);
+                    Item[] allGemsEquiped = Gems.GetGems(itemStackResult_0);
 
                     for(int i = 0; i < filledGemSlot; i++)
                     {
                         this.outputContainer.setItemWithSimpleContainer(i + 1, new ItemStack(allGemsEquiped[i], 1));
                     }
 
-                    ModTags.ReplaceAllGemSlotByEmpty(itemStackResult_0);
+                    Gems.ReplaceAllGemSlotByEmpty(itemStackResult_0);
                     doChanges = true;
                 }
                 else if(pliersPos == ItemPos.NONE && emptyGemSlot > 0)
                 {
-                    ModTags.ReplaceFirstEmptyGemSlot(itemStackResult_0, gemToAdd);
+                    Gems.ReplaceFirstEmptyGemSlot(itemStackResult_0, gemToAdd);
                     doChanges = true;
                 }
 
@@ -286,9 +287,6 @@ public class SocketingTableMenu extends AbstractContainerMenu implements Supplie
         }
     }
 
-    private boolean isGem(Item gem) {
-        return ModItems.GEMS_VALUES.containsKey(gem);
-    }
 
 
     protected void onTake(Player player, ItemStack itemStack, int index)
@@ -298,18 +296,18 @@ public class SocketingTableMenu extends AbstractContainerMenu implements Supplie
         //System.out.println("--- Makotache -- itemStack.getItem().getRegistryName().getPath() => " + itemStack.getItem().getRegistryName().getPath());
         //System.out.println("--- Makotache -- itemStack.getItem() => " + itemStack.getItem());
 
-        System.out.println("this.inputContainer.getItem(1) => " + this.inputContainer.getItem(1));
+        //System.out.println("this.inputContainer.getItem(1) => " + this.inputContainer.getItem(1));
 
 
         if(isInput && (readForNewCraft || !craftStart))
         {
-            System.out.println("isInput");
+            //System.out.println("isInput");
             craftStart = false;
             outputContainer.EmptyResult();
         }
         else if(gemPos != ItemPos.NONE)
         {
-            System.out.println("gemPos");
+            //System.out.println("gemPos");
 
             int gemIndex = gemPos == ItemPos.SLOT_0 ? 0 : 1;
             ItemStack gemItem = this.inputContainer.getItem(gemIndex);
@@ -327,7 +325,7 @@ public class SocketingTableMenu extends AbstractContainerMenu implements Supplie
         else if(pliersPos != ItemPos.NONE)
         {
             craftStart = true;
-            System.out.println("pliersPos");
+            //System.out.println("pliersPos");
 
             //voir pliers qui disparait en shit click sur gem
             if(this.inputContainer.getItem(0).getItem().equals(ModItems.PLIERS.get()))
@@ -342,7 +340,7 @@ public class SocketingTableMenu extends AbstractContainerMenu implements Supplie
             //this.inputContainer.setItem(pliersPos == ItemPos.SLOT_1 ? 0 : 1, ItemStack.EMPTY);
         }
 
-        System.out.println("this.inputContainer.getItem(1) => " + this.inputContainer.getItem(1));
+        //System.out.println("this.inputContainer.getItem(1) => " + this.inputContainer.getItem(1));
 
         readForNewCraft = outputContainer.countWithSimpleContainer(false) == 0;
 

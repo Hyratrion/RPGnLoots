@@ -2,10 +2,11 @@ package com.hyratrion.rpgnloots;
 
 import com.hyratrion.rpgnloots.block.ModBlocks;
 import com.hyratrion.rpgnloots.event.loot.CustomAttributes;
+import com.hyratrion.rpgnloots.item.GemDictionary;
+import com.hyratrion.rpgnloots.item.Gems;
 import com.hyratrion.rpgnloots.item.ModItems;
 import com.hyratrion.rpgnloots.screen.ModMenuTypes;
 import com.hyratrion.rpgnloots.screen.SocketingTableScreen;
-import com.hyratrion.rpgnloots.util.ModStats;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
@@ -53,7 +54,8 @@ public class RPGNLOOT
 
     private void setup(final FMLCommonSetupEvent event)
     {
-        ModItems.createArrayGems();
+        Gems.registerArrayGems();
+        GemDictionary.registerGem();
         ModItems.initGemsValuesAndReferences();
     }
 

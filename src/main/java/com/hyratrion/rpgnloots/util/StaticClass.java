@@ -1,15 +1,19 @@
 package com.hyratrion.rpgnloots.util;
 
 import com.google.common.collect.Multimap;
+import com.hyratrion.rpgnloots.item.Gems;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.*;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.lang.reflect.Executable;
 import java.lang.reflect.Field;
 import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 public final class StaticClass
@@ -34,7 +38,36 @@ public final class StaticClass
 
     public static float GetValueFromAttributeModifierMap(@Nonnull ItemStack itemStack,@Nonnull Attribute attribute)
     {
-        return GetValueFromAttributeModifierMap(itemStack.getAttributeModifiers(ModTags.GetEquipmentSlotOf(itemStack)[0]), attribute);
+        return GetValueFromAttributeModifierMap(itemStack.getAttributeModifiers(GetEquipmentSlotOf(itemStack)[0]), attribute);
+    }
+
+    public static EquipmentSlot[] GetEquipmentSlotOf(Item item)
+    {
+        List<EquipmentSlot> result = new ArrayList<>();
+
+        if (item instanceof ArmorItem armorItem)
+        {
+            result.add(armorItem.getSlot());
+        } else if (item instanceof TieredItem)
+        {
+            result.add(EquipmentSlot.MAINHAND);
+        } else if (item instanceof FishingRodItem || item instanceof ShearsItem ||
+                item instanceof ShieldItem || item instanceof TridentItem ||
+                item instanceof CrossbowItem || item instanceof BowItem)
+        {
+            result.add(EquipmentSlot.MAINHAND);
+            result.add(EquipmentSlot.OFFHAND);
+        } else if (item instanceof ElytraItem)
+        {
+            result.add(EquipmentSlot.CHEST);
+        }
+
+        return result.toArray(new EquipmentSlot[result.size() - 1]);
+    }
+
+    public static EquipmentSlot[] GetEquipmentSlotOf(ItemStack itemStack)
+    {
+        return GetEquipmentSlotOf(itemStack.getItem());
     }
 
     public static <T, E> T GetKeyByValue(Map<T, E> map, E value)
