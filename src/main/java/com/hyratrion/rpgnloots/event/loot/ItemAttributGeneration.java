@@ -2,8 +2,10 @@ package com.hyratrion.rpgnloots.event.loot;
 
 import com.google.common.base.Equivalence;
 import com.google.common.collect.Multimap;
+import com.hyratrion.rpgnloots.item.Gems;
 import com.hyratrion.rpgnloots.util.ModStats;
 import com.hyratrion.rpgnloots.util.ModTags;
+import com.hyratrion.rpgnloots.util.StaticClass;
 import net.minecraft.nbt.StringTag;
 import net.minecraft.util.random.WeightedEntry;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -570,7 +572,7 @@ public class ItemAttributGeneration
             );
             for(int i = 0; i < gemSlot; i++)
             {
-                ModTags.AddGemSlot(itemStack, ModTags.DEFAULT_TAG_VALUE);
+                Gems.AddGemSlot(itemStack, ModTags.DEFAULT_TAG_VALUE);
             }
         }
 
@@ -695,7 +697,7 @@ public class ItemAttributGeneration
             uuid = REINFORCED_ID;
         }
 
-        EquipmentSlot[] equipmentSlots = ModTags.GetEquipmentSlotOf(leItemStack);
+        EquipmentSlot[] equipmentSlots = StaticClass.GetEquipmentSlotOf(leItemStack);
 
         //attribute modifier CUSTOM
         if(uuid != null)
