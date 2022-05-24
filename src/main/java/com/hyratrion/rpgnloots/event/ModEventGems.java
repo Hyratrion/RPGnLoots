@@ -107,11 +107,11 @@ public class ModEventGems
 
             float valueToReturnForDamage;
 
-            System.out.println("- RPG&Loots - total crit chance => " + criticalChance);
+            //System.out.println("- RPG&Loots - total crit chance => " + criticalChance);
             //on check notre chance de faire un critique
             if(criticalChanceRNG < criticalChance || criticalDamage > 0)
             {
-                System.out.println("- RPG&Loots - crit fait" );
+                //System.out.println("- RPG&Loots - crit fait" );
                 int multiplicator = 1;
                 if(criticalChance >= 100)
                 {
@@ -120,28 +120,28 @@ public class ModEventGems
                     posComma = posComma != -1 ? posComma - 2 : 1;
                     multiplicator += Integer.valueOf(critChanceStr.substring(0, posComma)) - 1; // ajoute +1 au multiplicateur critique par centaine
                     //multiplicator += (Integer.valueOf(critChanceStr.substring(0, posComma)) / 2); // ajoute +0.5 au multiplicateur critique par centaine
-                    System.out.println("- RPG&Loots - before multiplicator => " + multiplicator);
+                    //System.out.println("- RPG&Loots - before multiplicator => " + multiplicator);
 
                     criticalChanceRNG = rand.nextFloat(100);
-                    System.out.println("- RPG&Loots - criticalChanceRNG => " + criticalChanceRNG);
+                    //System.out.println("- RPG&Loots - criticalChanceRNG => " + criticalChanceRNG);
 
                     float calc = criticalChance - 100 * multiplicator;
-                    System.out.println("- RPG&Loots - calc => " + calc);
+                    //System.out.println("- RPG&Loots - calc => " + calc);
                     if(criticalChanceRNG < calc)
                     {
                         multiplicator += 1; // ajoute +1 au multiplicateur critique
                         //multiplicator += 0.5f; // ajoute +0.5 au multiplicateur critique
                     }
                 }
-               System.out.println("- RPG&Loots - after multiplicator => " + multiplicator);
+               //System.out.println("- RPG&Loots - after multiplicator => " + multiplicator);
 
 
                 float criticalDamageAttributeArmor = getValueAttributeOfArmor(CustomAttributes.CRITICAL_DAMAGE.get(), player) / 100;
-               //System.out.println("- RPG&Loots - crit damage attribute armor => " + criticalDamageAttributeArmor);
+                //System.out.println("- RPG&Loots - crit damage attribute armor => " + criticalDamageAttributeArmor);
                 criticalDamage += criticalDamageAttributeArmor;
 
                 float criticalDamageGemArmor = getValueGemOfArmor(ModTags.Items.GEM_TYPE_CRITICAL_DAMAGE, player) / 100;
-               //System.out.println("- RPG&Loots - crit damage gem armor => " + criticalDamageGemArmor);
+                //System.out.println("- RPG&Loots - crit damage gem armor => " + criticalDamageGemArmor);
                 criticalDamage += criticalDamageGemArmor;
 
 
@@ -163,7 +163,7 @@ public class ModEventGems
                     criticalDamage += criticalDamageGem;
                 }
 
-                System.out.println("- RPG&Loots - critical Damage => " + criticalDamage);
+                //System.out.println("- RPG&Loots - critical Damage => " + criticalDamage);
 
                 //cacule final ou casi final du multiplicateur
                 valueToReturnForDamage = criticalDamage * multiplicator + 1;
@@ -311,7 +311,7 @@ public class ModEventGems
 
                 Multimap<Attribute, AttributeModifier> attributeModifiers = itemStack.getAttributeModifiers(EquipmentSlot.MAINHAND);
 
-                System.out.println("-- RPG&Loots -- bobo of " + event.getEntity().getType().getRegistryName().getPath() + " => " + event.getAmount());
+                //System.out.println("-- RPG&Loots -- bobo of " + event.getEntity().getType().getRegistryName().getPath() + " => " + event.getAmount());
 
                 //vol de vie
                 if(attributeModifiers.containsKey(CustomAttributes.LIFE_LEECH_PERCENT.get()))
