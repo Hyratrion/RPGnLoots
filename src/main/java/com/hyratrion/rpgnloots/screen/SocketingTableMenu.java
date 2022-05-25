@@ -502,6 +502,24 @@ public class SocketingTableMenu extends AbstractContainerMenu implements Supplie
                 }
             }
 
+            if(craftStart && !readForNewCraft)
+            {
+                for (int i = 0; i < outputContainer.getContainerSize(); ++i)
+                {
+                    ItemStack itemStack = outputContainer.getItem(i).copy();
+                    outputContainer.setItem(i, ItemStack.EMPTY);
+
+                    if (!serverPlayer.isAlive() || serverPlayer.hasDisconnected())
+                    {
+                        playerIn.drop(itemStack, false);
+                    }
+                    else
+                    {
+                        playerIn.getInventory().placeItemBackInInventory(itemStack);
+                    }
+                }
+            }
+
         }
     }
 

@@ -107,21 +107,27 @@ public class ModEventGems
 
             float valueToReturnForDamage;
 
+            //System.out.println("- RPG&Loots - total crit chance => " + criticalChance);
             //on check notre chance de faire un critique
-            if(criticalChanceRNG < criticalChance || criticalChance >= 100 || criticalDamage > 0)
+            if(criticalChanceRNG < criticalChance || criticalDamage > 0)
             {
+                //System.out.println("- RPG&Loots - crit fait" );
                 int multiplicator = 1;
-                if(criticalChance > 100)
+                if(criticalChance >= 100)
                 {
                     String critChanceStr = String.valueOf(criticalChance);
                     int posComma = critChanceStr.indexOf(".");//par ce que 94 % sure de micro
                     posComma = posComma != -1 ? posComma - 2 : 1;
-                    multiplicator += Integer.valueOf(critChanceStr.substring(0, posComma)); // ajoute +1 au multiplicateur critique par centaine
+                    multiplicator += Integer.valueOf(critChanceStr.substring(0, posComma)) - 1; // ajoute +1 au multiplicateur critique par centaine
                     //multiplicator += (Integer.valueOf(critChanceStr.substring(0, posComma)) / 2); // ajoute +0.5 au multiplicateur critique par centaine
-                   //System.out.println("- RPG&Loots - before multiplicator => " + multiplicator);
+                    //System.out.println("- RPG&Loots - before multiplicator => " + multiplicator);
 
                     criticalChanceRNG = rand.nextFloat(100);
-                    if(criticalChanceRNG < criticalChance - 100 * (multiplicator - 1))
+                    //System.out.println("- RPG&Loots - criticalChanceRNG => " + criticalChanceRNG);
+
+                    float calc = criticalChance - 100 * multiplicator;
+                    //System.out.println("- RPG&Loots - calc => " + calc);
+                    if(criticalChanceRNG < calc)
                     {
                         multiplicator += 1; // ajoute +1 au multiplicateur critique
                         //multiplicator += 0.5f; // ajoute +0.5 au multiplicateur critique
@@ -131,11 +137,11 @@ public class ModEventGems
 
 
                 float criticalDamageAttributeArmor = getValueAttributeOfArmor(CustomAttributes.CRITICAL_DAMAGE.get(), player) / 100;
-               //System.out.println("- RPG&Loots - crit damage attribute armor => " + criticalDamageAttributeArmor);
+                //System.out.println("- RPG&Loots - crit damage attribute armor => " + criticalDamageAttributeArmor);
                 criticalDamage += criticalDamageAttributeArmor;
 
                 float criticalDamageGemArmor = getValueGemOfArmor(ModTags.Items.GEM_TYPE_CRITICAL_DAMAGE, player) / 100;
-               //System.out.println("- RPG&Loots - crit damage gem armor => " + criticalDamageGemArmor);
+                //System.out.println("- RPG&Loots - crit damage gem armor => " + criticalDamageGemArmor);
                 criticalDamage += criticalDamageGemArmor;
 
 
@@ -157,9 +163,9 @@ public class ModEventGems
                     criticalDamage += criticalDamageGem;
                 }
 
-                //cacule final ou casi final du multiplicateur
-               //System.out.println("- RPG&Loots - critical Damage => " + criticalDamage);
+                //System.out.println("- RPG&Loots - critical Damage => " + criticalDamage);
 
+                //cacule final ou casi final du multiplicateur
                 valueToReturnForDamage = criticalDamage * multiplicator + 1;
             }
             else
@@ -177,17 +183,17 @@ public class ModEventGems
 
                 float f2 = player.getAttackStrengthScale(0.5F);
                 baseDamage *= 0.2F + f2 * f2 * 0.8F;
-               //System.out.println("- RPG&Loots - baseDamage => " + baseDamage);
+                //System.out.println("- RPG&Loots - baseDamage => " + baseDamage);
 
                 //ce n'est que maintenant que l'on met la valeur de notre degats
                 float damageGem = Gems.GetGemTotalValueOfType(itemStack, ModTags.Items.GEM_TYPE_DAMAGE, gemLevelIncrease) / 100;
-               //System.out.println("- RPG&Loots - damage gem weapon => " + damageGem);
+                //System.out.println("- RPG&Loots - damage gem weapon => " + damageGem);
 
                 float realBaseDamage = baseDamage * (damageGem + 1);
-               //System.out.println("- RPG&Loots - realBaseDamage => " + realBaseDamage);
+                //System.out.println("- RPG&Loots - realBaseDamage => " + realBaseDamage);
 
                 float finalDamage = realBaseDamage * valueToReturnForDamage;
-               //System.out.println("- RPG&Loots - finalDamage => " + finalDamage);
+                //System.out.println("- RPG&Loots - finalDamage => " + finalDamage);
 
                 valueToReturnForDamage = finalDamage / baseDamage;
             }
@@ -305,7 +311,7 @@ public class ModEventGems
 
                 Multimap<Attribute, AttributeModifier> attributeModifiers = itemStack.getAttributeModifiers(EquipmentSlot.MAINHAND);
 
-               //System.out.println("-- RPG&Loots -- bobo of " + event.getEntity().getType().getRegistryName().getPath() + " => " + event.getAmount());
+                //System.out.println("-- RPG&Loots -- bobo of " + event.getEntity().getType().getRegistryName().getPath() + " => " + event.getAmount());
 
                 //vol de vie
                 if(attributeModifiers.containsKey(CustomAttributes.LIFE_LEECH_PERCENT.get()))
