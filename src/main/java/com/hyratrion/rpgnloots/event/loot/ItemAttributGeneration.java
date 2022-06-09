@@ -563,13 +563,19 @@ public class ItemAttributGeneration
             }
         }
         //Ajout des gemslot sur l'item
-        if(gemSlot > 0){
+        if(gemSlot > 0)
+        {
+            EquipmentSlot[] equipmentSlots = StaticClass.GetEquipmentSlotOf(itemStack);
 
-            itemStack.addAttributeModifier(
-                    GEM_SLOT.get(),
-                    new AttributeModifier(GEM_SLOT_ID, "modifier rpgnloots", gemSlot, AttributeModifier.Operation.ADDITION),
-                    itemLooted.getEquipmentSlot(itemStack)
-            );
+            for (EquipmentSlot equipmentSlot : equipmentSlots)
+            {
+                itemStack.addAttributeModifier(
+                        GEM_SLOT.get(),
+                        new AttributeModifier(GEM_SLOT_ID, "modifier rpgnloots", gemSlot, AttributeModifier.Operation.ADDITION),
+                        equipmentSlot
+                );
+            }
+
             for(int i = 0; i < gemSlot; i++)
             {
                 Gems.AddGemSlot(itemStack, ModTags.DEFAULT_TAG_VALUE);
@@ -604,8 +610,15 @@ public class ItemAttributGeneration
         if(attribute == Attributes.ATTACK_DAMAGE)
         {
             //value = (((TieredItem) itemLooted).getTier().getAttackDamageBonus() + 3) * (rand.nextFloat(CustomAttributes.getValuesTierAttackDamage[tier - 1], CustomAttributes.getValuesTierAttackDamage[tier]) / 100 + 1);
-            value = (((TieredItem) itemLooted).getTier().getAttackDamageBonus() + 3) * GetValueFromTier(getValuesTierAttackDamage, tier, true);
+            /*if(itemLooted instanceof SwordItem swordItem)
+            {
 
+            }
+            else if(itemLooted instanceof DiggerItem diggerItem)
+            {
+
+            }*/
+            value = (((TieredItem) itemLooted).getTier().getAttackDamageBonus() + 3) * GetValueFromTier(getValuesTierAttackDamage, tier, true);
         }
         else if (attribute == ATTACK_SPEED)
         {

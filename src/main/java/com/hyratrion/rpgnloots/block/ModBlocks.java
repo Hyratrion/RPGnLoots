@@ -15,8 +15,7 @@ public class ModBlocks {
     public static final DeferredRegister<Block> BLOCKS =
             DeferredRegister.create(ForgeRegistries.BLOCKS, RPGNLOOT.MOD_ID);
 
-    public static final RegistryObject<Block> SOCKETING_TABLE = BLOCKS.register("socketing_table",
-            () -> new SocketingTableBlock(BlockBehaviour.Properties.of(Material.HEAVY_METAL, MaterialColor.METAL).strength(5.0f).requiresCorrectToolForDrops().sound(SoundType.ANVIL).noOcclusion()));
+    public static final RegistryObject<Block> SOCKETING_TABLE = BLOCKS.register("socketing_table", SocketingTableBlock::new);
 
 
     public static void register(IEventBus eventBus)

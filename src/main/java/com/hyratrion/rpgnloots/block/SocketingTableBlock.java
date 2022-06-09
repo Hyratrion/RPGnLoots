@@ -20,6 +20,8 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.AnvilMenu;
 import net.minecraft.world.inventory.ContainerLevelAccess;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TieredItem;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
@@ -27,10 +29,14 @@ import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
+import net.minecraft.world.level.material.Material;
+import net.minecraft.world.level.material.MaterialColor;
+import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.CollisionContext;
@@ -39,6 +45,8 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.network.NetworkHooks;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.stream.Stream;
 
 public class SocketingTableBlock extends FallingBlock {
@@ -46,8 +54,9 @@ public class SocketingTableBlock extends FallingBlock {
 
     private static final Component CONTAINER_TITLE = new TranslatableComponent("block.rpgnloots.socketing_table");
 
-    public SocketingTableBlock(Properties properties) {
-        super(properties);
+    public SocketingTableBlock() {
+        //HEAVY_METAL, MaterialColor.METAL
+        super(BlockBehaviour.Properties.of(Material.STONE).requiresCorrectToolForDrops().strength(1f, 10f).sound(SoundType.ANVIL));
         this.registerDefaultState(this.getStateDefinition().any().setValue(FACING, Direction.NORTH));
     }
 
@@ -188,6 +197,22 @@ public class SocketingTableBlock extends FallingBlock {
     ).reduce((v1, v2) -> Shapes.join(v1, v2, BooleanOp.OR)).get();
 
     @Override
+    public boolean canHarvestBlock(BlockState state, BlockGetter world, BlockPos pos, Player player) {
+        if (player.getInventory().getSelected().getItem() instanceof TieredItem tieredItem)
+            return tieredItem.getTier().getLevel() >= 1;
+        return false;
+    }
+
+    @Override
+    public List<ItemStack> getDrops(BlockState state, LootContext.Builder builder) {
+        List<ItemStack> dropsOriginal = super.getDrops(state, builder);
+        if (!dropsOriginal.isEmpty())
+            return dropsOriginal;
+        return Collections.singletonList(new ItemStack(this, 1));
+    }
+
+
+    @Override
     public VoxelShape getShape(BlockState pState, BlockGetter pLevel, BlockPos pPos, CollisionContext pContext) {
         switch (pState.getValue(FACING)) {
             case NORTH:
@@ -226,8 +251,8 @@ public class SocketingTableBlock extends FallingBlock {
     }
 
     public InteractionResult use(BlockState state, Level level, BlockPos pos,
-                                 Player player, InteractionHand hand, BlockHitResult hit) {
-
+                                 Player player, InteractionHand hand, BlockHitResult hit)
+    {
         super.use(state, level, pos, player, hand, hit);
         if (player instanceof ServerPlayer serverPlayer) {
             NetworkHooks.openGui(serverPlayer, new MenuProvider() {
@@ -245,32 +270,6 @@ public class SocketingTableBlock extends FallingBlock {
         System.out.println("Test ouverture gui SocketingTableMenu --> 3");
         return InteractionResult.SUCCESS;
     }
- /*   @Override
-    public InteractionResult use(BlockState pState, Level pLevel, BlockPos pPos,
-                                 Player pPlayer, InteractionHand pHand, BlockHitResult pHit) {
-        if (pLevel.isClientSide) {
-            return InteractionResult.SUCCESS;
-        } else {
-            pPlayer.openMenu(pState.getMenuProvider(pLevel, pPos));
-            pPlayer.awardStat(ModStats.INTERACT_WITH_SOCKETING_TABLE);
-            return InteractionResult.CONSUME;
-        }
-    }*/
 
- /*   @Nullable
-    @Override
-    public MenuProvider getMenuProvider(BlockState pBlockState, Level pLevel, BlockPos pBlockPos) {
-        return new SimpleMenuProvider((p_48785_, p_48786_, p_48787_) -> {
-            return new SocketingTableMenu(p_48785_, p_48786_, ContainerLevelAccess.create(pLevel, pBlockPos));
-        }, CONTAINER_TITLE);
-    }*/
-
-
-    /*
-    @Nullable
-    @Override
-    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level pLevel, BlockState pState, BlockEntityType<T> pBlockEntityType) {
-        return createTickerHelper(pBlockEntityType, ModBlockEntities.SOCKETING_TABLE.get(), SocketingTableBlockEntity::tick);
-    }*/
 }
 
